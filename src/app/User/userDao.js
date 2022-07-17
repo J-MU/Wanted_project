@@ -8,6 +8,10 @@ async function selectUser(connection) {
   return userRows;
 }
 
+async function insertProfileInfo(connection,userId,JobGroup,Job,career,skills){
+  const postProfileQuery=`
+    `;
+}
 // 이메일로 회원 조회
 async function selectUserEmail(connection, email) {
   const selectUserEmailQuery = `
@@ -82,6 +86,7 @@ async function updateUserInfo(connection, id, nickname) {
 
 
 module.exports = {
+  insertJobCatgory,
   selectUser,
   selectUserEmail,
   selectUserId,
