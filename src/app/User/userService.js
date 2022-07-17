@@ -114,10 +114,17 @@ exports.editUser = async function (id, nickname) {
     }
 }
 
-exports.postJobCatgory=async function(userId,JobGroup,Job,career,skills){
+exports.postJobCatgory=async function(userId,JobGroup,Job,career,skills){   //TODO JobGroup,Job이 name이 아니라 id여야 함.
+    if(JobGroup!="개발"&&skills===null){
+        return errResponse(baseResponse.NOT_DEVELOPMENT_CANT_HAVE_SKILL);
+    }
+    // TODO : JobGroup 과 Job이 부모-자식 관계여야함. check 함수가 추가로 구현되어야함.
     try{
         const connection = await pool.getConnection(async (conn) => conn);
-        const postJobCategoryResult = await userDao.postJobCatgory(connection,userId,JobGroup,Job,career,skills);
+        
+        const InsertProfileResult = await userDao.insertProfileInfo(connection,userId,JobGroup,Job,career,skills);// TODO profileId,JobGroupId 받아와야함.
+        const insertJobCatgoryResult=await userDao.insertJobCategoryInfo(connection,profileId,categoryId); //
+        
         connection.release();
 
         return response(baseResponse.SUCCESS);
