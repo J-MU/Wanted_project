@@ -13,7 +13,7 @@ const {connect} = require("http2");
 
 // Service: Create, Update, Delete 비즈니스 로직 처리
 
-exports.createUser = async function (email, password, nickname) {
+exports.createUser = async function (name, phoneNumber, email, password, IsAcceptedPrivacyTerm, IsAcceptedMarketingTerm) {
     try {
         // 이메일 중복 확인
         const emailRows = await userProvider.emailCheck(email);
@@ -26,7 +26,7 @@ exports.createUser = async function (email, password, nickname) {
             .update(password)
             .digest("hex");
 
-        const insertUserInfoParams = [email, hashedPassword, nickname];
+        const insertUserInfoParams = [name, phoneNumber, email, password, IsAcceptedPrivacyTerm, IsAcceptedMarketingTerm];
 
         const connection = await pool.getConnection(async (conn) => conn);
 
@@ -119,6 +119,19 @@ exports.postJobCatgory=async function(userId,JobGroup,Job,career,skills){
 
         return response(baseResponse.SUCCESS);
     }catch(err){
+        logger.error(`App - Post Job and JobGroup Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}
+
+exports.postSchoolAndCompany=async function(name, company){
+    try{
+        const connection = await pool.getConnection(async (conn) => conn);
+        const postJobCategoryResult = await userDao.postJobCatgory(connection,userId,JobGroup,Job,career,skills);
+        connection.release();
+
+        return response(baseResponse.SUCCESS);
+    } catch(err){
         logger.error(`App - Post Job and JobGroup Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
     }

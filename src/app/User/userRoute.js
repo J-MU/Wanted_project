@@ -9,7 +9,10 @@ module.exports = function(app){
     app.post('/app/users', user.postUsers);
 
     // 2. 회원가입(2페이지) 
-    app.post('/app/job',user.postJobCatgory); 
+    app.post('/app/job',user.postJobCatgory);
+
+    // 3. 회원가입(3페이지)
+    app.post('/app/users/school-and-company', user.postSchoolAndCompany);
 
     // 3. 특정 유저 조회 API
     //app.get('/app/users/:userId', user.getUserById);

@@ -62,15 +62,15 @@ exports.postUsers = async function (req, res) {
     if (!password)
         return res.send(response(baseResponse.SIGNUP_PASSWORD_EMPTY));
 
+    //약관동의 여부
+    if (!IsAcceptedPrivacyTerm)
+        return res.send(response(baseResponse.SIGNUP_AcceptedPrivacyTerm_EMPTY));
 
-    // 기타 등등 - 추가하기
-    // const signUpResponse = await userService.createUser(
-    //     email,
-    //     password,
-    //     nickname
-    // );
-    //
-    // return res.send(signUpResponse);
+     const signUpResponse = await userService.createUser(
+         name, phoneNumber, email, password, IsAcceptedPrivacyTerm, IsAcceptedMarketingTerm
+    );
+
+    return res.send(signUpResponse);
 };
 
 
@@ -100,7 +100,7 @@ exports.postJobCatgory=async function(req,res){
     // TODO : JobGroup이 개발이 아닐때 skills는 null이여야함.
     // TODO : JobGroup 과 Job이 부모-자식 관계여야함.
 
-    const postJobCatgoryResponse=await userProvider.postJobCatgory(
+    const postJobCatgoryResponse=await userService.postJobCatgory(
         userId,
         JobGroup,
         Job,
@@ -110,6 +110,36 @@ exports.postJobCatgory=async function(req,res){
 
     return res.send(postJobCatgoryResponse);
 }
+
+/**
+ *
+ * API NO.3
+ * API Name : 회원가입3 학교 직장 설정
+ * [POST] /app/users/school-and-company
+ */
+
+exports.postSchoolAndCompany=async function(req,res){
+
+    //school->education
+    //company->profiles
+
+    /* body: name, company*/
+    const {name, company}=req.body;
+
+    //NULL 체크
+    if(!name)
+        return res.send(errResponse(baseResponse.EDUCATION_NAME_EMPTY));
+
+    if(!company)
+        return res.send(errResponse(baseResponse.COMPANY_EMPTY));
+
+    const postSchoolAndCompanyResponse = await userService.postSchoolAndCompany(
+        name, company
+    );
+
+    return res.send(postSchoolAndCompanyResponse);
+}
+
 
 /**
  * API No. 3
