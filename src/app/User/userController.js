@@ -73,28 +73,42 @@ exports.postUsers = async function (req, res) {
     // return res.send(signUpResponse);
 };
 
+
 /**
- * API No. 2
- * API Name : 유저 조회 API (+ 이메일로 검색 조회)
- * [GET] /app/users
+ * 
+ * API NO.2
+ * API Name : 유저 프로필 생성 API(회원가입 과정2)
+ * [POST] /app/users/jobcategory
  */
-exports.getUsers = async function (req, res) {
+exports.postJobCatgory=async function(req,res){
+    /* body: JobGroup, Job, career(년차), skills[]  */
+    const {userId,JobGroup,Job,career,skills}=req.body;
 
-    /**
-     * Query String: email
-     */
-    const email = req.query.email;
+    //NULL 체크
+    if(!userId)
+         return res.send(err.Response(baseResponse.USER_USERID_EMPTY));
 
-    if (!email) {
-        // 유저 전체 조회
-        const userListResult = await userProvider.retrieveUserList();
-        return res.send(response(baseResponse.SUCCESS, userListResult));
-    } else {
-        // 유저 검색 조회
-        const userListByEmail = await userProvider.retrieveUserList(email);
-        return res.send(response(baseResponse.SUCCESS, userListByEmail));
-    }
-};
+    if(!JobGroup)
+        return res.send(err.Response(baseResponse.));
+
+    if(!Job)
+         return res.send(err.Response(baseResponse.));
+
+    if(!career)
+        return res.send(err.Response(baseResponse.));
+
+    // TODO : JobGroup이 개발이 아닐때 skills는 null이여야함.
+    // TODO : JobGroup 과 Job이 부모-자식 관계여야함.
+
+    const postJobCatgoryResponse=await userProvider.postJobCatgory(
+        JobGroup,
+        Job,
+        career,
+        skills
+    );
+
+    return res.send(postJobCatgoryResponse);
+}
 
 /**
  * API No. 3
