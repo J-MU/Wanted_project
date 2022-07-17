@@ -12,9 +12,9 @@ const {emit} = require("nodemon");
  * API Name : 테스트 API
  * [GET] /app/test
  */
-// exports.getTest = async function (req, res) {
-//     return res.send(response(baseResponse.SUCCESS))
-// }
+exports.getTest = async function (req, res) {
+    return res.send(response(baseResponse.SUCCESS))
+}
 
 /**
  * API No. 1
@@ -24,32 +24,53 @@ const {emit} = require("nodemon");
 exports.postUsers = async function (req, res) {
 
     /**
-     * Body: email, password, nickname
+     * Body: name, phoneNumber, email, password, IsAcceptedPrivacyTerm, IsAcceptedMarketingTerm
      */
-    const {email, password, nickname} = req.body;
+    const { name, phoneNumber, email, password, IsAcceptedPrivacyTerm, IsAcceptedMarketingTerm } = req.body;
+    // name 빈 값 체크
+    if (!name)
+        return res.send(response(baseResponse.SIGNUP_NAME_EMPTY));
+    // phoneNumber 빈 값 체크
+    // if (!phoneNumber)
+    //     return res.send(response(baseResponse.SIGNUP_PHONENUMBER_EMPTY));
+
+    //TODO phoneNumber Validation
+
+    // phoneNumber 정규 표현식
+    // if (!/^[0-9]{3}-[0-9]{3,4}-[0-9]{4}/.test(phoneNumber))
+    //     return res.send(response(baseResponse.SIGNUP_PHONENUMBER_ERROR_TYPE));
 
     // 빈 값 체크
-    if (!email)
-        return res.send(response(baseResponse.SIGNUP_EMAIL_EMPTY));
-
-    // 길이 체크
-    if (email.length > 30)
-        return res.send(response(baseResponse.SIGNUP_EMAIL_LENGTH));
+    // if (!email)
+    //     return res.send(response(baseResponse.SIGNUP_EMAIL_EMPTY));
 
     // 형식 체크 (by 정규표현식)
     if (!regexEmail.test(email))
         return res.send(response(baseResponse.SIGNUP_EMAIL_ERROR_TYPE));
 
+    // password 빈 값 체크
+    if (!password)
+        return res.send(response(baseResponse.SIGNUP_PASSWORD_EMPTY));
+
+    // password 정규 표현식 (영문 숫자 특수문자 8자리 이상 포함)
+    var regExp= /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/;
+
+    if (!regExp.test(password))
+        return res.send(response(baseResponse.SIGNUP_PASSWORD_ERROR_TYPE));
+
+    //개인정보 동의
+    if (!password)
+        return res.send(response(baseResponse.SIGNUP_PASSWORD_EMPTY));
+
+
     // 기타 등등 - 추가하기
-
-
-    const signUpResponse = await userService.createUser(
-        email,
-        password,
-        nickname
-    );
-
-    return res.send(signUpResponse);
+    // const signUpResponse = await userService.createUser(
+    //     email,
+    //     password,
+    //     nickname
+    // );
+    //
+    // return res.send(signUpResponse);
 };
 
 /**
