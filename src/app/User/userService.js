@@ -110,3 +110,16 @@ exports.editUser = async function (id, nickname) {
         return errResponse(baseResponse.DB_ERROR);
     }
 }
+
+exports.postJobCatgory=async function(userId,JobGroup,Job,career,skills){
+    try{
+        const connection = await pool.getConnection(async (conn) => conn);
+        const postJobCategoryResult = await userDao.postJobCatgory(connection,userId,JobGroup,Job,career,skills);
+        connection.release();
+
+        return response(baseResponse.SUCCESS);
+    }catch(err){
+        logger.error(`App - Post Job and JobGroup Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}

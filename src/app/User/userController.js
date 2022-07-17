@@ -86,21 +86,22 @@ exports.postJobCatgory=async function(req,res){
 
     //NULL 체크
     if(!userId)
-         return res.send(err.Response(baseResponse.USER_USERID_EMPTY));
+         return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
 
     if(!JobGroup)
-        return res.send(err.Response(baseResponse.));
+        return res.send(errResponse(baseResponse.JOB_GROUP_EMPTY));
 
     if(!Job)
-         return res.send(err.Response(baseResponse.));
+         return res.send(errResponse(baseResponse.JOB_EMPTY));
 
     if(!career)
-        return res.send(err.Response(baseResponse.));
+        return res.send(errResponse(baseResponse.CAREER_EMPTY));
 
     // TODO : JobGroup이 개발이 아닐때 skills는 null이여야함.
     // TODO : JobGroup 과 Job이 부모-자식 관계여야함.
 
     const postJobCatgoryResponse=await userProvider.postJobCatgory(
+        userId,
         JobGroup,
         Job,
         career,
