@@ -8,11 +8,13 @@ async function selectUser(connection) {
   return userRows;
 }
 
+//TODO user 테이블 Users로 변환시켜야 함.
+
 // 이메일로 회원 조회
 async function selectUserEmail(connection, email) {
   const selectUserEmailQuery = `
-                SELECT email, nickname 
-                FROM UserInfo 
+                SELECT email
+                FROM User 
                 WHERE email = ?;
                 `;
   const [emailRows] = await connection.query(selectUserEmailQuery, email);
@@ -29,11 +31,13 @@ async function selectUserId(connection, userId) {
   const [userRow] = await connection.query(selectUserIdQuery, userId);
   return userRow;
 }
+//TODO user 테이블 Users로 변환시켜야 함.
 
 // 유저 생성
 async function insertUserInfo(connection, insertUserInfoParams) {
+  console.log('test2');
   const insertUserInfoQuery = `
-        INSERT INTO UserInfo(name, phoneNumber, email, password, IsAcceptedPrivacyTerm, IsAcceptedMarketingTerm)
+        INSERT INTO User(name, phoneNumber, email, password, IsAcceptedPrivacyTerm, IsAcceptedMarketingTerm)
         VALUES (?, ?, ?, ?, ?, ?);
     `;
   const insertUserInfoRow = await connection.query(

@@ -15,6 +15,8 @@ const {connect} = require("http2");
 
 exports.createUser = async function (name, phoneNumber, email, password, IsAcceptedPrivacyTerm, IsAcceptedMarketingTerm) {
     try {
+        //TODO 이메일체크 함수를 telCheck
+
         // 이메일 중복 확인
         const emailRows = await userProvider.emailCheck(email);
         if (emailRows.length > 0)
@@ -29,6 +31,7 @@ exports.createUser = async function (name, phoneNumber, email, password, IsAccep
         const insertUserInfoParams = [name, phoneNumber, email, password, IsAcceptedPrivacyTerm, IsAcceptedMarketingTerm];
 
         const connection = await pool.getConnection(async (conn) => conn);
+        console.log('test1');
 
         const userIdResult = await userDao.insertUserInfo(connection, insertUserInfoParams);
         console.log(`추가된 회원 : ${userIdResult[0].insertId}`)
