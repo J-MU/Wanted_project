@@ -124,7 +124,7 @@ async function
 module.exports = {
   selectUser,
   insertJobCategoryInfo,
-  insertUserSkill,
+  insertUserSkills,
   selectUserEmail,
   selectUserId,
   insertUserInfo,
