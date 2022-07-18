@@ -84,6 +84,12 @@ async function updateUserInfo(connection, id, nickname) {
   return updateUserRow[0];
 }
 
+/*
+//학교 직장 설정
+async function
+*/
+
+
 
 module.exports = {
   selectUser,
