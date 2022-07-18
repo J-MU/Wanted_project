@@ -28,7 +28,8 @@ exports.createUser = async function (name, phoneNumber, email, password, IsAccep
             .update(password)
             .digest("hex");
 
-        const insertUserInfoParams = [name, phoneNumber, email, password, IsAcceptedPrivacyTerm, IsAcceptedMarketingTerm];
+
+        const insertUserInfoParams = [name, phoneNumber, email, hashedPassword, IsAcceptedPrivacyTerm, IsAcceptedMarketingTerm];
 
         // TODO transaction 적용해야함.
         const connection = await pool.getConnection(async (conn) => conn);
