@@ -114,6 +114,14 @@ async function updateUserInfo(connection, id, nickname) {
   return updateUserRow[0];
 }
 
+async function getJobGroupCategories(connection){
+  const getJobGroupCategoriesQuery=`
+   select jobGroupCategoryId,name from WANTED.JobGroupCategories;
+  `
+
+  const jobcategoriesRow=await connection.query(getJobGroupCategoriesQuery);
+  return jobcategoriesRow[0];
+}
 /*
 //학교 직장 설정
 async function
@@ -131,4 +139,5 @@ module.exports = {
   selectUserPassword,
   selectUserAccount,
   updateUserInfo,
+  getJobGroupCategories
 };
