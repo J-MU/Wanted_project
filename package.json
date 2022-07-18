@@ -22,27 +22,14 @@
     "jsonwebtoken": "^8.5.1",
     "method-override": "^3.0.0",
     "mysql2": "^2.0.0",
-<<<<<<< HEAD
-=======
     "nodemon": "^2.0.19",
->>>>>>> 08be2e20d79ad85f6fdd64f578910dfe7bfbb3b4
     "regex-email": "^1.0.2",
     "winston": "^3.2.1",
     "winston-daily-rotate-file": "^4.2.1"
   },
-<<<<<<< HEAD
-  "devDependencies": {
-    "nodemon": "^2.0.19"
-  },
-
-  "scripts": {
-    "start": "node index.js",
-    "backend" : "nodemon index.js",
-=======
   "scripts": {
     "start": "node index.js", 	     
     "backend" : "nodemon index.js",  
->>>>>>> 08be2e20d79ad85f6fdd64f578910dfe7bfbb3b4
     "test": "echo \"Error: no test specified\" && exit 1"
   }
 }

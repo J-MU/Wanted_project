@@ -30,13 +30,20 @@ exports.createUser = async function (name, phoneNumber, email, password, IsAccep
 
         const insertUserInfoParams = [name, phoneNumber, email, password, IsAcceptedPrivacyTerm, IsAcceptedMarketingTerm];
 
+        // TODO transaction 적용해야함.
         const connection = await pool.getConnection(async (conn) => conn);
         console.log('test1');
 
         const userIdResult = await userDao.insertUserInfo(connection, insertUserInfoParams);
-        console.log(`추가된 회원 : ${userIdResult[0].insertId}`)
+        const userId=userIdResult[0].insertId;
+        //console.log(`추가된 회원 : ${userId}`)
+        const getJobGroupRows=await userDao.getJobGroupCategories(connection)
+        console.log(getJobGroupRows);
+        const result={};
+        result.userId=userId;
+        result.jobGroup=getJobGroupRows;
         connection.release();
-        return response(baseResponse.SUCCESS);
+        return response(baseResponse.SUCCESS,result);
 
 
     } catch (err) {
