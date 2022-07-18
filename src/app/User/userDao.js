@@ -8,7 +8,6 @@ async function selectUser(connection) {
   return userRows;
 }
 
-//TODO user 테이블 Users로 변환시켜야 함.
 
 // 이메일로 회원 조회
 async function selectUserEmail(connection, email) {
@@ -31,11 +30,10 @@ async function selectUserId(connection, userId) {
   const [userRow] = await connection.query(selectUserIdQuery, userId);
   return userRow;
 }
-//TODO user 테이블 Users로 변환시켜야 함.
 
 // 유저 생성
 async function insertUserInfo(connection, insertUserInfoParams) {
-  console.log('test2');
+  console.log('insertUserInfo');
   const insertUserInfoQuery = `
         INSERT INTO Users(name, phoneNumber, email, password, IsAcceptedPrivacyTerm, IsAcceptedMarketingTerm)
         VALUES (?, ?, ?, ?, ?, ?);
@@ -47,6 +45,38 @@ async function insertUserInfo(connection, insertUserInfoParams) {
 
   return insertUserInfoRow;
 }
+
+// JobCategory설정 funtion
+async function insertJobCategoryInfo(connection,profileId,categoryId) {
+  console.log('insertJobCategoryInfo 함수 호출 완료.');
+  const insertJobCategoryInfoQuery = `
+        INSERT INTO profileJobGroupsMapping(profileId,categoryId)
+        VALUES (${profileId},${categoryId});
+    `;
+  const insertJobCategoryInfoRow = await connection.query(
+    insertJobCategoryInfoQuery,
+    profileId,
+    categoryId
+  );
+
+  return insertUserInfoRow;
+}
+
+async function insertUserSkills(connection,skills) {
+  console.log('insertUserSkills 함수 호출 완료.');
+  const insertUserSkillsQuery = `
+        INSERT INTO profileJobGroupsMapping(profileId,categoryId)
+        VALUES (${profileId},${categoryId});
+    `;
+  const insertUserSkillsRow = await connection.query(
+    insertUserSkillsQuery,
+    profileId,
+    categoryId
+  );
+
+  return insertUserInfoRow;
+}
+
 
 // 패스워드 체크
 async function selectUserPassword(connection, selectUserPasswordParams) {
@@ -87,6 +117,8 @@ async function updateUserInfo(connection, id, nickname) {
 
 module.exports = {
   selectUser,
+  insertJobCategoryInfo,
+  insertUserSkill,
   selectUserEmail,
   selectUserId,
   insertUserInfo,

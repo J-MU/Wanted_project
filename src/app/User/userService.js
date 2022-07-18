@@ -122,9 +122,9 @@ exports.postJobCatgory=async function(userId,JobGroup,Job,career,skills){   //TO
     try{
         const connection = await pool.getConnection(async (conn) => conn);
         
-        const InsertProfileResult = await userDao.insertProfileInfo(connection,userId,JobGroup,Job,career,skills);// TODO profileId,JobGroupId 받아와야함.
+        const insertProfileResult = await userDao.insertProfileInfo(connection,userId,JobGroup,Job,career,skills);// TODO profileId,JobGroupId 받아와야함.
         const insertJobCatgoryResult=await userDao.insertJobCategoryInfo(connection,profileId,categoryId); //
-        
+        const insertUserSkill=await userDao.insertUserSkill(connection,skills);
         connection.release();
 
         return response(baseResponse.SUCCESS);
