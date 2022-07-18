@@ -120,7 +120,7 @@ exports.postJobCatgory=async function(req,res){
  */
 
 exports.postSchoolAndCompany=async function(req,res){
-
+    console.log("test1");
     //school->education
     //company->profiles
 
