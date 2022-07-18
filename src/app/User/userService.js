@@ -153,7 +153,9 @@ exports.postJobCatgory=async function(userId,jobGroupId,jobId,career,skills){   
 exports.postSchoolAndCompany=async function(name, company){
     try{
         const connection = await pool.getConnection(async (conn) => conn);
+        
         const postJobCategoryResult = await userDao.postJobCatgory(connection,userId,JobGroup,Job,career,skills);
+
         connection.release();
 
         return response(baseResponse.SUCCESS);
