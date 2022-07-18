@@ -33,7 +33,7 @@ exports.postUsers = async function (req, res) {
     // phoneNumber 빈 값 체크
     // if (!phoneNumber)
     //     return res.send(response(baseResponse.SIGNUP_PHONENUMBER_EMPTY));
-    console.log("password":password);
+    console.log("password:",password);
     //TODO phoneNumber Validation
 
     // phoneNumber 정규 표현식
