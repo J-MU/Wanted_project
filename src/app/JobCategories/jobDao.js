@@ -7,18 +7,9 @@ async function getJobCategories(connection,jobGroupId) {
                   `;
     const jobCategoryRows = await connection.query(getJobCategoriesQuery);
     return jobCategoryRows;
-  }
-  
-async function getSkills(connection) {
-    const getSkillsQuery = `
-            select skillId,name from Skills;
-                    `;
-    const skillRows = await connection.query(getSkillsQuery);
-    return skillRows;
 }
 
   module.exports = {
     getJobCategories,
-    getSkills,
   };
   

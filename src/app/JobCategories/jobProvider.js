@@ -2,7 +2,7 @@ const { pool } = require("../../../config/database");
 const { logger } = require("../../../config/winston");
 
 const jobDao = require("./jobDao");
-
+const skillDao=require("../Skill/skillDao");
 // Provider: Read 비즈니스 로직 처리
 
 exports.getJobCategories = async function (jobGroupId) {
@@ -14,7 +14,7 @@ exports.getJobCategories = async function (jobGroupId) {
         const jobCategoryRows=await jobDao.getJobCategories(connection,jobGroupId);
         console.log(jobCategoryRows[0]);
         if(jobGroupId==1){
-            skills=await jobDao.getSkills(connection);    //TODO skill Domain으로 옮겨야함.
+            skills=await skillDao.getSkillsAll(connection);    //TODO skill Domain으로 옮겨야함.
         }else{
             skills=null;
         }
