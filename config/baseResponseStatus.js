@@ -12,7 +12,7 @@ module.exports = {
     //로그인 : 2000
     SIGNUP_NAME_EMPTY :  { "isSuccess": false, "code": 2001, "message":"이름을 입력해주세요" },
     SIGNUP_PHONENUMBER_EMPTY :  { "isSuccess": false, "code": 2002, "message":"전화번호를 입력해주세요" },
-    SIGNUP_PHONENUMBER_ERROR_TYPE :  { "isSuccess": false, "code": 2003, "message":"전화번호를 입력해주세요" },
+    // SIGNUP_PHONENUMBER_ERROR_TYPE :  { "isSuccess": false, "code": 2003, "message":"전화번호 입력해주세요" },
     SIGNUP_EMAIL_EMPTY : { "isSuccess": false, "code": 2004, "message":"이메일을 입력해주세요" },
     SIGNUP_EMAIL_ERROR_TYPE : { "isSuccess": false, "code": 2005, "message":"이메일 형식을 정확하게 입력해주세요." },
     SIGNUP_PASSWORD_EMPTY : { "isSuccess": false, "code": 2006, "message": "비밀번호를 입력 해주세요." },
