@@ -13,9 +13,24 @@ const {emit} = require("nodemon");
  */
 
 exports.getPosts = async function (req, res) {
-    const userId=req.verifiedToken.userId
+    // const userId=req.verifiedToken.userId
 
-    const getPostsResponse = await postProvider.getPosts(userId);
+    const getPostsResponse = await postProvider.getPosts();
+
+    return res.send(getPostsResponse);
+
+};
+
+
+/**
+ * 홈 화면 가져오기
+ * [GET] /app/posts/article
+ */
+
+exports.getArticlePosts = async function (req, res) {
+    // const userId=req.verifiedToken.userId
+
+    const getPostsResponse = await postProvider.getPosts();
 
     return res.send(getPostsResponse);
 
