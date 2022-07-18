@@ -14,7 +14,7 @@ async function selectUser(connection) {
 async function selectUserEmail(connection, email) {
   const selectUserEmailQuery = `
                 SELECT email
-                FROM User 
+                FROM Users
                 WHERE email = ?;
                 `;
   const [emailRows] = await connection.query(selectUserEmailQuery, email);
@@ -37,7 +37,7 @@ async function selectUserId(connection, userId) {
 async function insertUserInfo(connection, insertUserInfoParams) {
   console.log('test2');
   const insertUserInfoQuery = `
-        INSERT INTO User(name, phoneNumber, email, password, IsAcceptedPrivacyTerm, IsAcceptedMarketingTerm)
+        INSERT INTO Users(name, phoneNumber, email, password, IsAcceptedPrivacyTerm, IsAcceptedMarketingTerm)
         VALUES (?, ?, ?, ?, ?, ?);
     `;
   const insertUserInfoRow = await connection.query(
