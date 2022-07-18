@@ -123,18 +123,19 @@ exports.postSchoolAndCompany=async function(req,res){
     //school->education
     //company->profiles
 
-    /* body: name, company*/
-    const {name, company}=req.body;
+    /* body: schoolName, companyName*/
+    const {schoolName, companyName}=req.body;
+
+    // 학교는 필수! company는 선택.!
 
     //NULL 체크
-    if(!name)
+    if(!schoolName) //학교는 필수.
         return res.send(errResponse(baseResponse.EDUCATION_NAME_EMPTY));
 
-    if(!company)
-        return res.send(errResponse(baseResponse.COMPANY_EMPTY));
+    
 
     const postSchoolAndCompanyResponse = await userService.postSchoolAndCompany(
-        name, company
+        schoolName, companyName
     );
 
     return res.send(postSchoolAndCompanyResponse);

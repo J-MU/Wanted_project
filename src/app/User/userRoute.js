@@ -14,6 +14,7 @@ module.exports = function(app){
     // 3. 회원가입(3페이지)
     app.post('/app/users/school-and-company', user.postSchoolAndCompany);
 
+    app.post('/app/users/school-and-company',user.postSchoolAndCompany);
     // 3. 특정 유저 조회 API
     //app.get('/app/users/:userId', user.getUserById);
 

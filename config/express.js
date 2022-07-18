@@ -21,6 +21,7 @@ module.exports = function () {
     require('../src/app/User/userRoute')(app);
     require('../src/app/JobCategories/jobRoute')(app);
     require('../src/app/Post/postRoute')(app);
+    require('../src/app/Skill/skillRoute')(app);
     // require('../src/app/Board/boardRoute')(app);
 
     return app;

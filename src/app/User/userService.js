@@ -28,7 +28,8 @@ exports.createUser = async function (name, phoneNumber, email, password, IsAccep
             .update(password)
             .digest("hex");
 
-        const insertUserInfoParams = [name, phoneNumber, email, password, IsAcceptedPrivacyTerm, IsAcceptedMarketingTerm];
+
+        const insertUserInfoParams = [name, phoneNumber, email, hashedPassword, IsAcceptedPrivacyTerm, IsAcceptedMarketingTerm];
 
         // TODO transaction 적용해야함.
         const connection = await pool.getConnection(async (conn) => conn);
@@ -153,7 +154,9 @@ exports.postJobCatgory=async function(userId,jobGroupId,jobId,career,skills){   
 exports.postSchoolAndCompany=async function(name, company){
     try{
         const connection = await pool.getConnection(async (conn) => conn);
+        
         const postJobCategoryResult = await userDao.postJobCatgory(connection,userId,JobGroup,Job,career,skills);
+
         connection.release();
 
         return response(baseResponse.SUCCESS);
