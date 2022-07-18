@@ -50,7 +50,7 @@ async function insertUserInfo(connection, insertUserInfoParams) {
 async function insertJobCategoryInfo(connection,profileId,categoryId) {
   console.log('insertJobCategoryInfo 함수 호출 완료.');
   const insertJobCategoryInfoQuery = `
-        INSERT INTO profileJobGroupsMapping(profileId,categoryId)
+        INSERT INTO profileJobGroupMapping(profileId,categoryId)
         VALUES (${profileId},${categoryId});
     `;
   const insertJobCategoryInfoRow = await connection.query(
@@ -59,23 +59,39 @@ async function insertJobCategoryInfo(connection,profileId,categoryId) {
     categoryId
   );
 
-  return insertUserInfoRow;
+  return insertJobCategoryInfoRow;
 }
 
-async function insertUserSkills(connection,skills) {
+async function insertUserSkills(connection,userId,skillId) {
   console.log('insertUserSkills 함수 호출 완료.');
   const insertUserSkillsQuery = `
-        INSERT INTO profileJobGroupsMapping(profileId,categoryId)
-        VALUES (${profileId},${categoryId});
+        INSERT INTO userSkills(userId,skillId)
+        VALUES (${userId},${skillId});
     `;
-  const insertUserSkillsRow = await connection.query(
+  const insertUserSkillResult = await connection.query(
     insertUserSkillsQuery,
-    profileId,
-    categoryId
+    userId,
+    skillId
   );
 
-  return insertUserInfoRow;
+  return insertUserSkillResult;
 }
+
+async function insertProfileInfo(connection,userId,career) {
+    const insertProfileInfoQuery = `
+      INSERT INTO Profiles(userId,career)
+      VALUES (${userId},${career});
+    `;
+
+    const insertProfileInfoResult = await connection.query(
+      insertProfileInfoQuery,
+      userId,
+      career
+    );
+
+    return insertProfileInfoResult;
+}
+
 
 
 // 패스워드 체크
@@ -122,6 +138,7 @@ async function getJobGroupCategories(connection){
   const jobcategoriesRow=await connection.query(getJobGroupCategoriesQuery);
   return jobcategoriesRow[0];
 }
+
 /*
 //학교 직장 설정
 async function
@@ -139,5 +156,6 @@ module.exports = {
   selectUserPassword,
   selectUserAccount,
   updateUserInfo,
-  getJobGroupCategories
+  getJobGroupCategories,
+  insertProfileInfo,
 };

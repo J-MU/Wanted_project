@@ -82,29 +82,28 @@ exports.postUsers = async function (req, res) {
  */
 exports.postJobCatgory=async function(req,res){
     /* body: JobGroup, Job, career(년차), skills[]  */
-    const {userId,JobGroup,Job,career,skills}=req.body;
+    const {userId,JobGroupId,JobId,career,skills}=req.body;
 
-    console.log(req.body);
     
     //NULL 체크
     if(!userId)
          return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
 
-    if(!JobGroup)
+    if(!JobGroupId)
         return res.send(errResponse(baseResponse.JOB_GROUP_EMPTY));
 
-    if(!Job)
+    if(!JobId)
          return res.send(errResponse(baseResponse.JOB_EMPTY));
 
     if(!career)
         return res.send(errResponse(baseResponse.CAREER_EMPTY));
 
-    
+    console.log(req.body);
 
     const postJobCatgoryResponse=await userService.postJobCatgory(
         userId,
-        JobGroup,
-        Job,
+        JobGroupId,
+        JobId,
         career,
         skills
     );

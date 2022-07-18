@@ -121,17 +121,26 @@ exports.editUser = async function (id, nickname) {
     }
 }
 
-exports.postJobCatgory=async function(userId,JobGroup,Job,career,skills){   //TODO JobGroup,Job이 name이 아니라 id여야 함.
-    if(JobGroup!="개발"&&skills===null){
+exports.postJobCatgory=async function(userId,jobGroupId,jobId,career,skills){   //TODO JobGroup,Job이 name이 아니라 id여야 함.
+    console.log(userId,jobGroupId,jobId,career,skills);
+    if(jobGroupId!=1&&skills!=null){
         return errResponse(baseResponse.NOT_DEVELOPMENT_CANT_HAVE_SKILL);
     }
     // TODO : JobGroup 과 Job이 부모-자식 관계여야함. check 함수가 추가로 구현되어야함.
     try{
         const connection = await pool.getConnection(async (conn) => conn);
+        //,JobGroup,Job
+        const getParam = await userDao.insertProfileInfo(connection,userId,career);// TODO profileId 받아와야함.
+        console.log("hihi");
+        console.log(getParam[0].insertId);
+        const profileId=getParam[0].insertId;
+        const insertJobCatgoryResult=await userDao.insertJobCategoryInfo(connection,profileId,jobGroupId); //
+        console.log("확인");
+        console.log(skills);
+        for (let index = 0; index < skills.length; index++) {
+            const insertUserSkill=await userDao.insertUserSkills(connection,userId,skills[index]);
+        }
         
-        const insertProfileResult = await userDao.insertProfileInfo(connection,userId,JobGroup,Job,career,skills);// TODO profileId,JobGroupId 받아와야함.
-        const insertJobCatgoryResult=await userDao.insertJobCategoryInfo(connection,profileId,categoryId); //
-        const insertUserSkill=await userDao.insertUserSkills(connection,skills);
         connection.release();
 
         return response(baseResponse.SUCCESS);
