@@ -122,20 +122,38 @@ exports.postSchoolAndCompany=async function(req,res){
     console.log("test1");
     //school->education
     //company->profiles
+    /* email, 휴대폰 번호, self_introduction, 경력(회사명, 기간, 현재 재직 유무),학교,
 
     /* body: schoolName, companyName*/
-    const {schoolName, companyName}=req.body;
-
+    const {userId,userName,email,telephone,jobName,career,companyId,companyName,schoolName,skills}=req.body;
+    // self_introduction="안녕하세요 o년차 oo입니다./ 안녕하세요 신입 oo 입니다."
     // 학교는 필수! company는 선택.!
-
+    
+    // company,skills는 NULL가능
     //NULL 체크
     if(!schoolName) //학교는 필수.
         return res.send(errResponse(baseResponse.EDUCATION_NAME_EMPTY));
 
+    if(!email)
+        return res.send(errResponse(baseResponse.SIGNUP_EMAIL_EMPTY));
     
+    if(!telephone)
+        return res.send(errResponse(baseResponse.SIGNUP_PHONENUMBER_EMPTY));
+    
+    if(!jobName)
+        return res.send(errResponse(baseResponse.JOB_EMPTY));
+    
+    if(!career)
+        return res.send(errResponse(baseResponse.CAREER_EMPTY));
+    
+    if(!userId)
+        return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+
+    if(!userName)
+        return res.send(errResponse(baseResponse.USER_NAME_EMPTY));
 
     const postSchoolAndCompanyResponse = await userService.postSchoolAndCompany(
-        schoolName, companyName
+        userId,userName,email,telephone,jobName,career,companyName,schoolName,skills
     );
 
     return res.send(postSchoolAndCompanyResponse);

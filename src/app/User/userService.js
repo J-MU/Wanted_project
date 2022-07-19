@@ -151,11 +151,29 @@ exports.postJobCatgory=async function(userId,jobGroupId,jobId,career,skills){   
     }
 }
 
-exports.postSchoolAndCompany=async function(name, company){
+exports.postSchoolAndCompany=async function(userId,userName,email,telephone,jobName,career,companyId,companyName,schoolName,skills){
+    //companyId가 넘어올 수도 있음.
     try{
         const connection = await pool.getConnection(async (conn) => conn);
+        let self_introduction;
+        if(career==0)
+        {
+            self_introduction="안녕하세요. 신입 "+jobName+"입니다.";    
+        }else{
+            self_introduction="안녕하세요. "+career+"년차"+jobName+"입니다.";
+        }
+        let resumeName="userName"+"1";
         
-        const postJobCategoryResult = await userDao.postJobCatgory(connection,userId,JobGroup,Job,career,skills);
+        const postResumeResult = await userDao.postResumeInfo(connection,resumeName,userId,userName,email,telephone,self_introduction);
+        const resumeId=postResumeResult[0].insertId;
+        const postResumeCareerResult=await userDao.postResumeCareerInfo(connection,resumeId,companyId,companyName);
+        const postEducationResult=await userDao.postResumeCareerInfo(connection,resumeId,schoolName);
+        
+        for (let index = 0; index < skills.length; index++) {
+            const postResumeSkillResult=await userDao.postResumeCareerInfo(connection,resumeId,skills[index]);    
+        }
+
+        
 
         connection.release();
 
