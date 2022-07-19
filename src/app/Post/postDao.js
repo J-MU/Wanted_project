@@ -36,7 +36,7 @@ async function getInsitePosts(connectionA) {
     `;
 
     const  getInsitePostsRow = await connectionA.query(getInsitePostsQuery,tagId);
-    return getInsitePostsRow[0];
+    return getInsitePostsRow[0].concat(postTagsRow);
 }
 
 async function getArticlePosts(connectionB) {

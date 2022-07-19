@@ -40,6 +40,9 @@ async function postResumeSkillInfo(connection,resumeId,skillId) {
     const jobCategoryRows = await connection.query(getJobCategoriesQuery);
     return jobCategoryRows;
 }
+
+//이력서 전체 조회
+
   module.exports = {
     postResumeInfo,
     postResumeCareerInfo,
