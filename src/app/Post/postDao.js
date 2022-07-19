@@ -19,7 +19,7 @@ async function getInsitePosts(connectionA) {
         select tagId, name 
         from postTags
         where tagId<19
-        order by rand() limit 8;
+        order by rand() limit 10;
     `;
 
     const [postTagsRow] = await connectionA.query(getPostTagsQuery);

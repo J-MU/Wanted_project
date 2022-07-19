@@ -12,5 +12,5 @@ exports.getResumes = async function(userId) {
     const getResumesResult = await resumeDao.getResumes(connection,userId);
     connection.release();
 
-    return response(baseResponse.SUCCESS,getResumesResult);
+    return response(baseResponse.SUCCESS);
 };

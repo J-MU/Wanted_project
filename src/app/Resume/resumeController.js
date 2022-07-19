@@ -29,13 +29,13 @@ exports.getResumes = async function (req, res) {
  */
 
 exports.deleteResumes = async function (req, res) {
-    //TODO userId validation
     const userId = req.verifiedToken.userId
-    const resumeId = req.body.resumeId
 
+    const resumeId = parseInt(req.params.resumeId)
 
+    if (!resumeId)  return res.send(response(baseResponse.RESUMEID_EMPTY));
 
-    const getResumesResponse = await resumeProvider.deleteResumes(userId);
+    const getResumesResponse = await resumeService.deleteResumes(userId, resumeId);
 
     return res.send(getResumesResponse);
 
