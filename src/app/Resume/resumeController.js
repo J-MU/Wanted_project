@@ -40,3 +40,14 @@ exports.deleteResumes = async function (req, res) {
     return res.send(getResumesResponse);
 
 };
+
+/**
+ *
+ *
+ */
+exports.postResumes = async function(req, res) {
+    const userId = req.verifiedToken.userId
+
+
+
+}

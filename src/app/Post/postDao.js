@@ -23,6 +23,7 @@ async function getInsitePosts(connectionA) {
     `;
 
     const [postTagsRow] = await connectionA.query(getPostTagsQuery);
+    console.log(postTagsRow)
     const tagId = postTagsRow[0].tagId;
 
     //태그 가져오기 9개. 거기서 첫번째 태그 포스트 9개 넣기.
