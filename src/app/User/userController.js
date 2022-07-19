@@ -159,7 +159,19 @@ exports.postDefaultResume=async function(req,res){
     return res.send(postSchoolAndCompanyResponse);
 }
 
+exports.postInterestedTags = async function (req, res) {
+    const {userId,postTagList} = req.body;
+    console.log(req.body);
+    console.log(userId);
+    console.log(postTagList);
 
+    if (!userId) return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+    if(!postTagList) return res.send(errResponse(baseResponse.POST_TAG_EMPTY));
+
+
+    const postInterestedTagsResult = await userService.postInterestedTags(userId,postTagList);
+    return res.send(response(baseResponse.SUCCESS));
+}
 /**
  * API No. 3
  * API Name : 특정 유저 조회 API

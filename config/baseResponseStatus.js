@@ -39,7 +39,8 @@ module.exports = {
     // USER_NICKNAME_EMPTY : { "isSuccess": false, "code": 2017, "message": "변경할 닉네임 값을 입력해주세요" },
 
     // USER_STATUS_EMPTY : { "isSuccess": false, "code": 2018, "message": "회원 상태값을 입력해주세요" },
-
+    //Post :2200
+    POST_TAG_EMPTY:{"isSuccess": false, "code": 2200, "message": "태그를 입력해 주세요."},
     //Job,JobGroup :2300
     JOB_GROUP_EMPTY:{"isSuccess": false, "code": 2300, "message": "직군을 입력해주세요"},
     JOB_EMPTY:{"isSuccess": false, "code": 2301, "message": "직무를 입력해주세요"},

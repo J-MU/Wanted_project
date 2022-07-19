@@ -139,6 +139,15 @@ async function getJobGroupCategories(connection){
   return jobcategoriesRow[0];
 }
 
+async function postInterestedTags(connection,userId,postTagId){
+  const postInterestedTagsQuery=`
+    INSERT INTO UserPostTagMapping(userId, postTagId)
+    VALUES  (${userId},${postTagId});
+  `
+  console.log(postInterestedTagsQuery);
+  const postInterestedTagsResult=await connection.query(postInterestedTagsQuery);
+  return postInterestedTagsResult;
+}
 /*
 //학교 직장 설정
 async function
@@ -158,4 +167,5 @@ module.exports = {
   updateUserInfo,
   getJobGroupCategories,
   insertProfileInfo,
+  postInterestedTags,
 };
