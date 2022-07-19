@@ -13,9 +13,29 @@ const postProvider = require("../Post/postProvider");
  */
 
 exports.getResumes = async function (req, res) {
-    const userId=req.verifiedToken.userId
+    //TODO userId validation
+    const userId = req.verifiedToken.userId
+
 
     const getResumesResponse = await resumeProvider.getResumes(userId);
+
+    return res.send(getResumesResponse);
+
+};
+
+/**
+ * 이력서 삭제
+ * * [patch] app/resumes/:resumeId/deleted
+ */
+
+exports.deleteResumes = async function (req, res) {
+    //TODO userId validation
+    const userId = req.verifiedToken.userId
+    const resumeId = req.body.resumeId
+
+
+
+    const getResumesResponse = await resumeProvider.deleteResumes(userId);
 
     return res.send(getResumesResponse);
 

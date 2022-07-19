@@ -41,6 +41,16 @@ async function postResumeSkillInfo(connection,resumeId,skillId) {
     return jobCategoryRows;
 }
 
+async function getResumes(connection, userId) {
+    console.log(userId);
+    const getResumesQuery = `
+    select resumeName, date_format(updatedAt,'%Y.%m.%d') as 'updatedAt' , status
+    from Resumes
+    where userId=?;
+    `;
+    const getResumesRows = await connection.query(getResumesQuery,userId);
+    return getResumesRows[0];
+}
 //이력서 전체 조회
 
   module.exports = {
@@ -48,5 +58,6 @@ async function postResumeSkillInfo(connection,resumeId,skillId) {
     postResumeCareerInfo,
     postResumeEducationInfo,
     postResumeSkillInfo,
+      getResumes
   };
   

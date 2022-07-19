@@ -23,6 +23,7 @@ module.exports = function () {
     require('../src/app/Post/postRoute')(app);
     require('../src/app/Skill/skillRoute')(app);
     require('../src/app/PostTag/postTagRoute')(app);
+    require('../src/app/Resume/resumeRoute')(app);
     // require('../src/app/Board/boardRoute')(app);
 
     return app;
