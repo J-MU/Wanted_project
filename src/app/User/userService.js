@@ -3,6 +3,7 @@ const {pool} = require("../../../config/database");
 const secret_config = require("../../../config/secret");
 const userProvider = require("./userProvider");
 const userDao = require("./userDao");
+const resumeDao = require("../Resume/resumeDao");
 const baseResponse = require("../../../config/baseResponseStatus");
 const {response} = require("../../../config/response");
 const {errResponse} = require("../../../config/response");
@@ -151,10 +152,14 @@ exports.postJobCatgory=async function(userId,jobGroupId,jobId,career,skills){   
     }
 }
 
-exports.postSchoolAndCompany=async function(userId,userName,email,telephone,jobName,career,companyId,companyName,schoolName,skills){
+exports.postDefaultResume=async function(userId,userName,email,telephone,jobName,career,companyId,companyName,schoolName,skills){
     //companyId가 넘어올 수도 있음.
+    console.log(userId,userName,email,telephone,jobName,career,companyId,companyName,schoolName,skills)
+    const connection = await pool.getConnection(async (conn) => conn);
     try{
-        const connection = await pool.getConnection(async (conn) => conn);
+        
+        await connection.beginTransaction();
+
         let self_introduction;
         if(career==0)
         {
@@ -163,23 +168,29 @@ exports.postSchoolAndCompany=async function(userId,userName,email,telephone,jobN
             self_introduction="안녕하세요. "+career+"년차"+jobName+"입니다.";
         }
         let resumeName="userName"+"1";
-        
-        const postResumeResult = await userDao.postResumeInfo(connection,resumeName,userId,userName,email,telephone,self_introduction);
+        console.log("Query1");
+        const postResumeResult = await resumeDao.postResumeInfo(connection,resumeName,userId,userName,email,telephone,self_introduction);
         const resumeId=postResumeResult[0].insertId;
-        const postResumeCareerResult=await userDao.postResumeCareerInfo(connection,resumeId,companyId,companyName);
-        const postEducationResult=await userDao.postResumeCareerInfo(connection,resumeId,schoolName);
-        
+        console.log(resumeId);
+        console.log("Query2");
+        const postResumeCareerResult=await resumeDao.postResumeCareerInfo(connection,resumeId,companyId,companyName);
+        console.log("Query3");
+        const postEducationResult=await resumeDao.postResumeEducationInfo(connection,resumeId,schoolName);
+        console.log("Query4");
         for (let index = 0; index < skills.length; index++) {
-            const postResumeSkillResult=await userDao.postResumeCareerInfo(connection,resumeId,skills[index]);    
+            const postResumeSkillResult=await resumeDao.postResumeSkillInfo(connection,resumeId,skills[index]);    
         }
 
-        
+        await connection.commit() // 커밋
 
-        connection.release();
+        
 
         return response(baseResponse.SUCCESS);
     } catch(err){
         logger.error(`App - Post Job and JobGroup Service error\n: ${err.message}`);
+        await connection.rollback() // 롤백
         return errResponse(baseResponse.DB_ERROR);
+    }finally{
+        connection.release();
     }
 }

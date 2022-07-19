@@ -118,7 +118,7 @@ exports.postJobCatgory=async function(req,res){
  * [POST] /app/users/school-and-company
  */
 
-exports.postSchoolAndCompany=async function(req,res){
+exports.postDefaultResume=async function(req,res){
     console.log("test1");
     //school->education
     //company->profiles
@@ -152,8 +152,8 @@ exports.postSchoolAndCompany=async function(req,res){
     if(!userName)
         return res.send(errResponse(baseResponse.USER_NAME_EMPTY));
 
-    const postSchoolAndCompanyResponse = await userService.postSchoolAndCompany(
-        userId,userName,email,telephone,jobName,career,companyName,schoolName,skills
+    const postSchoolAndCompanyResponse = await userService.postDefaultResume(
+        userId,userName,email,telephone,jobName,career,companyId,companyName,schoolName,skills
     );
 
     return res.send(postSchoolAndCompanyResponse);
