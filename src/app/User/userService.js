@@ -56,7 +56,7 @@ exports.createUser = async function (name, phoneNumber, email, password, IsAccep
 
 
 // TODO: After 로그인 인증 방법 (JWT)
-exports.postSignIn = async function (email, password) {
+exports. postSignIn = async function (email, password) {
     try {
         // 이메일 여부 확인
         const emailRows = await userProvider.emailCheck(email);
@@ -86,12 +86,12 @@ exports.postSignIn = async function (email, password) {
             return errResponse(baseResponse.SIGNIN_WITHDRAWAL_ACCOUNT);
         }
 
-        console.log(userInfoRows[0].id) // DB의 userId
+        console.log(userInfoRows[0]) // DB의 userId
 
         //토큰 생성 Service
         let token = await jwt.sign(
             {
-                userId: userInfoRows[0].id,
+                userId: userInfoRows[0].userId,
             }, // 토큰의 내용(payload)
             secret_config.jwtsecret, // 비밀키
             {
