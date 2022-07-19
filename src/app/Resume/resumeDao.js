@@ -40,13 +40,33 @@ async function postResumeSkillInfo(connection,resumeId,skillId) {
     const jobCategoryRows = await connection.query(getJobCategoriesQuery);
     return jobCategoryRows;
 }
-
 //이력서 전체 조회
+async function getResumes(connection, userId) {
+    const getResumesQuery = `
+    select resumeName, date_format(updatedAt,'%Y.%m.%d') as 'updatedAt' , status
+    from Resumes
+    where userId=?;
+    `;
+    const getResumesRows = await connection.query(getResumesQuery,userId);
+    return getResumesRows[0];
+}
+//이력서 삭제
+async function deleteResumes(connection, deleteResumesParams) {
+    const deleteResumesQuery = `
+    UPDATE WANTED.Resumes t SET t.status = 'DELETED'
+    WHERE t.userId=? and t.resumeId =?;
+    `;
+    console.log(deleteResumesQuery);
+    const deleteResumesRows = await connection.query(deleteResumesQuery,deleteResumesParams);
+    return deleteResumesRows
+}
 
   module.exports = {
     postResumeInfo,
     postResumeCareerInfo,
     postResumeEducationInfo,
     postResumeSkillInfo,
+      getResumes,
+      deleteResumes
   };
   

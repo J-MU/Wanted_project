@@ -5,7 +5,7 @@ async function getCarousel(connection) {
     const getCarouselQuery = `
     select imgUrl, title as carouseTitle, content, link
     from carousel
-    order by rand() limit 3;    
+    order by rand() limit 6;    
     `;
 
     const carouselRow = await connection.query(getCarouselQuery);
@@ -19,7 +19,7 @@ async function getInsitePosts(connectionA) {
         select tagId, name 
         from postTags
         where tagId<19
-        order by rand() limit 8;
+        order by rand() limit 10;
     `;
 
     const [postTagsRow] = await connectionA.query(getPostTagsQuery);
