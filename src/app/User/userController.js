@@ -203,7 +203,14 @@ exports.login = async function (req, res) {
     const {email, password} = req.body;
 
     // TODO: email, password 형식적 Validation
+    if (!regexEmail.test(email))
+        return res.send(response(baseResponse.SIGNUP_EMAIL_ERROR_TYPE));
 
+    var regExp= /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/;
+
+    if (!regExp.test(password))
+        return res.send(response(baseResponse.SIGNIN_PASSWORD_ERROR_TYPE));
+    
     const signInResponse = await userService.postSignIn(email, password);
 
     return res.send(signInResponse);

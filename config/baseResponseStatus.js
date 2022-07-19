@@ -19,13 +19,15 @@ module.exports = {
     SIGNUP_PASSWORD_ERROR_TYPE : { "isSuccess": false, "code": 2007, "message":"비밀번호 형식을 정확하게 입력해주세요." },
     SIGNUP_AcceptedPrivacyTerm_EMPTY : { "isSuccess": false, "code": 2008, "message":"약관동의 여부를 체크해주세요." },
 
+    SIGNIN_EMAIL_ERROR_TYPE : { "isSuccess": false, "code": 2010, "message":"이메일을 형식을 정확하게 입력해주세요." },
+    SIGNIN_PASSWORD_ERROR_TYPE : { "isSuccess": false, "code": 2011, "message":"비밀번호 형식을 정확하게 입력해주세요." },
     //userDomain/profie :2050
     CAREER_EMPTY:{"isSuccess": false, "code": 2050, "message":"경력(년차)를 입력해주세요"},
     EDUCATION_NAME_EMPTY : {"isSuccess": false, "code": 2051, "message":"학교를 입력해주세요."},
     COMPANY_EMPTY : {"isSuccess": false, "code": 2052, "message":"직장을 입력해주세요."},
     // SIGNIN_EMAIL_EMPTY : { "isSuccess": false, "code": 2008, "message":"이메일을 입력해주세요" },
     // SIGNIN_EMAIL_LENGTH : { "isSuccess": false, "code": 2009, "message":"이메일은 30자리 미만으로 입력해주세요." },
-    // SIGNIN_EMAIL_ERROR_TYPE : { "isSuccess": false, "code": 2010, "message":"이메일을 형식을 정확하게 입력해주세요." },
+   
     // SIGNIN_PASSWORD_EMPTY : { "isSuccess": false, "code": 2011, "message": "비밀번호를 입력 해주세요." },
 
     USER_USERID_EMPTY : { "isSuccess": false, "code": 2053, "message": "userId를 입력해주세요." },

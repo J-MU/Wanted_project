@@ -72,11 +72,11 @@ exports.postSignIn = async function (email, password) {
 
         const selectUserPasswordParams = [selectEmail, hashedPassword];
         const passwordRows = await userProvider.passwordCheck(selectUserPasswordParams);
-
+        console.log("passwordCheck complete");
         if (passwordRows[0].password !== hashedPassword) {
             return errResponse(baseResponse.SIGNIN_PASSWORD_WRONG);
         }
-
+        console.log("password 맞음");
         // 계정 상태 확인
         const userInfoRows = await userProvider.accountCheck(email);
 
@@ -99,8 +99,8 @@ exports.postSignIn = async function (email, password) {
                 subject: "userInfo",
             } // 유효 기간 365일
         );
-
-        return response(baseResponse.SUCCESS, {'userId': userInfoRows[0].id, 'jwt': token});
+        console.log("jwt 발급 완료");
+        return response(baseResponse.SUCCESS, {'userId': userInfoRows[0].userId, 'jwt': token});
 
     } catch (err) {
         logger.error(`App - postSignIn Service error\n: ${err.message} \n${JSON.stringify(err)}`);
@@ -167,7 +167,7 @@ exports.postDefaultResume=async function(userId,userName,email,telephone,jobName
         }else{
             self_introduction="안녕하세요. "+career+"년차"+jobName+"입니다.";
         }
-        let resumeName="userName"+"1";
+        let resumeName=`${userName}`+"1";
         console.log("Query1");
         const postResumeResult = await resumeDao.postResumeInfo(connection,resumeName,userId,userName,email,telephone,self_introduction);
         const resumeId=postResumeResult[0].insertId;
