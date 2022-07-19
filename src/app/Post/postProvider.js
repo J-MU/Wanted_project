@@ -8,9 +8,30 @@ const userDao = require("../User/userDao");
 
 exports.getPosts = async function (userId) {
     const connection = await pool.getConnection(async (conn) => conn);
-    const getPostsResult = await postDao.selectPosts(connection);
-
+    const getCarouselResult = await postDao.getCarousel(connection);
     connection.release();
 
-    return getPostsResult;
+    const connectionA = await pool.getConnection(async (conn) => conn);
+    const getInsitePostsResult = await postDao.getInsitePosts(connectionA);
+    connection.release();
+
+    const connectionB = await pool.getConnection(async (conn) => conn);
+    const getArticlePostsResult = await postDao.getArticlePosts(connectionB);
+    connection.release();
+
+    const connectionC = await pool.getConnection(async (conn) => conn);
+    const getVodPostsResult = await postDao.getVodPosts(connectionC);
+    connection.release();
+
+
+    const resultResponse = {}
+    const carousels = getCarouselResult;
+    resultResponse.carousels = carousels;
+    resultResponse.insitePosts = getInsitePostsResult;
+    resultResponse.articlePosts = getArticlePostsResult;
+    resultResponse.vodPosts = getVodPostsResult;
+    console.log(resultResponse);
+
+    return resultResponse;
+
 }
