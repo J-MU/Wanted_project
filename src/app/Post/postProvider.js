@@ -8,7 +8,7 @@ const userDao = require("../User/userDao");
 
 exports.getPosts = async function (userId) {
     const connection = await pool.getConnection(async (conn) => conn);
-    const getPostsResult = await postDao.selectPosts(connection, userId);
+    const getPostsResult = await postDao.selectPosts(connection);
 
     connection.release();
 
