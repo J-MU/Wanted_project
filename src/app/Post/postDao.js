@@ -16,7 +16,7 @@ async function getInsitePostTags(connection_A) {
     //postTags 가져오기
 
     const getPostTagsQuery = `
-        select tagId, concat('#',name)  as name
+        select tagId, name 
         from postTags
         where tagId<19
         order by rand() limit 10;
@@ -53,15 +53,15 @@ async function getArticlePosts(connectionB) {
     const getArticlePostsQuery=`
     select postId, postThumbnailUrl, title
     from articlePosts
-    order by rand() limit 4;
+    order by rand() limit 5;
     `;
     const [articlePostsRow] = await connectionB.query(getArticlePostsQuery);
 
     var resultRow = [];
-    for (var i=0; i<4; i++) {
+    for (var i=0; i<5; i++) {
         var articlePostId = articlePostsRow[i].postId;
         const getArticlePostTagsQuery=`
-        select name, articlePostId
+        select concat("#",name) as name, articlePostId
         from postTags
         inner join articleTagsMapping as aTM on postTags.tagId = aTM.tagId
         where aTM.articlePostId=?;
@@ -82,7 +82,7 @@ async function getVodPosts(connectionC) {
     const getVodPostsQuery = `
     select postId, talkerName, LEFT(title,35) as title, LEFT(subtitle,23) as subtitle, thumnailImgUrl
     from vodPosts
-    order by rand() limit 4;
+    order by rand() limit 5;
     `;
 
     const vodPostsRow = await connectionC.query(getVodPostsQuery);
