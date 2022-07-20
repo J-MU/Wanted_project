@@ -24,3 +24,22 @@ exports.getJobCategories = async function (jobGroupId) {
         return errResponse(baseResponse.DB_ERROR);
     }
 };
+
+exports.getJobGroupCategories = async function () {
+    
+    try{
+        const connection = await pool.getConnection(async (conn) => conn);
+        
+        const jobGroupCategories=await jobDao.getJobGroupCategories(connection);
+    
+        connection.release();
+
+        
+       
+
+        return jobGroupCategories[0];
+    }catch(err){
+        logger.error(`App - Get Job Group Categories Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+};

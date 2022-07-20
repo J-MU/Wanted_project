@@ -9,7 +9,17 @@ async function getJobCategories(connection,jobGroupId) {
     return jobCategoryRows;
 }
 
+async function getJobGroupCategories(connection) {
+  const getJobCategoriesQuery = `
+           select jobGroupCategoryId,name
+           from JobGroupCategories 
+                `;
+  const jobCategoryRows = await connection.query(getJobCategoriesQuery);
+  return jobCategoryRows;
+}
+
   module.exports = {
     getJobCategories,
+    getJobGroupCategories,
   };
   

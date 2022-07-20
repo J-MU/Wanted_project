@@ -20,3 +20,9 @@ exports.getJobCategories = async function (req, res) {
     
     return res.send(response(baseResponse.SUCCESS,matchingJobCategories))
 }
+
+exports.getJobGroupCategories=async function(req,res){
+    const JobGroupCategories=await jobProvider.getJobGroupCategories();
+
+    return res.send(response(baseResponse.SUCCESS,JobGroupCategories));
+}
