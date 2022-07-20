@@ -36,7 +36,7 @@ async function getCompanyLogo(connection,companyThemeId) {
 
 async function getCompaniesMatchingTag(connection,tagId) {
     const getCompaniesMatchingTagQuery = `
-        SELECT Companies.CompanyId,companyName,CompanyTags.tagId,CompanyTags.name,CompanyFirstImg.imgUrl,Logo FROM Companies
+        SELECT Companies.CompanyId,companyName,CompanyFirstImg.imgUrl,Logo FROM Companies
         LEFT JOIN CompanyTagsMapping CTM on Companies.companyId = CTM.companyId
         LEFT JOIN CompanyTags on CompanyTags.tagId=CTM.tagId
         LEFT JOIN (
@@ -53,11 +53,33 @@ async function getCompaniesMatchingTag(connection,tagId) {
 }
 
 async function getTagInfo(connection,tagId) {
+    console.log("여기까지2"); 
     const getCompaniesMatchingTagQuery = `
             select tagId,name from CompanyTags
             WHERE tagId=${tagId};
          `;
-    const tagInfo = await connection.query(getTagInfo);
+    const tagInfo = await connection.query(getCompaniesMatchingTagQuery);
+    
+    return tagInfo[0];
+}
+
+async function getExampleEmployment(connection) {
+    
+    const getCompaniesMatchingTagQuery = `
+            SELECT employmentId,
+            jobName,
+            IF(responseRate>=95,"응답률 매우 높음",NULL) AS responseRate,
+            country,
+            city,
+            employmentImgUrl,
+            Employments.companyId,
+            C.companyName
+            FROM WANTED.Employments
+            LEFT JOIN Companies C on Employments.companyId = C.CompanyId
+            ORDER BY RAND()
+            LIMIT 12;
+         `;
+    const tagInfo = await connection.query(getCompaniesMatchingTagQuery);
     
     return tagInfo[0];
 }
@@ -68,5 +90,6 @@ async function getTagInfo(connection,tagId) {
     getCompanyLogo,
     getCompaniesMatchingTag,
     getTagInfo,
+    getExampleEmployment,
   };
   
