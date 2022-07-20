@@ -96,7 +96,7 @@ async function getResumeCareer(connection, getResumeParams) {
     const getResumeCareerQuery = `
         select companyName,DepartmentAndTitle,type, startDate, endDate
         from Careers
-        where resumeId=${getResumeParams[1]};
+        where resumeId=${getResumeParams[1]} and status='ACTIVE';
     `;
 
     const getResumeCareerRows = await connection.query(getResumeCareerQuery,getResumeParams);
@@ -193,6 +193,43 @@ async function patchResumeTitle (connection, getResumeParams) {
 
     return  patchResumeTitleRows[0]
 }
+
+//회사 검색
+async function getCareerCompanies (connection, companyName) {
+    const  getCareerCompaniesQuery = `
+        select companyName
+        from Companies
+        where companyName LIKE '%${companyName}%';
+    `;
+
+    const  getCareerCompaniesRows = await connection.query( getCareerCompaniesQuery, companyName);
+
+    return  getCareerCompaniesRows[0]
+}
+
+//이력서 경력 생성
+async function postResumeCareer(connection, postResumeCareerParams) {
+    const postResumeCareerQuery = `
+        insert into Careers (resumeId, companyName, type)
+        values(?,?,?);
+    `;
+
+    const  postResumeCareerRows = await connection.query(postResumeCareerQuery,postResumeCareerParams);
+
+    return  postResumeCareerRows[0]
+}
+
+//이력서 경력 삭제
+async function deleteResumeCareer(connection, careerId) {
+    const deleteResumeCareerQuery = `
+    UPDATE Careers t SET t.status = 'DELETED'
+    WHERE careerId=?;
+    `;
+    const deleteResumeCareerRows = await connection.query(deleteResumeCareerQuery,careerId);
+    return deleteResumeCareerRows
+}
+
+
  module.exports = {
     postResumeInfo,
     postResumeCareerInfo,
@@ -209,6 +246,9 @@ async function patchResumeTitle (connection, getResumeParams) {
     getResumeForeign,
      getResumeLink,
      getResumeTitle,
-     patchResumeTitle
+     patchResumeTitle,
+     getCareerCompanies,
+     postResumeCareer,
+     deleteResumeCareer
 };
   

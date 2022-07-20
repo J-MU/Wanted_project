@@ -110,3 +110,52 @@ exports.patchResumeTitle = async function(req, res) {
 
     return res.send(patchResumeTitleResponse);
 }
+
+/**
+ * 이력서 회사 검색
+ * [GET] /app/resumes/career/companies
+ */
+
+exports.getCareerCompanies = async function (req, res) {
+    const companyName = req.body.companyName
+
+
+    const getCareerCompaniesResponse = await resumeProvider.getCareerCompanies(companyName);
+
+    return res.send(getCareerCompaniesResponse);
+}
+
+
+/**
+ * 이력서 경력 추가(회사 검색)
+ * [post] /app/resumes/:resumeId/career
+ */
+
+exports.postResumeCareer = async function(req, res) {
+    const resumeId = parseInt(req.params.resumeId)
+    const companyName = req.body.companyName;
+    const type = req.body.companyName;
+
+    const postResumeCareerParams = [resumeId, companyName, type]
+
+    const postResumeCareerResponse = await resumeService.postResumeCareer(postResumeCareerParams);
+
+    return res.send(postResumeCareerResponse);
+}
+
+/**
+ *
+ *[patch] /app/resumes/:careerId/deleted
+ */
+
+exports.deleteResumeCareer = async function (req, res) {
+
+    const careerId = parseInt(req.params.careerId)
+    console.log(careerId);
+    // if (!resumeId)  return res.send(response(baseResponse.RESUMEID_EMPTY));
+
+    const deleteResumeCareerResponse = await resumeService.deleteResumeCareer(careerId);
+
+    return res.send(deleteResumeCareerResponse);
+
+};
