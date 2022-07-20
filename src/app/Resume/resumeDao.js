@@ -77,13 +77,138 @@ async function postResumes(connection, userId){
     return postResumesRows
 }
 
-  module.exports = {
+//이력서 개인정보 및 간단 소개글 가져오기
+async function getResumeInfo(connection, getResumeParams){
+
+    const getResumeQuery = `
+    select resumeName, userName, userEmail, replace(userTel,'010','+8210') as userTel, selfIntroduction
+    from Resumes
+    where resumeId=${getResumeParams[1]} and userId=${getResumeParams[0]};
+    `;
+
+    const getResumeRows = await connection.query(getResumeQuery, getResumeParams);
+    return getResumeRows[0]
+
+}
+
+//경력 가져오기
+async function getResumeCareer(connection, getResumeParams) {
+    const getResumeCareerQuery = `
+        select companyName,DepartmentAndTitle,type, startDate, endDate
+        from Careers
+        where resumeId=${getResumeParams[1]};
+    `;
+
+    const getResumeCareerRows = await connection.query(getResumeCareerQuery,getResumeParams);
+    return getResumeCareerRows[0]
+}
+
+
+//학력 가져오기
+
+async function getResumeEducation(connection, getResumeParams) {
+    const getResumeEducationQuery = `
+        select name, MajorOrDegree,subject, startDate, endDate
+        from Education
+                 inner join Resumes as r on r.resumeId = Education.resumeId
+        where r.resumeId=${getResumeParams[1]};
+    `;
+
+    const getResumeEducationRows = await connection.query(getResumeEducationQuery,getResumeParams);
+    return getResumeEducationRows[0]
+}
+//스킬 가져오기
+
+async function getResumeSkills(connection, getResumeParams) {
+    const getResumeSkillsQuery = `
+        select S.name
+        from Skills as S
+                 inner join ResumeSkillsMapping as RS on RS.skillId=S.skillId
+        where resumeId=${getResumeParams[1]};
+    `;
+
+    const getResumeSkillsRows = await connection.query(getResumeSkillsQuery, getResumeParams);
+    return getResumeSkillsRows[0]
+}
+
+//수상 및 기타
+
+async function getResumeAwards(connection, getResumeParams) {
+    const getResumeAwardsQuery = `
+        select period, name, details
+        from awards
+        where resumeId=${getResumeParams[1]};
+    `;
+
+    const getResumeAwardsRows = await connection.query(getResumeAwardsQuery, getResumeParams);
+    return getResumeAwardsRows[0]
+}
+
+//외국어
+
+async function getResumeForeign (connection, getResumeParams) {
+    const getResumeForeignQuery = `
+        select foreignLanguage, level
+        from foreignLanguages
+        where resumeId=${getResumeParams[1]};
+    `;
+
+    const getResumeForeignRows = await connection.query(getResumeForeignQuery, getResumeParams);
+    return getResumeForeignRows[0]
+}
+
+//링크
+async function getResumeLink (connection, getResumeParams) {
+    const  getResumeLinkQuery = `
+        select linkAddress
+        from links
+        where resumeId=${getResumeParams[1]};
+    `;
+
+    const getResumeLinkRows = await connection.query(getResumeLinkQuery, getResumeParams);
+    return getResumeLinkRows[0]
+}
+//이력서 이름 조회하기
+async function getResumeTitle (connection, getResumeParams) {
+    const  getResumeTitleQuery = `
+        select resumeName
+        from Resumes
+        where resumeId=${getResumeParams[1]};
+    `;
+
+    const  getResumeTitleRows = await connection.query(getResumeTitleQuery, getResumeParams);
+    return  getResumeTitleRows[0]
+}
+
+
+//이력서 이름 변경
+async function patchResumeTitle (connection, getResumeParams) {
+    const  patchResumeTitleQuery = `
+        update Resumes
+        set resumeName = '${getResumeParams[2]}'
+        WHERE resumeId = ${getResumeParams[1]} and userId=${getResumeParams[0]};
+    `;
+
+    const  patchResumeTitleRows = await connection.query(patchResumeTitleQuery, getResumeParams);
+
+    return  patchResumeTitleRows[0]
+}
+ module.exports = {
     postResumeInfo,
     postResumeCareerInfo,
     postResumeEducationInfo,
     postResumeSkillInfo,
-      getResumes,
-      deleteResumes,
-      postResumes
-  };
+     getResumes,
+     deleteResumes,
+     postResumes,
+     getResumeInfo,
+     getResumeCareer,
+     getResumeEducation,
+     getResumeSkills,
+     getResumeAwards,
+    getResumeForeign,
+     getResumeLink,
+     getResumeTitle,
+     patchResumeTitle
+};
   

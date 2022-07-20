@@ -53,3 +53,60 @@ exports.postResumes = async function(req, res) {
     return res.send(postResumesResponse)
 
 }
+
+/**
+ * 이력서 조회
+ * [GET] /app/resumes/:resumeId
+ */
+
+exports.getResume = async function(req, res) {
+    const userId = req.verifiedToken.userId
+
+    const resumeId = parseInt(req.params.resumeId)
+
+    const getResumeParams = [userId, resumeId]
+    if (!resumeId)  return res.send(response(baseResponse.RESUMEID_EMPTY));
+
+    const getResumeResponse = await resumeProvider.getResume(getResumeParams);
+
+    return res.send(getResumeResponse);
+
+}
+
+/**
+ * 이력서 조회
+ * [GET] /app/resumes/:resumeId/title
+ */
+//이력서 이름 가져오기
+exports.getResumeTitle = async function(req, res) {
+    const userId = req.verifiedToken.userId
+
+    const resumeId = parseInt(req.params.resumeId)
+
+    const getResumeParams = [userId, resumeId]
+    if (!resumeId)  return res.send(response(baseResponse.RESUMEID_EMPTY));
+
+    const getResumeResponse = await resumeProvider.getResumeTitle(getResumeParams);
+
+    return res.send(getResumeResponse);
+}
+
+/**
+ * 이력서 이름 변경
+ * [PATCH] /app/resumes/:resumeId/title
+ */
+
+exports.patchResumeTitle = async function(req, res) {
+    const userId = req.verifiedToken.userId
+
+    const resumeId = parseInt(req.params.resumeId)
+
+    const resumeName = req.body.resumeName
+
+    const getResumeParams = [userId, resumeId,resumeName]
+    if (!resumeId)  return res.send(response(baseResponse.RESUMEID_EMPTY));
+
+    const patchResumeTitleResponse = await resumeService.patchResumeTitle(getResumeParams);
+
+    return res.send(patchResumeTitleResponse);
+}
