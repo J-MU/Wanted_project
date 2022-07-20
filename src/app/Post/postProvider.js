@@ -11,8 +11,13 @@ exports.getPosts = async function (userId) {
     const getCarouselResult = await postDao.getCarousel(connection);
     connection.release();
 
+    const connection_A = await pool.getConnection(async (conn) => conn);
+    const getInsitePostTagsResult = await postDao.getInsitePostTags(connection_A);
+    connection.release();
+
+    const tagId = getInsitePostTagsResult[0].tagId;
     const connectionA = await pool.getConnection(async (conn) => conn);
-    const getInsitePostsResult = await postDao.getInsitePosts(connectionA);
+    const getInsitePostsResult = await postDao.getInsitePosts(connectionA, tagId);
     connection.release();
 
     const connectionB = await pool.getConnection(async (conn) => conn);
@@ -27,6 +32,7 @@ exports.getPosts = async function (userId) {
     const resultResponse = {}
     const carousels = getCarouselResult;
     resultResponse.carousels = carousels;
+    resultResponse.insitePostTags = getInsitePostTagsResult;
     resultResponse.insitePosts = getInsitePostsResult;
     resultResponse.articlePosts = getArticlePostsResult;
     resultResponse.vodPosts = getVodPostsResult;

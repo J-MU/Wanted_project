@@ -12,8 +12,7 @@ async function getCarousel(connection) {
     const carouselRow = await connection.query(getCarouselQuery);
     return carouselRow[0]
 }
-
-async function getInsitePosts(connectionA) {
+async function getInsitePostTags(connection_A) {
     //postTags 가져오기
 
     const getPostTagsQuery = `
@@ -23,9 +22,16 @@ async function getInsitePosts(connectionA) {
         order by rand() limit 10;
     `;
 
-    const [postTagsRow] = await connectionA.query(getPostTagsQuery);
-    console.log(postTagsRow)
-    const tagId = postTagsRow[0].tagId;
+    const postTagsRow = await connection_A.query(getPostTagsQuery);
+  /*  const array = [{"A": "a"}, {"B" : "b"}]
+    console.log(array[0].A);*/
+    return postTagsRow[0]
+   /* console.log(postTagsRow)
+    const tagId = postTagsRow[0].tagId;*/
+
+}
+
+async function getInsitePosts(connectionA, tagId) {
 
     //태그 가져오기 9개. 거기서 첫번째 태그 포스트 9개 넣기.
 
@@ -38,7 +44,7 @@ async function getInsitePosts(connectionA) {
     `;
 
     const  getInsitePostsRow = await connectionA.query(getInsitePostsQuery,tagId);
-    return getInsitePostsRow[0].concat(postTagsRow);
+    return getInsitePostsRow[0];
 }
 
 async function getArticlePosts(connectionB) {
@@ -88,6 +94,7 @@ async function getVodPosts(connectionC) {
 
 module.exports = {
     getCarousel,
+    getInsitePostTags,
     getInsitePosts,
     getArticlePosts,
     getVodPosts
