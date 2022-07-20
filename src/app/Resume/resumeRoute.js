@@ -12,6 +12,8 @@ module.exports = function(app) {
     app.patch('/app/resumes/:resumeId/deleted',jwtMiddleware, resume.deleteResumes);
 
     //이력서 생성
-//    app.post('/app/resumes',  jwtMiddleware, resume.postResumes);
+    app.post('/app/resumes',  jwtMiddleware, resume.postResumes);
+
+
 
 };

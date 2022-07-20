@@ -4,7 +4,8 @@ async function getCarousel(connection) {
     //배너 사진 가져오기 3개 가져오기 랜덤으로 배열에 담음
     const getCarouselQuery = `
     select imgUrl, title as carouseTitle, content, link
-    from carousel
+    from Carousel
+    where page='MAIN_PAGE'
     order by rand() limit 6;    
     `;
 

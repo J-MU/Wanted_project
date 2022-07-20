@@ -61,12 +61,26 @@ async function deleteResumes(connection, deleteResumesParams) {
     return deleteResumesRows
 }
 
+//이력서 생성
+async function postResumes(connection, userId){
+    const postResumesQuery= `
+    INSERT INTO WANTED.Resumes (userId, resumeName, userName, userEmail, userTel)
+    select Users.userId, resumeName, userName, userEmail, userTel
+    from Users
+    inner join Resumes on Resumes.userId=Users.userId
+    where Users.userId=? limit 1;
+    `;
+    const postResumesRows = await connection.query(postResumesQuery, userId);
+    return postResumesRows
+}
+
   module.exports = {
     postResumeInfo,
     postResumeCareerInfo,
     postResumeEducationInfo,
     postResumeSkillInfo,
       getResumes,
-      deleteResumes
+      deleteResumes,
+      postResumes
   };
   

@@ -42,12 +42,14 @@ exports.deleteResumes = async function (req, res) {
 };
 
 /**
- *
- *
+ * 이력서 생성
+ * [POST] /app/resumes
  */
 exports.postResumes = async function(req, res) {
     const userId = req.verifiedToken.userId
 
+    const postResumesResponse = await resumeService.postResumes(userId);
 
+    return res.send(postResumesResponse)
 
 }
