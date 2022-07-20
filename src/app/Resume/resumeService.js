@@ -44,3 +44,21 @@ exports.postResumes = async function(userId) {
         return errResponse(baseResponse.DB_ERROR);
     }
 }
+
+//이력서 제목 변경
+
+exports.patchResumeTitle = async function(getResumeParams) {
+    try {
+
+        const connection = await pool.getConnection(async (conn) => conn);
+        const patchResumeTitleResult = await resumeDao.patchResumeTitle(connection,getResumeParams);
+        connection.release();
+
+        return response(baseResponse.SUCCESS);
+
+    }
+    catch(err) {
+        logger.error(`App - createUser Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}

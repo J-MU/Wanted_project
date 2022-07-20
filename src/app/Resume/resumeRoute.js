@@ -14,6 +14,13 @@ module.exports = function(app) {
     //이력서 생성
     app.post('/app/resumes',  jwtMiddleware, resume.postResumes);
 
+    //이력서 조회
+    app.get('/app/resumes/:resumeId',  jwtMiddleware, resume.getResume );
 
+    //이력서 이름 가져오기
+    app.get('/app/resumes/:resumeId/title',jwtMiddleware, resume.getResumeTitle );
+
+    //이력서 제목 수정하기
+    app.patch('/app/resumes/:resumeId/title', jwtMiddleware, resume.patchResumeTitle );
 
 };

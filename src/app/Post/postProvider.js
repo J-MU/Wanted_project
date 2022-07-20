@@ -36,7 +36,6 @@ exports.getPosts = async function (userId) {
     resultResponse.insitePosts = getInsitePostsResult;
     resultResponse.articlePosts = getArticlePostsResult;
     resultResponse.vodPosts = getVodPostsResult;
-    console.log(resultResponse);
 
     return resultResponse;
 
