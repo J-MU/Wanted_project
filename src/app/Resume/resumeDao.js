@@ -12,8 +12,8 @@ async function postResumeInfo(connection,resumeName,userId,userName,email,teleph
 
 async function postResumeCareerInfo(connection,resumeId,companyId,companyName) {
     const postResumeCareerInfoQuery = `
-            INSERT INTO Careers(resumeId,companyId,companyName)
-            VALUES (${resumeId},${companyId},"${companyName}");
+            INSERT INTO Careers(resumeId,companyName)
+            VALUES (${resumeId},"${companyName}");
                   `;
         console.log(postResumeCareerInfoQuery);
     const postResumeCareerInfoResult = await connection.query(postResumeCareerInfoQuery);

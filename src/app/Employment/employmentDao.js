@@ -84,6 +84,30 @@ async function getExampleEmployment(connection) {
     return tagInfo[0];
 }
 
+async function getBookMarkCount(connection,employmentId) {
+    
+    const getBookMarkCountQuery = `
+            SELECT bookMarkCount
+            FROM Employments
+            WHERE employmentId=${employmentId}
+         `;
+    const BookmarkCountResult = await connection.query(getBookMarkCountQuery);
+    const BookMarkCount=BookmarkCountResult[0][0].bookMarkCount+1; 
+    return BookMarkCount;
+}
+
+async function plusBookMarkCount(connection,employmentId,BookMarkCount) {
+    
+    const plusBookMarkCountQuery = `
+            UPDATE WANTED.Employments
+            SET Employments.bookMarkCount=${BookMarkCount}
+            WHERE Employments.employmentId=${employmentId};
+         `;
+    const plusBookmarkCountResult = await connection.query(plusBookMarkCountQuery);
+    
+    return plusBookmarkCountResult[0];
+}
+
   module.exports = {
     getEmploymentCarouselData,
     getThemeData,
@@ -91,5 +115,7 @@ async function getExampleEmployment(connection) {
     getCompaniesMatchingTag,
     getTagInfo,
     getExampleEmployment,
+    plusBookMarkCount,
+    getBookMarkCount,
   };
   

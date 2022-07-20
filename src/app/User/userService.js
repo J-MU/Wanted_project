@@ -4,6 +4,7 @@ const secret_config = require("../../../config/secret");
 const userProvider = require("./userProvider");
 const userDao = require("./userDao");
 const resumeDao = require("../Resume/resumeDao");
+const employmentDao=require("../Employment/employmentDao.js");
 const baseResponse = require("../../../config/baseResponseStatus");
 const {response} = require("../../../config/response");
 const {errResponse} = require("../../../config/response");
@@ -206,6 +207,32 @@ exports.postInterestedTags=async function(userId,postTagList){
             const postInterestedTagsResult=await userDao.postInterestedTags(connection,userId,postTagList[index]);
         }
         await connection.commit() // 커밋
+        return response(baseResponse.SUCCESS);
+    } catch(err){
+        logger.error(`App - Post Tag Service error\n: ${err.message}`);
+        await connection.rollback() // 롤백
+        return errResponse(baseResponse.DB_ERROR);
+    }finally{
+        connection.release();
+    }
+}
+
+
+
+
+exports.postBookMark=async function(userId,employmentId){
+    //companyId가 넘어올 수도 있음.
+    
+    const connection = await pool.getConnection(async (conn) => conn);
+    try{
+        await connection.beginTransaction();
+       
+
+        const postBookMarkResult=await userDao.postBookMark(connection,userId,employmentId);
+        const BookMarkCount=await employmentDao.getBookMarkCount(connection,employmentId);
+        console.log(BookMarkCount);
+        const postBookMarkCountResult=await employmentDao.plusBookMarkCount(connection,employmentId,BookMarkCount);
+        await connection.commit();
         return response(baseResponse.SUCCESS);
     } catch(err){
         logger.error(`App - Post Tag Service error\n: ${err.message}`);

@@ -244,8 +244,31 @@ exports.patchUsers = async function (req, res) {
 };
 
 
+/**
+ * API No. 4
+ * API Name : 북마크 등록 API
+ * [POST] /app/users/:userid/bookmark
+ * path variable : userId
+ * 
+ */
+exports.postBookMark = async function (req, res) {
 
+    // jwt - userId, path variable :userId
 
+    const userIdFromJWT = req.verifiedToken.userId;
+
+    const userId = req.body.userId;
+    const employmentId=req.body.employmentId;
+   
+
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } else {
+
+        const editUserInfo = await userService.postBookMark(userId,employmentId);
+        return res.send(editUserInfo);
+    }
+};
 
 
 

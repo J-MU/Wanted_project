@@ -148,10 +148,18 @@ async function postInterestedTags(connection,userId,postTagId){
   const postInterestedTagsResult=await connection.query(postInterestedTagsQuery);
   return postInterestedTagsResult;
 }
-/*
-//학교 직장 설정
-async function
-*/
+
+async function postBookMark(connection,userId,employmentId){
+  
+  const postBookMarkQuery=`
+    INSERT INTO BookMark(userId, employmentId)
+    VALUES  (${userId},${employmentId});
+  `
+
+  console.log(postBookMarkQuery);
+  const postBookMarkResult=await connection.query(postBookMarkQuery);
+  return postBookMarkResult;
+}
 
 
 
@@ -168,4 +176,5 @@ module.exports = {
   getJobGroupCategories,
   insertProfileInfo,
   postInterestedTags,
+  postBookMark,
 };
