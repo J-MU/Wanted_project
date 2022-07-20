@@ -185,7 +185,7 @@ async function getResumeTitle (connection, getResumeParams) {
 async function patchResumeTitle (connection, getResumeParams) {
     const  patchResumeTitleQuery = `
         update Resumes
-        set resumeName = ${getResumeParams[2]}
+        set resumeName = '${getResumeParams[2]}'
         WHERE resumeId = ${getResumeParams[1]} and userId=${getResumeParams[0]};
     `;
 

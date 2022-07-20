@@ -16,7 +16,7 @@ async function getInsitePostTags(connection_A) {
     //postTags 가져오기
 
     const getPostTagsQuery = `
-        select tagId, name 
+        select tagId, concat('#',name)  as name
         from postTags
         where tagId<19
         order by rand() limit 10;
