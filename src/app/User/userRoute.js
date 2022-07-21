@@ -37,7 +37,7 @@ module.exports = function(app){
     app.patch('/app/users/:userId/companies/:companyId/follow/status',jwtMiddleware,user.deleteFollow);
 
     //10. 회원여부 체크 API
-    app.get('/app/is-member',user.isMemer);
+    app.get('/app/is-member/:email',user.isMember);
     // TODO: After 로그인 인증 방법 (JWT)
     // 로그인 하기 API (JWT 생성)
     app.post('/app/login', user.login);
