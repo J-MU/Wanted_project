@@ -1,11 +1,17 @@
 const { pool } = require("../../../config/database");
 const { logger } = require("../../../config/winston");
+const secret_config = require("../../../config/secret");
+
 const util = require('util');
 const employmentDao = require("./employmentDao");
 const skillDao=require("../Skill/skillDao");
+
+const baseResponse = require("../../../config/baseResponseStatus");
+const { response } = require("../../../config/response");
+const { errResponse } = require("../../../config/response");
 // Provider: Read 비즈니스 로직 처리
 
-exports.getDataForMainPage = async function () {
+exports.getDataForMainPage = async function (userId) {
     
     try{
         const connection = await pool.getConnection(async (conn) => conn);
@@ -20,10 +26,13 @@ exports.getDataForMainPage = async function () {
         */
         const totalData={};
 
-        
+        console.log("여긴어디냐.");
         totalData.carousel=await employmentDao.getEmploymentCarouselData(connection);
-        totalData.recommendEmployment=await employmentDao.getExampleEmployment(connection);
-        totalData.recommendHighPassRateEmployment=await employmentDao.getExampleEmployment(connection);
+        if(userId!=0){
+            totalData.recommendEmployment=await employmentDao.getExampleEmployment(connection,userId);
+            totalData.recommendHighPassRateEmployment=await employmentDao.getExampleEmployment(connection,userId);
+        }
+        console.log("여긴 여기지");
         const themeData=await employmentDao.getThemeData(connection);
         
         for (let index = 0; index < themeData.length; index++) {
@@ -51,14 +60,15 @@ exports.getDataForMainPage = async function () {
         let tagInfo=await employmentDao.getTagInfo(connection,tagList[0]);
         totalData.companiesMatchingTag1.tagId=tagInfo[0].tagId;
         totalData.companiesMatchingTag1.tagName=tagInfo[0].name;
-        totalData.companiesMatchingTag1.companyList=await employmentDao.getCompaniesMatchingTag(connection,tagList[0]);
+        console.log("여기까진 왓ㄱㅆ지?")
+        totalData.companiesMatchingTag1.companyList=await employmentDao.getCompaniesMatchingTag(connection,tagList[0],userId);
 
         tagInfo=await employmentDao.getTagInfo(connection,tagList[1]);
         totalData.companiesMatchingTag2.tagId=tagInfo[0].tagId;
         totalData.companiesMatchingTag2.tagName=tagInfo[0].name;
-        totalData.companiesMatchingTag2.companyList=await employmentDao.getCompaniesMatchingTag(connection,tagList[1]);
-        
-        totalData.hotPosition=await employmentDao.getExampleEmployment(connection);
+        totalData.companiesMatchingTag2.companyList=await employmentDao.getCompaniesMatchingTag(connection,tagList[1],userId);
+        console.log("여기까지왔니?998")
+        totalData.hotPosition=await employmentDao.getExampleEmployment(connection,userId);
         console.log(util.inspect(totalData, {showHidden: false, depth: null, colors: true}))
         
         connection.release();

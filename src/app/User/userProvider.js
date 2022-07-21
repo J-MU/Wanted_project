@@ -56,3 +56,4 @@ exports.accountCheck = async function (email) {
 
   return userAccountResult;
 };
+

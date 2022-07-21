@@ -375,6 +375,18 @@ exports.deleteFollow = async function (req, res) {
     }
 };
 
+exports.isMember = async function (req, res) {
+
+    const email = req.params.email;
+    
+   
+    const memberRows = await userProvider.emailCheck(email);
+    const memberCount=memberRows.length;
+    
+    return res.send(memberCount)
+
+};
+
 
 
 

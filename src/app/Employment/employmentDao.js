@@ -34,18 +34,28 @@ async function getCompanyLogo(connection,companyThemeId) {
     return companyLogoList;
 }
 
-async function getCompaniesMatchingTag(connection,tagId) {
+async function getCompaniesMatchingTag(connection,tagId,userId) {
+    console.log(tagId,userId);
     const getCompaniesMatchingTagQuery = `
-        SELECT Companies.CompanyId,companyName,CompanyFirstImg.imgUrl,Logo FROM Companies
-        LEFT JOIN CompanyTagsMapping CTM on Companies.companyId = CTM.companyId
-        LEFT JOIN CompanyTags on CompanyTags.tagId=CTM.tagId
-        LEFT JOIN (
-            SELECT C.CompanyId,imgUrl FROM CompanyImgs
-            JOIN Companies C on CompanyImgs.companyId = C.CompanyId
-            GROUP BY C.companyId
-        )CompanyFirstImg
-        ON CompanyFirstImg.CompanyId=Companies.CompanyId
-        WHERE CompanyTags.tagId=${tagId};
+    SELECT Companies.CompanyId,
+    companyName,
+    CompanyFirstImg.imgUrl,
+    Logo,
+    IF(IsFollow.userId,true,false) as isFollow
+FROM Companies
+     LEFT JOIN CompanyTagsMapping CTM on Companies.companyId = CTM.companyId
+     LEFT JOIN CompanyTags on CompanyTags.tagId=CTM.tagId
+     LEFT JOIN (
+         SELECT C.CompanyId,imgUrl FROM CompanyImgs
+         JOIN Companies C on CompanyImgs.companyId = C.CompanyId
+         GROUP BY C.companyId
+     )CompanyFirstImg
+     ON CompanyFirstImg.CompanyId=Companies.CompanyId
+     LEFT JOIN (
+         SELECT * FROM Follow
+         WHERE userId=${userId}
+     )IsFollow ON IsFollow.companyId=Companies.CompanyId
+     WHERE CompanyTags.tagId=${tagId};
          `;
     const companiesMatchingTagRows = await connection.query(getCompaniesMatchingTagQuery);
     
@@ -63,21 +73,27 @@ async function getTagInfo(connection,tagId) {
     return tagInfo[0];
 }
 
-async function getExampleEmployment(connection) {
+async function getExampleEmployment(connection,userId) {
     
     const getCompaniesMatchingTagQuery = `
-            SELECT employmentId,
-            jobName,
-            IF(responseRate>=95,"응답률 매우 높음",NULL) AS responseRate,
-            country,
-            city,
-            employmentImgUrl,
-            Employments.companyId,
-            C.companyName
-            FROM WANTED.Employments
-            LEFT JOIN Companies C on Employments.companyId = C.CompanyId
-            ORDER BY RAND()
-            LIMIT 12;
+                SELECT      
+                    Employments.employmentId,
+                    jobName,
+                    IF(responseRate>=95,"응답률 매우 높음",NULL) AS responseRate,
+                    country,
+                    city,
+                    employmentImgUrl,
+                    Employments.companyId,
+                    C.companyName,
+                    IF(IsBookMark.userId,true,false) as isBookMark
+                    FROM WANTED.Employments
+                    LEFT JOIN Companies C on Employments.companyId = C.CompanyId
+                    LEFT JOIN (
+                        select * from WANTED.BookMark
+                        where userId=${userId} and status='ACTIVE'
+                    )IsBookMark on IsBookMark.employmentId=Employments.employmentId
+                    ORDER BY RAND()
+                    LIMIT 12;
          `;
     const tagInfo = await connection.query(getCompaniesMatchingTagQuery);
     
