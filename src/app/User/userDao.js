@@ -230,4 +230,5 @@ module.exports = {
   postHeart,
   postFollow,
   deleteBookMark,
+  deleteHeart,
 };

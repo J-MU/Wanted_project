@@ -263,7 +263,7 @@ exports.postHeart=async function(userId,employmentId){
         const HeartCount=await employmentDao.getHeartCount(connection,employmentId);
         console.log("2번 함수 호출성공");
         console.log(HeartCount);
-        const postHeartCountResult=await employmentDao.plusHeartCount(connection,employmentId,HeartCount);
+        const postHeartCountResult=await employmentDao.updateHeartCount(connection,employmentId,HeartCount);
         await connection.commit();
         return response(baseResponse.SUCCESS);
     } catch(err){
