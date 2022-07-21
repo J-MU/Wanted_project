@@ -226,6 +226,21 @@ async function deleteFollow(connection,userId,companyId){
   return deleteFollowResult;
 }
 
+async function updateUserState(connection,userId,stepLevel){
+
+  const updateUserStateQuery=`
+    UPDATE Users
+    SET status='STEP2'
+    WHERE  userId=${userId};
+  `
+
+  console.log(updateUserStateQuery);
+  const updateResult=await connection.query(updateUserStateQuery);
+
+
+
+  return updateResult;
+}
 module.exports = {
   selectUser,
   insertJobCategoryInfo,
@@ -245,4 +260,5 @@ module.exports = {
   deleteBookMark,
   deleteHeart,
   deleteFollow,
+  updateUserState,
 };

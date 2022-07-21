@@ -129,12 +129,13 @@ exports.postJobCatgory=async function(req,res){
 
 exports.postDefaultResume=async function(req,res){
     console.log("test1");
+    console.log("이게 맞긴 해..?");
     //school->education
     //company->profiles
     /* email, 휴대폰 번호, self_introduction, 경력(회사명, 기간, 현재 재직 유무),학교,
 
     /* body: schoolName, companyName*/
-    const {userId,userName,email,telephone,jobName,career,companyId,companyName,schoolName,skills}=req.body;
+    const {userId,userName,email,telephone,jobId,career,companyId,companyName,schoolName,skills}=req.body;
     // self_introduction="안녕하세요 o년차 oo입니다./ 안녕하세요 신입 oo 입니다."
     // 학교는 필수! company는 선택.!
     
@@ -149,7 +150,7 @@ exports.postDefaultResume=async function(req,res){
     if(!telephone)
         return res.send(errResponse(baseResponse.SIGNUP_PHONENUMBER_EMPTY));
     
-    if(!jobName)
+    if(!jobId)
         return res.send(errResponse(baseResponse.JOB_EMPTY));
     
     if(!career)
@@ -162,7 +163,7 @@ exports.postDefaultResume=async function(req,res){
         return res.send(errResponse(baseResponse.USER_NAME_EMPTY));
 
     const postSchoolAndCompanyResponse = await userService.postDefaultResume(
-        userId,userName,email,telephone,jobName,career,companyId,companyName,schoolName,skills
+        userId,userName,email,telephone,jobId,career,companyId,companyName,schoolName,skills
     );
 
     return res.send(postSchoolAndCompanyResponse);

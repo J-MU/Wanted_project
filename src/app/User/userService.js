@@ -3,6 +3,7 @@ const {pool} = require("../../../config/database");
 const secret_config = require("../../../config/secret");
 
 const userProvider = require("./userProvider");
+const jobDao=require('../JobCategories/jobDao');
 const userDao = require("./userDao");
 const resumeDao = require("../Resume/resumeDao");
 const employmentDao=require("../Employment/employmentDao.js");
@@ -38,9 +39,9 @@ exports.createUser = async function (name, phoneNumber, email, password, IsAccep
 
         const insertUserInfoParams = [name, phoneNumber, email, hashedPassword, IsAcceptedPrivacyTerm, IsAcceptedMarketingTerm];
 
-        // TODO transaction 적용해야함.
         const connection = await pool.getConnection(async (conn) => conn);
         console.log('test1');
+        await connection.beginTransaction();
 
         const userIdResult = await userDao.insertUserInfo(connection, insertUserInfoParams);
         const userId=userIdResult[0].insertId;
@@ -50,13 +51,20 @@ exports.createUser = async function (name, phoneNumber, email, password, IsAccep
         const result={};
         result.userId=userId;
         result.jobGroup=getJobGroupRows;
-        connection.release();
+
+        await connection.commit() // 커밋
+       
+        
         return response(baseResponse.SUCCESS,result);
 
 
     } catch (err) {
+        connection.rollback();
         logger.error(`App - createUser Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
+    }finally{
+        connection.release();
+
     }
 };
 
@@ -129,7 +137,7 @@ exports.editUser = async function (id, nickname) {
     }
 }
 
-exports.postJobCatgory=async function(userId,jobGroupId,jobId,career,skills){   //TODO JobGroup,Job이 name이 아니라 id여야 함.
+exports.postJobCatgory=async function(userId,jobGroupId,jobId,career,skills){   
     console.log(userId,jobGroupId,jobId,career,skills);
     if(jobGroupId!=1&&skills!=null){
         return errResponse(baseResponse.NOT_DEVELOPMENT_CANT_HAVE_SKILL);
@@ -138,12 +146,16 @@ exports.postJobCatgory=async function(userId,jobGroupId,jobId,career,skills){   
     try{
         const connection = await pool.getConnection(async (conn) => conn);
         //,JobGroup,Job
-        const getParam = await userDao.insertProfileInfo(connection,userId,career);// TODO profileId 받아와야함.
+        const getParam = await userDao.insertProfileInfo(connection,userId,career);
         console.log("hihi");
         console.log(getParam[0].insertId);
         const profileId=getParam[0].insertId;
-        const insertJobCatgoryResult=await userDao.insertJobCategoryInfo(connection,profileId,jobGroupId); //
+        
+        connection.beginTransaction();
+
+        const insertJobCatgoryResult=await userDao.insertJobCategoryInfo(connection,profileId,jobGroupId); 
         const insertJobIdResult=await userDao.insertJobCategoryInfo(connection,profileId,jobGroupId)
+        const updateUserStep=await userDao.updateUserState(connection,userId,"STEP2");
         console.log("확인");
         console.log(skills);
         
@@ -151,22 +163,30 @@ exports.postJobCatgory=async function(userId,jobGroupId,jobId,career,skills){   
             const insertUserSkill=await userDao.insertUserSkills(connection,userId,skills[index]);
         }
         
-        connection.release();
+        connection.commit();
+        
 
         return response(baseResponse.SUCCESS);
     }catch(err){
+        connection.rollback();
         logger.error(`App - Post Job and JobGroup Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
+    }finally{
+        connection.release();
     }
 }
 
-exports.postDefaultResume=async function(userId,userName,email,telephone,jobName,career,companyId,companyName,schoolName,skills){
+exports.postDefaultResume=async function(userId,userName,email,telephone,jobId,career,companyId,companyName,schoolName,skills){
     //companyId가 넘어올 수도 있음.
-    console.log(userId,userName,email,telephone,jobName,career,companyId,companyName,schoolName,skills)
+    console.log(userId,userName,email,telephone,jobId,career,companyId,companyName,schoolName,skills)
     const connection = await pool.getConnection(async (conn) => conn);
     try{
         
         await connection.beginTransaction();
+
+        // jobId로 jobName 뽑아내기
+        const jobNametemp=await jobDao.getJobNameByJobId(connection,jobId);
+        const jobName=jobNametemp.name;
 
         let self_introduction;
         if(career==0)
@@ -176,6 +196,7 @@ exports.postDefaultResume=async function(userId,userName,email,telephone,jobName
             self_introduction="안녕하세요. "+career+"년차"+jobName+"입니다.";
         }
         let resumeName=`${userName}`+"1";
+        console.log(resumeName);
         console.log("Query1");
         const postResumeResult = await resumeDao.postResumeInfo(connection,resumeName,userId,userName,email,telephone,self_introduction);
         const resumeId=postResumeResult[0].insertId;
@@ -188,6 +209,8 @@ exports.postDefaultResume=async function(userId,userName,email,telephone,jobName
         for (let index = 0; index < skills.length; index++) {
             const postResumeSkillResult=await resumeDao.postResumeSkillInfo(connection,resumeId,skills[index]);    
         }
+
+        const updateUserState=await userDao.updateUserState(connection,userId,"STEP3");
 
         await connection.commit() // 커밋
 
