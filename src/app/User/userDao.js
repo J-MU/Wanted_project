@@ -11,13 +11,14 @@ async function selectUser(connection) {
 
 // 이메일로 회원 조회
 async function selectUserEmail(connection, email) {
+  console.log(email);
   const selectUserEmailQuery = `
                 SELECT email
                 FROM Users
-                WHERE email = ?;
+                WHERE email = ${email};
                 `;
-  const [emailRows] = await connection.query(selectUserEmailQuery, email);
-  return emailRows;
+  const emailRows = await connection.query(selectUserEmailQuery);
+  return emailRows[0];
 }
 
 // userId 회원 조회

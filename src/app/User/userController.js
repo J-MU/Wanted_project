@@ -381,6 +381,7 @@ exports.isMember = async function (req, res) {
     
    
     const memberRows = await userProvider.emailCheck(email);
+    console.log(memberRows);
     const memberCount=memberRows.length;
     if(memberCount>0)
         return res.send(response(baseResponse.HAVE_REDUCTION_USER));
