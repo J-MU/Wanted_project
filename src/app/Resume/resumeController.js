@@ -207,8 +207,23 @@ exports.deleteResumeEducation = async function (req, res) {
  */
 
 exports.getPopularSkills =  async function (req, res) {
-    console.log('good');
+
     const getPopularSkillsResponse = await resumeProvider.getPopularSkills();
 
     return res.send(getPopularSkillsResponse);
+}
+
+/**
+ * 유저 스킬 가져오기
+ * [get]
+ *
+ */
+
+exports.getResumeUserSkills = async function (req, res) {
+    console.log('good');
+    const userId = req.verifiedToken.userId
+
+    const getResumeUserSkillsResponse = await resumeProvider.getResumeUserSkills(userId);
+
+    return res.send(getResumeUserSkillsResponse);
 }

@@ -268,6 +268,21 @@ async function getPopularSkills (connection) {
     return  getPopularSkillsRows[0]
 }
 
+//유저 스킬 가져오기
+
+async function getResumeUserSkills (connection, userId) {
+    const  getResumeUserSkillsQuery = `
+        select name
+        from Skills
+                 inner join userSkills as uS on uS.skillId=Skills.skillId
+        where userId=?;
+    `;
+
+    const  getResumeUserSkillsRows = await connection.query(getResumeUserSkillsQuery, userId);
+    return  getResumeUserSkillsRows[0]
+
+}
+
  module.exports = {
     postResumeInfo,
     postResumeCareerInfo,
@@ -290,6 +305,7 @@ async function getPopularSkills (connection) {
      getEducationSchool,
      postEducationSchool,
      deleteResumeEducation,
-    getPopularSkills
+    getPopularSkills,
+    getResumeUserSkills
 };
   

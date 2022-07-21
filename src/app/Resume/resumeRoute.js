@@ -1,11 +1,13 @@
 const resume = require("./resumeController");
+const jwtMiddleware = require("../../../config/jwtMiddleware");
 
 module.exports = function(app) {
     const resume = require('./resumeController');
     const jwtMiddleware = require('../../../config/jwtMiddleware');
 
 
-
+    //유저 스킬 가져오기
+    app.get('/app/resumes/userSkills', jwtMiddleware, resume.getResumeUserSkills);
     //이력서 전체 조회
     //app.get('/app/resumes', jwtMiddleware, resume.getResumes);
 
