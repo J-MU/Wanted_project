@@ -158,7 +158,7 @@ exports.postJobCatgory=async function(userId,jobGroupId,jobId,career,skills){
         
         connection.beginTransaction();
 
-        const insertJobCatgoryResult=await userDao.insertJobCategoryInfo(connection,profileId,jobGroupId); 
+        const insertJobCatgoryResult=await userDao.insertJobGroupCategoryInfo(connection,profileId,jobGroupId); 
         const insertJobIdResult=await userDao.insertJobCategoryInfo(connection,profileId,jobId)
         const updateUserStep=await userDao.updateUserState(connection,userId,"STEP2");
         console.log("확인");

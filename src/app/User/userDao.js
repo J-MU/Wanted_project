@@ -48,7 +48,7 @@ async function insertUserInfo(connection, insertUserInfoParams) {
 }
 
 // JobCategory설정 funtion1
-async function insertJobCategoryInfo(connection,profileId,categoryId) {
+async function insertJobGroupCategoryInfo(connection,profileId,categoryId) {
   console.log('insertJobCategoryInfo 함수 호출 완료.');
   const insertJobCategoryInfoQuery = `
         INSERT INTO profileJobGroupMapping(profileId,categoryId)
@@ -258,6 +258,7 @@ async function updateUserState(connection,userId,stepLevel){
 }
 module.exports = {
   selectUser,
+  insertJobGroupCategoryInfo,
   insertJobCategoryInfo,
   insertUserSkills,
   selectUserEmail,
