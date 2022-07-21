@@ -212,6 +212,18 @@ async function deleteHeart(connection,userId,employmentId){
   return deleteHeartQueryResult;
 }
 
+async function deleteFollow(connection,userId,companyId){
+  
+  const deleteFollowQuery=`
+    UPDATE Follow
+    SET status='DELETED'
+    WHERE  userId=${userId} and companyId=${companyId};
+  `
+
+  console.log(deleteFollowQuery);
+  const deleteFollowResult=await connection.query(deleteFollowQuery);
+  return deleteFollowResult;
+}
 
 module.exports = {
   selectUser,
@@ -231,4 +243,5 @@ module.exports = {
   postFollow,
   deleteBookMark,
   deleteHeart,
+  deleteFollow,
 };

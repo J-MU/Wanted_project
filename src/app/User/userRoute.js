@@ -32,6 +32,10 @@ module.exports = function(app){
 
     //8. 좋아요 취소 API
     app.patch('/app/users/:userId/employments/:employmentId/heart/status',jwtMiddleware,user.deleteHeart);
+
+    //9. Follow 취소 API
+    app.patch('/app/users/:userId/companies/:companyId/follow/status',jwtMiddleware,user.deleteFollow);
+
     // TODO: After 로그인 인증 방법 (JWT)
     // 로그인 하기 API (JWT 생성)
     app.post('/app/login', user.login);

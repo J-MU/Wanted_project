@@ -9,25 +9,25 @@ async function getFollowCount(connection,companyId){
 
     console.log(getFollowCountQuery);
     const getFollowCountResult = await connection.query(getFollowCountQuery);
-    const FollowCount=getFollowCountResult[0][0].followCount+1;
+    const FollowCount=getFollowCountResult[0][0].followCount;
     return FollowCount;
   
 }
 
-async function plusFollowCount(connection,companyId,followCount) {
+async function updateFollowCount(connection,companyId,followCount) {
     
-    const plusFollowCountQuery = `
+    const updateFollowCountQuery = `
             UPDATE WANTED.Companies
             SET Companies.followCount=${followCount}
             WHERE Companies.companyId=${companyId};
          `;
-    const plusFollowCountResult = await connection.query(plusFollowCountQuery);
+    const updateFollowCountResult = await connection.query(updateFollowCountQuery);
     
-    return plusFollowCountResult[0];
+    return updateFollowCountResult[0];
 }
 
 
 module.exports = {
     getFollowCount,
-    plusFollowCount,
+    updateFollowCount,
 }

@@ -356,6 +356,26 @@ exports.deleteHeart = async function (req, res) {
 };
 
 
+exports.deleteFollow = async function (req, res) {
+
+    // jwt - userId, path variable :userId
+
+    const userIdFromJWT = req.verifiedToken.userId;
+
+    const userId = req.params.userId;
+    const companyId=req.params.companyId;
+   
+
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } else {
+
+        const deleteFollowResult = await userService.deleteFollow(userId,companyId);
+        return res.send(deleteFollowResult);
+    }
+};
+
+
 
 
 

@@ -359,3 +359,30 @@ exports.deleteHeart=async function(userId,employmentId){
         connection.release();
     }
 }
+
+
+exports.deleteFollow=async function(userId,companyId){
+    //companyId가 넘어올 수도 있음.
+    
+    const connection = await pool.getConnection(async (conn) => conn);
+    try{
+        await connection.beginTransaction();
+       
+
+        const deleteFollowResult=await userDao.deleteFollow(connection,userId,companyId);
+        console.log("1번 함수 호출성공")
+        let followCount=await companyDao.getFollowCount(connection,companyId);
+        followCount=followCount-1;
+        console.log("2번 함수 호출성공");
+        console.log(followCount);
+        const updateFollowCountResult=await companyDao.updateFollowCount(connection,companyId,followCount);
+        await connection.commit();
+        return response(baseResponse.SUCCESS);
+    } catch(err){
+        logger.error(`App - delete Follow Service error\n: ${err.message}`);
+        await connection.rollback() // 롤백
+        return errResponse(baseResponse.DB_ERROR);
+    }finally{
+        connection.release();
+    }
+}
