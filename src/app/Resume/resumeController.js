@@ -60,6 +60,7 @@ exports.postResumes = async function(req, res) {
  */
 
 exports.getResume = async function(req, res) {
+    console.log("사ㅅ바사바 분신사바");
     const userId = req.verifiedToken.userId
 
     const resumeId = parseInt(req.params.resumeId)

@@ -7,6 +7,7 @@ const baseResponse = require("./baseResponseStatus");
 
 const jwtMiddleware = (req, res, next) => {
     // read the token from header or url
+
     const token = req.headers['x-access-token'] || req.query.token;
     // token does not exist
     if(!token) {

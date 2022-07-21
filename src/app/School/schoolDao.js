@@ -1,12 +1,12 @@
-async function getSchools  (connection, schoolName) {
+async function getSchools  (connection) {
 
     const   getSchoolsQuery = `
         select name
         from school
-        where name LIKE '%${schoolName}%';
+       ;
     `;
 
-    const  getSchoolsRows = await connection.query(getSchoolsQuery, schoolName);
+    const  getSchoolsRows = await connection.query(getSchoolsQuery);
 
     return  getSchoolsRows[0]
 }
