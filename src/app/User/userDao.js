@@ -47,11 +47,26 @@ async function insertUserInfo(connection, insertUserInfoParams) {
   return insertUserInfoRow;
 }
 
-// JobCategory설정 funtion
+// JobCategory설정 funtion1
 async function insertJobCategoryInfo(connection,profileId,categoryId) {
   console.log('insertJobCategoryInfo 함수 호출 완료.');
   const insertJobCategoryInfoQuery = `
         INSERT INTO profileJobGroupMapping(profileId,categoryId)
+        VALUES (${profileId},${categoryId});
+    `;
+  const insertJobCategoryInfoRow = await connection.query(
+    insertJobCategoryInfoQuery,
+    profileId,
+    categoryId
+  );
+
+  return insertJobCategoryInfoRow;
+}
+
+async function insertJobCategoryInfo(connection,profileId,categoryId) {
+  console.log('insertJobCategoryInfo 함수 호출 완료.');
+  const insertJobCategoryInfoQuery = `
+        INSERT INTO profileJobMapping(profileId,categoryId)
         VALUES (${profileId},${categoryId});
     `;
   const insertJobCategoryInfoRow = await connection.query(

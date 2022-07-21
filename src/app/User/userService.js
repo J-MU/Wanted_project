@@ -159,7 +159,7 @@ exports.postJobCatgory=async function(userId,jobGroupId,jobId,career,skills){
         connection.beginTransaction();
 
         const insertJobCatgoryResult=await userDao.insertJobCategoryInfo(connection,profileId,jobGroupId); 
-        const insertJobIdResult=await userDao.insertJobCategoryInfo(connection,profileId,jobGroupId)
+        const insertJobIdResult=await userDao.insertJobCategoryInfo(connection,profileId,jobId)
         const updateUserStep=await userDao.updateUserState(connection,userId,"STEP2");
         console.log("확인");
         console.log(skills);
@@ -174,7 +174,7 @@ exports.postJobCatgory=async function(userId,jobGroupId,jobId,career,skills){
         return response(baseResponse.SUCCESS);
     }catch(err){
         connection.rollback();
-        logger.error(`App - Post Job and JobGroup Service error\n: ${err.message}`);
+        logger.error(`App - Post postJobCatgory Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
     }finally{
         connection.release();
