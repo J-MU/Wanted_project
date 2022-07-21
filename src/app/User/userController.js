@@ -83,7 +83,7 @@ exports.postUsers = async function (req, res) {
 exports.postJobCatgory=async function(req,res){
     /* body: JobGroup, Job, career(년차), skills[]  */
     const {userId,JobGroupId,JobId,career,skills}=req.body;
-
+    console.log(req.body);
     
     //NULL 체크
     if(!userId)
@@ -265,8 +265,84 @@ exports.postBookMark = async function (req, res) {
         res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
     } else {
 
-        const editUserInfo = await userService.postBookMark(userId,employmentId);
-        return res.send(editUserInfo);
+        const postBookMarkResult = await userService.postBookMark(userId,employmentId);
+        return res.send(postBookMarkResult);
+    }
+};
+
+exports.postHeart = async function (req, res) {
+
+    // jwt - userId, path variable :userId
+
+    const userIdFromJWT = req.verifiedToken.userId;
+
+    const userId = req.body.userId;
+    const employmentId=req.body.employmentId;
+   
+
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } else {
+
+        const postHeartResult = await userService.postHeart(userId,employmentId);
+        return res.send(postHeartResult);
+    }
+};
+
+exports.postFollow = async function (req, res) {
+
+    // jwt - userId, path variable :userId
+
+    const userIdFromJWT = req.verifiedToken.userId;
+
+    const userId = req.body.userId;
+    const companyId=req.body.companyId;
+   
+
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } else {
+
+        const postFollowResult = await userService.postFollow(userId,companyId);
+        return res.send(postFollowResult);
+    }
+};
+
+exports.deleteBookMark = async function (req, res) {
+
+    // jwt - userId, path variable :userId
+
+    const userIdFromJWT = req.verifiedToken.userId;
+
+    const userId = req.params.userId;
+    const employmentId=req.params.employmentId;
+   
+
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } else {
+
+        const deleteBookMarkResult = await userService.deleteBookMark(userId,employmentId);
+        return res.send(deleteBookMarkResult);
+    }
+};
+
+exports.deleteHeart = async function (req, res) {
+
+    // jwt - userId, path variable :userId
+
+    const userIdFromJWT = req.verifiedToken.userId;
+
+    const userId = req.params.userId;
+    const employmentId=req.params.employmentId;
+   
+
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } else {
+
+        const deleteHeartResult = await userService.deleteHeart(userId,employmentId);
+        return res.send(deleteHeartResult);
     }
 };
 

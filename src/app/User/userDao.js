@@ -161,6 +161,56 @@ async function postBookMark(connection,userId,employmentId){
   return postBookMarkResult;
 }
 
+async function postHeart(connection,userId,employmentId){
+  
+  const postHeartQuery=`
+    INSERT INTO Heart(userId, employmentId)
+    VALUES  (${userId},${employmentId});
+  `
+
+  console.log(postHeartQuery);
+  const postHeartResult=await connection.query(postHeartQuery);
+  return postHeartResult;
+}
+
+async function postFollow(connection,userId,companyId){
+  
+  const postFollowQuery=`
+    INSERT INTO Follow(userId, companyId)
+    VALUES  (${userId},${companyId});
+  `
+
+  console.log(postFollowQuery);
+  const postFollowResult=await connection.query(postFollowQuery);
+  return postFollowResult;
+}
+
+async function deleteBookMark(connection,userId,employmentId){
+  
+  const deleteBookMarkQuery=`
+    UPDATE BookMark
+    SET status='DELETED'
+    WHERE userId=${userId} and employmentId=${employmentId};
+  `
+
+  console.log(deleteBookMarkQuery);
+  const deleteBookMarkResult=await connection.query(deleteBookMarkQuery);
+  return deleteBookMarkResult;
+}
+
+
+async function deleteHeart(connection,userId,employmentId){
+  
+  const deleteHeartQuery=`
+    UPDATE Heart
+    SET status='DELETED'
+    WHERE userId=${userId} and employmentId=${employmentId};
+  `
+
+  console.log(deleteHeartQuery);
+  const deleteHeartQueryResult=await connection.query(deleteHeartQuery);
+  return deleteHeartQueryResult;
+}
 
 
 module.exports = {
@@ -177,4 +227,7 @@ module.exports = {
   insertProfileInfo,
   postInterestedTags,
   postBookMark,
+  postHeart,
+  postFollow,
+  deleteBookMark,
 };

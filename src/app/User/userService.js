@@ -1,10 +1,13 @@
 const {logger} = require("../../../config/winston");
 const {pool} = require("../../../config/database");
 const secret_config = require("../../../config/secret");
+
 const userProvider = require("./userProvider");
 const userDao = require("./userDao");
 const resumeDao = require("../Resume/resumeDao");
 const employmentDao=require("../Employment/employmentDao.js");
+const companyDao=require("../Company/companyDao.js");
+
 const baseResponse = require("../../../config/baseResponseStatus");
 const {response} = require("../../../config/response");
 const {errResponse} = require("../../../config/response");
@@ -229,13 +232,126 @@ exports.postBookMark=async function(userId,employmentId){
        
 
         const postBookMarkResult=await userDao.postBookMark(connection,userId,employmentId);
+        console.log("1번 함수 호출성공")
         const BookMarkCount=await employmentDao.getBookMarkCount(connection,employmentId);
+        BookMarkCount=BookMarkCount+1;
+        console.log("2번 함수 호출성공");
         console.log(BookMarkCount);
         const postBookMarkCountResult=await employmentDao.plusBookMarkCount(connection,employmentId,BookMarkCount);
         await connection.commit();
         return response(baseResponse.SUCCESS);
     } catch(err){
         logger.error(`App - Post Tag Service error\n: ${err.message}`);
+        await connection.rollback() // 롤백
+        return errResponse(baseResponse.DB_ERROR);
+    }finally{
+        connection.release();
+    }
+}
+
+exports.postHeart=async function(userId,employmentId){
+    //companyId가 넘어올 수도 있음.
+    
+    const connection = await pool.getConnection(async (conn) => conn);
+    try{
+        await connection.beginTransaction();
+       
+
+        const postHeartResult=await userDao.postHeart(connection,userId,employmentId);
+        console.log("1번 함수 호출성공")
+        const HeartCount=await employmentDao.getHeartCount(connection,employmentId);
+        console.log("2번 함수 호출성공");
+        console.log(HeartCount);
+        const postHeartCountResult=await employmentDao.plusHeartCount(connection,employmentId,HeartCount);
+        await connection.commit();
+        return response(baseResponse.SUCCESS);
+    } catch(err){
+        logger.error(`App - Post Heart Service error\n: ${err.message}`);
+        await connection.rollback() // 롤백
+        return errResponse(baseResponse.DB_ERROR);
+    }finally{
+        connection.release();
+    }
+}
+
+exports.postFollow=async function(userId,companyId){
+    //companyId가 넘어올 수도 있음.
+    
+    const connection = await pool.getConnection(async (conn) => conn);
+    try{
+        await connection.beginTransaction();
+       
+
+        const postFollowResult=await userDao.postFollow(connection,userId,companyId);
+        console.log("1번 함수 호출성공")
+        const followCount=await companyDao.getFollowCount(connection,companyId);
+        console.log("2번 함수 호출성공");
+        console.log(followCount);
+        const postFollowCountResult=await companyDao.plusFollowCount(connection,companyId,followCount);
+        await connection.commit();
+        return response(baseResponse.SUCCESS);
+    } catch(err){
+        logger.error(`App - Post Heart Service error\n: ${err.message}`);
+        await connection.rollback() // 롤백
+        return errResponse(baseResponse.DB_ERROR);
+    }finally{
+        connection.release();
+    }
+}
+
+exports.deleteBookMark=async function(userId,employmentId){
+    //companyId가 넘어올 수도 있음.
+    
+    const connection = await pool.getConnection(async (conn) => conn);
+    try{
+        await connection.beginTransaction();
+       
+        /*
+            1. BookMarkTable 에서 status를 DELETED로 고칠것.
+            2. Employments Table에서 BookMark Count를 하나 줄일 것. */
+
+
+        const deleteBookMarkResult=await userDao.deleteBookMark(connection,userId,employmentId);
+        console.log("1번 함수 호출성공")
+        let BookMarkCount=await employmentDao.getBookMarkCount(connection,employmentId);
+        BookMarkCount=BookMarkCount-1;
+        console.log("2번 함수 호출성공");
+        console.log(BookMarkCount);
+        const plusBookMarkCount=await employmentDao.updateBookMarkCount(connection,employmentId,BookMarkCount);
+        await connection.commit();
+        return response(baseResponse.SUCCESS);
+    } catch(err){
+        logger.error(`App - Delete BookMark Service error\n: ${err.message}`);
+        await connection.rollback() // 롤백
+        return errResponse(baseResponse.DB_ERROR);
+    }finally{
+        connection.release();
+    }
+}
+
+exports.deleteHeart=async function(userId,employmentId){
+    //companyId가 넘어올 수도 있음.
+    
+    const connection = await pool.getConnection(async (conn) => conn);
+    try{
+        await connection.beginTransaction();
+       
+        /*
+            1. BookMarkTable 에서 status를 DELETED로 고칠것.
+            2. Employments Table에서 BookMark Count를 하나 줄일 것. */
+
+
+        const deleteHeartResult=await userDao.deleteHeart(connection,userId,employmentId);
+        console.log("1번 함수 호출성공")
+        let HeartCount=await employmentDao.getHeartCount(connection,employmentId);
+        HeartCount=HeartCount-1;
+        console.log("2번 함수 호출성공");
+        console.log(HeartCount);
+        const deleteHeartCountResult=await employmentDao.updateHeartCount(connection,employmentId,HeartCount);
+        await connection.commit();
+        return response(baseResponse.SUCCESS);
+    } catch(err){
+        logger.error(`App - Delete Heart Service error\n: ${err.message}`);
         await connection.rollback() // 롤백
         return errResponse(baseResponse.DB_ERROR);
     }finally{
