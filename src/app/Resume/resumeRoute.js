@@ -31,4 +31,13 @@ module.exports = function(app) {
 
     //이력서 회사 삭제
     app.patch('/app/resumes/career/:careerId/deleted',jwtMiddleware, resume.deleteResumeCareer);
+
+    //이력서 학교 조회
+    app.get('/app/resumes/education/school', resume.getEducationSchool);
+
+    //이력서 학교 추가
+    app.post('/app/resumes/:resumeId/education/school',jwtMiddleware, resume.postEducationSchool );
+
+    //이력서 학교 삭제
+    app.patch('/app/resumes/education/:educationId/deleted',jwtMiddleware, resume.deleteResumeEducation);
 };

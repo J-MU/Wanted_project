@@ -49,6 +49,8 @@ module.exports = {
 
     //resume : 2400
     RESUMEID_EMPTY : {"isSuccess": false, "code": 2400, "message": "이력서ID를 입력해주세요"},
+    COMPANYNAME_EMPTY : {"isSuccess": false, "code": 2401, "message": "회사이름을 입력해주세요"},
+    SCHOOLNAME_EMPTY  : {"isSuccess": false, "code": 2401, "message": "학교이름을 입력해주세요"},
 
     // Response error
     SIGNUP_REDUNDANT_EMAIL : { "isSuccess": false, "code": 3001, "message":"중복된 이메일입니다." },

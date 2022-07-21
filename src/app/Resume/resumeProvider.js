@@ -110,3 +110,21 @@ exports.getCareerCompanies = async function (companyName) {
         return errResponse(baseResponse.DB_ERROR);
     }
 }
+
+//이력서 학교 검색
+exports.getEducationSchool = async function (schoolName) {
+    try {
+        const connection = await pool.getConnection(async (conn) => conn);
+        const getEducationSchoolResult = await resumeDao.getEducationSchool(connection,schoolName);
+        connection.release();
+
+        return response(baseResponse.SUCCESS,getEducationSchoolResult);
+
+    }
+    catch(err) {
+        logger.error(`App - createUser Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}
+
+

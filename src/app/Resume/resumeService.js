@@ -97,3 +97,38 @@ exports.deleteResumeCareer = async function (careerId) {
     }
 
 };
+
+//이력서 학교 추가
+exports.postEducationSchool = async function(postEducationSchoolParams ){
+    try {
+
+        const connection = await pool.getConnection(async (conn) => conn);
+        const postEducationSchoolResult = await resumeDao.postEducationSchool(connection,postEducationSchoolParams );
+        connection.release();
+
+        return response(baseResponse.SUCCESS);
+
+    }
+    catch(err) {
+        logger.error(`App - createUser Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}
+
+//이력서 학교 삭제
+exports.deleteResumeEducation = async function (educationId) {
+    try {
+        //TODO deleted확인
+        const connection = await pool.getConnection(async (conn) => conn);
+        const deleteResumeEducationResult = await resumeDao.deleteResumeEducation(connection,educationId);
+        connection.release();
+
+        return response(baseResponse.SUCCESS);
+    }
+
+    catch (err) {
+        logger.error(`App - createUser Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+
+};

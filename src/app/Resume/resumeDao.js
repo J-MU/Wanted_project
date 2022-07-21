@@ -94,9 +94,9 @@ async function getResumeInfo(connection, getResumeParams){
 //경력 가져오기
 async function getResumeCareer(connection, getResumeParams) {
     const getResumeCareerQuery = `
-        select companyName,DepartmentAndTitle,type, startDate, endDate
+        select companyName,DepartmentAndTitle,type, date_format(startDate, '%Y.%m') as startDate, date_format(endDate, '%Y.%m') as endDate
         from Careers
-        where resumeId=${getResumeParams[1]} and status='ACTIVE';
+        where resumeId=${getResumeParams[1]} and status!='DELETED';
     `;
 
     const getResumeCareerRows = await connection.query(getResumeCareerQuery,getResumeParams);
@@ -108,10 +108,10 @@ async function getResumeCareer(connection, getResumeParams) {
 
 async function getResumeEducation(connection, getResumeParams) {
     const getResumeEducationQuery = `
-        select name, MajorOrDegree,subject, startDate, endDate
+        select name, MajorOrDegree,subject, date_format(startDate, '%Y.%m') as startDate, date_format(endDate, '%Y.%m') as endDate
         from Education
                  inner join Resumes as r on r.resumeId = Education.resumeId
-        where r.resumeId=${getResumeParams[1]};
+        where r.resumeId=${getResumeParams[1]} and Education.status!='DELETED';
     `;
 
     const getResumeEducationRows = await connection.query(getResumeEducationQuery,getResumeParams);
@@ -124,7 +124,7 @@ async function getResumeSkills(connection, getResumeParams) {
         select S.name
         from Skills as S
                  inner join ResumeSkillsMapping as RS on RS.skillId=S.skillId
-        where resumeId=${getResumeParams[1]};
+        where resumeId=${getResumeParams[1]} and S.status!='DELETED';
     `;
 
     const getResumeSkillsRows = await connection.query(getResumeSkillsQuery, getResumeParams);
@@ -135,9 +135,9 @@ async function getResumeSkills(connection, getResumeParams) {
 
 async function getResumeAwards(connection, getResumeParams) {
     const getResumeAwardsQuery = `
-        select period, name, details
+        select date_format(period , '%Y.%m'), name, details
         from awards
-        where resumeId=${getResumeParams[1]};
+        where resumeId=${getResumeParams[1]} and status!='DELETED';
     `;
 
     const getResumeAwardsRows = await connection.query(getResumeAwardsQuery, getResumeParams);
@@ -150,7 +150,7 @@ async function getResumeForeign (connection, getResumeParams) {
     const getResumeForeignQuery = `
         select foreignLanguage, level
         from foreignLanguages
-        where resumeId=${getResumeParams[1]};
+        where resumeId=${getResumeParams[1]} and status!='DELETED';
     `;
 
     const getResumeForeignRows = await connection.query(getResumeForeignQuery, getResumeParams);
@@ -162,7 +162,7 @@ async function getResumeLink (connection, getResumeParams) {
     const  getResumeLinkQuery = `
         select linkAddress
         from links
-        where resumeId=${getResumeParams[1]};
+        where resumeId=${getResumeParams[1]} and status!='DELETED';
     `;
 
     const getResumeLinkRows = await connection.query(getResumeLinkQuery, getResumeParams);
@@ -209,9 +209,10 @@ async function getCareerCompanies (connection, companyName) {
 
 //이력서 경력 생성
 async function postResumeCareer(connection, postResumeCareerParams) {
+    console.log(postResumeCareerParams);
     const postResumeCareerQuery = `
         insert into Careers (resumeId, companyName, type)
-        values(?,?,?);
+        values(${postResumeCareerParams[0]},'${postResumeCareerParams[1]}','${postResumeCareerParams[2]}');
     `;
 
     const  postResumeCareerRows = await connection.query(postResumeCareerQuery,postResumeCareerParams);
@@ -227,6 +228,44 @@ async function deleteResumeCareer(connection, careerId) {
     `;
     const deleteResumeCareerRows = await connection.query(deleteResumeCareerQuery,careerId);
     return deleteResumeCareerRows
+}
+
+//이력서 학교 검색
+
+async function getEducationSchool  (connection, schoolName) {
+    console.log(schoolName);
+    const   getEducationSchoolQuery = `
+        select name
+        from school
+        where name LIKE '%${schoolName}%';
+    `;
+
+    const  getEducationSchoolRows = await connection.query(getEducationSchoolQuery, schoolName);
+
+    return   getEducationSchoolRows[0]
+}
+
+//이력서 학교 추가
+async function postEducationSchool(connection, postEducationSchoolParams) {
+    const postEducationSchoolQuery = `
+        insert into Education (resumeId, name)
+        values(${postEducationSchoolParams[0]},'${postEducationSchoolParams[1]}');
+    `;
+
+    const  postEducationSchoolRows = await connection.query(postEducationSchoolQuery,postEducationSchoolParams);
+
+    return  postEducationSchoolRows[0]
+}
+
+//이력서 학교 삭제
+
+async function  deleteResumeEducation(connection, educationId) {
+    const  deleteResumeEducationQuery = `
+    UPDATE Education t SET t.status = 'DELETED'
+    WHERE educationId=?;
+    `;
+    const  deleteResumeEducationRows = await connection.query( deleteResumeEducationQuery,educationId);
+    return  deleteResumeEducationRows
 }
 
 
@@ -249,6 +288,9 @@ async function deleteResumeCareer(connection, careerId) {
      patchResumeTitle,
      getCareerCompanies,
      postResumeCareer,
-     deleteResumeCareer
+     deleteResumeCareer,
+     getEducationSchool,
+     postEducationSchool,
+     deleteResumeEducation
 };
   

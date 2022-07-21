@@ -119,7 +119,7 @@ exports.patchResumeTitle = async function(req, res) {
 exports.getCareerCompanies = async function (req, res) {
     const companyName = req.body.companyName
 
-
+    if(!companyName) return res.send(response(baseResponse.COMPANYNAME_EMPTY));
     const getCareerCompaniesResponse = await resumeProvider.getCareerCompanies(companyName);
 
     return res.send(getCareerCompaniesResponse);
@@ -134,7 +134,9 @@ exports.getCareerCompanies = async function (req, res) {
 exports.postResumeCareer = async function(req, res) {
     const resumeId = parseInt(req.params.resumeId)
     const companyName = req.body.companyName;
-    const type = req.body.companyName;
+    const type = req.body.type;
+
+    if(!companyName) return res.send(response(baseResponse.COMPANYNAME_EMPTY));
 
     const postResumeCareerParams = [resumeId, companyName, type]
 
@@ -144,8 +146,8 @@ exports.postResumeCareer = async function(req, res) {
 }
 
 /**
- *
- *[patch] /app/resumes/:careerId/deleted
+ *이력서 커리어 삭제
+ *[patch] /app/resumes/career/:careerId/deleted
  */
 
 exports.deleteResumeCareer = async function (req, res) {
@@ -157,5 +159,56 @@ exports.deleteResumeCareer = async function (req, res) {
     const deleteResumeCareerResponse = await resumeService.deleteResumeCareer(careerId);
 
     return res.send(deleteResumeCareerResponse);
+
+};
+
+/**
+ * 이력서 학교 검색
+ * [get]
+ */
+
+exports.getEducationSchool =  async function (req, res) {
+    const schoolName = req.body.schoolName;
+
+    if(!schoolName) return res.send(response(baseResponse.SCHOOLNAME_EMPTY));
+    const getEducationSchoolResponse = await resumeProvider.getEducationSchool(schoolName);
+
+    return res.send(getEducationSchoolResponse);
+}
+
+
+/**
+ * 이력서 학교 추가
+ * [post] /app/resumes/education/school
+ */
+
+exports.postEducationSchool = async function(req, res) {
+    const resumeId = parseInt(req.params.resumeId)
+    const schoolName = req.body.schoolName;
+
+    if(!schoolName) return res.send(response(baseResponse.SCHOOLNAME_EMPTY));
+
+    const postEducationSchoolParams = [resumeId,schoolName]
+
+    const postResumeCareerResponse = await resumeService.postEducationSchool(postEducationSchoolParams );
+
+    return res.send(postResumeCareerResponse);
+}
+
+
+/**
+ * 이력서 학교 삭제
+ * [patch]
+ */
+
+exports.deleteResumeEducation = async function (req, res) {
+
+    const educationId = parseInt(req.params.educationId)
+    console.log(educationId);
+    // if (!resumeId)  return res.send(response(baseResponse.RESUMEID_EMPTY));
+
+    const deleteResumeEducationResponse = await resumeService.deleteResumeEducation(educationId);
+
+    return res.send(deleteResumeEducationResponse);
 
 };
