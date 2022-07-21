@@ -88,6 +88,8 @@ exports.postJobCatgory=async function(req,res){
 
     console.log(skills);
     console.log(typeof skills);
+    console.log(typeof userId);
+    console.log(typeof JobGroupId);
     console.log(Array.isArray(skills));
     
     //NULL 체크
