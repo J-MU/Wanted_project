@@ -3,7 +3,7 @@ module.exports = {
     // Success
     SUCCESS : { "isSuccess": true, "code": 1000, "message":"성공" },
     NO_REDUCTION_USER:{"isSuccess":true,"code":1001,"message":"중복 유저 없음"},
-    HAVE_REDUCTION_USER:{"isSuccess":}
+    HAVE_REDUCTION_USER:{"isSuccess":true,"code":1002,"message":"이미 가입된 유저"},
 
     // Common
     TOKEN_EMPTY : { "isSuccess": false, "code": 2000, "message":"JWT 토큰을 입력해주세요." },
