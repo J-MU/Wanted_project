@@ -4,6 +4,7 @@ const { logger } = require("../../../config/winston");
 const resumeDao = require("./resumeDao");
 const {response, errResponse} = require("../../../config/response");
 const baseResponse = require("../../../config/baseResponseStatus");
+const userDao = require("../User/userDao");
 
 
 //이력서 전체 조회
@@ -147,4 +148,22 @@ exports.getResumeUserSkills = async function (userId) {
         return errResponse(baseResponse.DB_ERROR);
     }
 
+}
+
+
+//간단 소개글 가져오기
+exports.selfIntroductionCheck = async function(resumeId) {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const selfIntroductionCheck = await resumeDao.selfIntroductionCheck(connection,resumeId);
+    connection.release();
+    return selfIntroductionCheck;
+}
+
+//경력 있는지 체크
+
+exports.careerCheck = async function(resumeId) {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const careerCheck = await resumeDao.careerCheck(connection,resumeId);
+    connection.release();
+    return careerCheck;
 }

@@ -52,7 +52,7 @@ module.exports = {
     //resume : 2400
     RESUMEID_EMPTY : {"isSuccess": false, "code": 2400, "message": "이력서ID를 입력해주세요"},
     SCHOOLNAME_EMPTY  : {"isSuccess": false, "code": 2401, "message": "학교이름을 입력해주세요"},
-
+    SELFINTRODUCTIONNUM_ERROR : {"isSuccess": false, "code": 2402, "message": "글자수 400자 미만은 이력서 작성을 완료할 수 없습니다."},
     //company : 2150
     COMPANYNAME_EMPTY : {"isSuccess": false, "code": 2150, "message": "회사이름을 입력해주세요"},
 

@@ -16,18 +16,10 @@ async function getInsitePostTags(connection_A) {
     //postTags 가져오기
 
     const getPostTagsQuery = `
-        select tagId, name 
-        from postTags
-        where tagId<19
-        order by rand() limit 10;
+        select tagId,name from postTags;
     `;
-
-    const postTagsRow = await connection_A.query(getPostTagsQuery);
-  /*  const array = [{"A": "a"}, {"B" : "b"}]
-    console.log(array[0].A);*/
-    return postTagsRow[0]
-   /* console.log(postTagsRow)
-    const tagId = postTagsRow[0].tagId;*/
+    const PostTagsRow = await connection_A.query(getPostTagsQuery);
+    return PostTagsRow[0];
 
 }
 

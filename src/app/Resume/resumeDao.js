@@ -135,7 +135,7 @@ async function getResumeSkills(connection, getResumeParams) {
 
 async function getResumeAwards(connection, getResumeParams) {
     const getResumeAwardsQuery = `
-        select date_format(period , '%Y.%m'), name, details
+        select date_format(period , '%Y.%m') as period, name, details
         from awards
         where resumeId=${getResumeParams[1]} and status!='DELETED';
     `;
@@ -284,17 +284,51 @@ async function getResumeUserSkills (connection, userId) {
 }
 //수상 추가하기
 
-async function postResumeAwards (connection, resumeId) {
+async function postResumeAwards (connection, postResumeAwardsParams) {
     const  postResumeAwardsQuery = `
-        select name
-        from Skills
-                 inner join userSkills as uS on uS.skillId=Skills.skillId
-        where userId=?;
+        insert into awards (resumeId, period, name, details)
+        values(${postResumeAwardsParams[0]}, nullif('${postResumeAwardsParams[1]}','') ,
+               '${postResumeAwardsParams[2]}',nullif('${postResumeAwardsParams[3]}',''));
     `;
 
-    const  postResumeAwardsRows = await connection.query(postResumeAwardsQuery, resumeId);
+    const  postResumeAwardsRows = await connection.query(postResumeAwardsQuery, postResumeAwardsParams);
     return  postResumeAwardsRows[0]
 
+}
+
+//수상 삭제하기
+
+async function deleteResumeAwards (connection, awardsId) {
+    const  deleteResumeAwardsQuery = `
+    UPDATE awards t SET t.status = 'DELETED'
+    WHERE awardsId=?;
+    `;
+    const deleteResumeAwardsRows = await connection.query(deleteResumeAwardsQuery,awardsId);
+    return  deleteResumeAwardsRows
+}
+//이력서 간단 소개글 글자수 세기
+async function selfIntroductionCheck (connection, resumeId) {
+    const  selfIntroductionCheckQuery = `
+        select char_length(selfIntroduction) as 'selfIntroductionNum'
+        from Resumes
+        where resumeId=?;
+    `;
+    const selfIntroductionCheckRows = await connection.query(selfIntroductionCheckQuery,resumeId);
+    const num = selfIntroductionCheckRows[0][0].selfIntroductionNum
+
+    return  num;
+}
+
+//이력서 경력 체크
+async function careerCheck (connection, resumeId) {
+    const  careerCheckQuery = `
+        select companyName, startDate,endDate
+        from Careers
+        where resumeId=?;
+    `;
+    const careerCheckRows = await connection.query(careerCheckQuery,resumeId);
+    console.log(careerCheckRows[0]);
+    return  num;
 }
 
  module.exports = {
@@ -321,6 +355,9 @@ async function postResumeAwards (connection, resumeId) {
      deleteResumeEducation,
     getPopularSkills,
     getResumeUserSkills,
-    postResumeAwards
+    postResumeAwards,
+    deleteResumeAwards,
+    selfIntroductionCheck,
+     careerCheck
 };
   

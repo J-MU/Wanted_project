@@ -52,4 +52,10 @@ module.exports = function(app) {
 
     //이력서 수상 추가
     app.post('/app/resumes/:resumeId/awards',jwtMiddleware, resume.postResumeAwards);
+
+    //이력서 수상 삭제
+    app.patch('/app/resumes/awards/:awardsId',jwtMiddleware, resume.deleteResumeAwards);
+
+    //이력서 작성 완료
+    app.patch('/app/resumes/:resumeId/status', jwtMiddleware, resume.patchResumeStatus);
 };
