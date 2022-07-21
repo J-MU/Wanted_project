@@ -282,6 +282,20 @@ async function getResumeUserSkills (connection, userId) {
     return  getResumeUserSkillsRows[0]
 
 }
+//수상 추가하기
+
+async function postResumeAwards (connection, resumeId) {
+    const  postResumeAwardsQuery = `
+        select name
+        from Skills
+                 inner join userSkills as uS on uS.skillId=Skills.skillId
+        where userId=?;
+    `;
+
+    const  postResumeAwardsRows = await connection.query(postResumeAwardsQuery, resumeId);
+    return  postResumeAwardsRows[0]
+
+}
 
  module.exports = {
     postResumeInfo,
@@ -306,6 +320,7 @@ async function getResumeUserSkills (connection, userId) {
      postEducationSchool,
      deleteResumeEducation,
     getPopularSkills,
-    getResumeUserSkills
+    getResumeUserSkills,
+    postResumeAwards
 };
   

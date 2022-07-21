@@ -50,5 +50,6 @@ module.exports = function(app) {
     //이력서 학교 삭제
     app.patch('/app/resumes/education/:educationId/deleted',jwtMiddleware, resume.deleteResumeEducation);
 
-
+    //이력서 수상 추가
+    app.post('/app/resumes/:resumeId/awards',jwtMiddleware, resume.postResumeAwards);
 };
