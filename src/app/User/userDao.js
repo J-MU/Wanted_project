@@ -15,7 +15,7 @@ async function selectUserEmail(connection, email) {
   const selectUserEmailQuery = `
                 SELECT email
                 FROM Users
-                WHERE email = ${email};
+                WHERE email = "${email}";
                 `;
   const emailRows = await connection.query(selectUserEmailQuery);
   return emailRows[0];

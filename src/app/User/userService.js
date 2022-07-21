@@ -22,11 +22,13 @@ exports.createUser = async function (name, phoneNumber, email, password, IsAccep
     try {
         //TODO 이메일체크 함수를 telCheck
 
-        // 이메일 중복 확인
+        // 이메일 중복 
+        console.log("email Check");
         const emailRows = await userProvider.emailCheck(email);
+        console.log(emailRows);
         if (emailRows.length > 0)
             return errResponse(baseResponse.SIGNUP_REDUNDANT_EMAIL);
-
+            console.log("email Check complete");
         // 비밀번호 암호화
         const hashedPassword = await crypto
             .createHash("sha512")
