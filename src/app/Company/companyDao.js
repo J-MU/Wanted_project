@@ -28,7 +28,7 @@ async function updateFollowCount(connection,companyId,followCount) {
 //회사 검색
 async function getCompanies (connection) {
     const  getCompaniesQuery = `
-        select companyName
+        select companyName, companyId
         from Companies;
     `;
 

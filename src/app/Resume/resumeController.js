@@ -220,10 +220,23 @@ exports.getPopularSkills =  async function (req, res) {
  */
 
 exports.getResumeUserSkills = async function (req, res) {
-    console.log('good');
     const userId = req.verifiedToken.userId
 
     const getResumeUserSkillsResponse = await resumeProvider.getResumeUserSkills(userId);
 
     return res.send(getResumeUserSkillsResponse);
+}
+
+/**
+ * 수상 및 기타 추가
+ * [post] /app/resumes/:resumeId/awards
+ */
+
+exports.postResumeAwards = async function (req, res) {
+    const resumeId =parseInt(req.params.resumeId)
+    
+    const postResumeAwardsResponse = await resumeService.postResumeAwards(resumeId);
+
+    return res.send(postResumeAwardsResponse);
+
 }

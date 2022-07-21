@@ -1,7 +1,7 @@
 async function getSchools  (connection) {
 
     const   getSchoolsQuery = `
-        select name
+        select name, schoolId
         from school
        ;
     `;

@@ -132,3 +132,20 @@ exports.deleteResumeEducation = async function (educationId) {
     }
 
 };
+
+//이력서 수상 추가
+exports.postResumeAwards = async function(resumeId){
+    try {
+
+        const connection = await pool.getConnection(async (conn) => conn);
+        const postResumeAwardsResult = await resumeDao.postResumeAwards(connection,resumeId);
+        connection.release();
+
+        return response(baseResponse.SUCCESS);
+
+    }
+    catch(err) {
+        logger.error(`App - createUser Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}
