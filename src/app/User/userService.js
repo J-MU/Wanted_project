@@ -147,8 +147,9 @@ exports.postJobCatgory=async function(userId,jobGroupId,jobId,career,skills){
         return errResponse(baseResponse.NOT_DEVELOPMENT_CANT_HAVE_SKILL);
     }
     // TODO : JobGroup 과 Job이 부모-자식 관계여야함. check 함수가 추가로 구현되어야함.
+    const connection = await pool.getConnection(async (conn) => conn);
+
     try{
-        const connection = await pool.getConnection(async (conn) => conn);
         //,JobGroup,Job
         const getParam = await userDao.insertProfileInfo(connection,userId,career);
         console.log("hihi");
