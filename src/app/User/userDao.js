@@ -148,12 +148,82 @@ async function postInterestedTags(connection,userId,postTagId){
   const postInterestedTagsResult=await connection.query(postInterestedTagsQuery);
   return postInterestedTagsResult;
 }
-/*
-//학교 직장 설정
-async function
-*/
+
+async function postBookMark(connection,userId,employmentId){
+  
+  const postBookMarkQuery=`
+    INSERT INTO BookMark(userId, employmentId)
+    VALUES  (${userId},${employmentId});
+  `
+
+  console.log(postBookMarkQuery);
+  const postBookMarkResult=await connection.query(postBookMarkQuery);
+  return postBookMarkResult;
+}
+
+async function postHeart(connection,userId,employmentId){
+  
+  const postHeartQuery=`
+    INSERT INTO Heart(userId, employmentId)
+    VALUES  (${userId},${employmentId});
+  `
+
+  console.log(postHeartQuery);
+  const postHeartResult=await connection.query(postHeartQuery);
+  return postHeartResult;
+}
+
+async function postFollow(connection,userId,companyId){
+  
+  const postFollowQuery=`
+    INSERT INTO Follow(userId, companyId)
+    VALUES  (${userId},${companyId});
+  `
+
+  console.log(postFollowQuery);
+  const postFollowResult=await connection.query(postFollowQuery);
+  return postFollowResult;
+}
+
+async function deleteBookMark(connection,userId,employmentId){
+  
+  const deleteBookMarkQuery=`
+    UPDATE BookMark
+    SET status='DELETED'
+    WHERE userId=${userId} and employmentId=${employmentId};
+  `
+
+  console.log(deleteBookMarkQuery);
+  const deleteBookMarkResult=await connection.query(deleteBookMarkQuery);
+  return deleteBookMarkResult;
+}
 
 
+async function deleteHeart(connection,userId,employmentId){
+  
+  const deleteHeartQuery=`
+    UPDATE Heart
+    SET status='DELETED'
+    WHERE userId=${userId} and employmentId=${employmentId};
+  `
+
+  console.log(deleteHeartQuery);
+  const deleteHeartQueryResult=await connection.query(deleteHeartQuery);
+  return deleteHeartQueryResult;
+}
+
+async function deleteFollow(connection,userId,companyId){
+  
+  const deleteFollowQuery=`
+    UPDATE Follow
+    SET status='DELETED'
+    WHERE  userId=${userId} and companyId=${companyId};
+  `
+
+  console.log(deleteFollowQuery);
+  const deleteFollowResult=await connection.query(deleteFollowQuery);
+  return deleteFollowResult;
+}
 
 module.exports = {
   selectUser,
@@ -168,4 +238,10 @@ module.exports = {
   getJobGroupCategories,
   insertProfileInfo,
   postInterestedTags,
+  postBookMark,
+  postHeart,
+  postFollow,
+  deleteBookMark,
+  deleteHeart,
+  deleteFollow,
 };

@@ -27,6 +27,8 @@ exports.postUsers = async function (req, res) {
      * Body: name, phoneNumber, email, password, IsAcceptedPrivacyTerm, IsAcceptedMarketingTerm
      */
     const { name, phoneNumber, email, password, IsAcceptedPrivacyTerm, IsAcceptedMarketingTerm } = req.body;
+    console.log(req.body);
+    
     // name 빈 값 체크
     if (!name)
         return res.send(response(baseResponse.SIGNUP_NAME_EMPTY));
@@ -83,7 +85,14 @@ exports.postUsers = async function (req, res) {
 exports.postJobCatgory=async function(req,res){
     /* body: JobGroup, Job, career(년차), skills[]  */
     const {userId,JobGroupId,JobId,career,skills}=req.body;
+    console.log("일단 이 함수 호출 된긴 했음.");
+    console.log(req.body);
 
+    console.log(skills);
+    console.log(typeof skills);
+    console.log(typeof userId);
+    console.log(typeof JobGroupId);
+    console.log(Array.isArray(skills));
     
     //NULL 체크
     if(!userId)
@@ -244,8 +253,127 @@ exports.patchUsers = async function (req, res) {
 };
 
 
+/**
+ * API No. 4
+ * API Name : 북마크 등록 API
+ * [POST] /app/users/:userid/bookmark
+ * path variable : userId
+ * 
+ */
+exports.postBookMark = async function (req, res) {
+
+    // jwt - userId, path variable :userId
+
+    const userIdFromJWT = req.verifiedToken.userId;
+
+    const userId = req.body.userId;
+    const employmentId=req.body.employmentId;
+   
+
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } else {
+
+        const postBookMarkResult = await userService.postBookMark(userId,employmentId);
+        return res.send(postBookMarkResult);
+    }
+};
+
+exports.postHeart = async function (req, res) {
+
+    // jwt - userId, path variable :userId
+
+    const userIdFromJWT = req.verifiedToken.userId;
+
+    const userId = req.body.userId;
+    const employmentId=req.body.employmentId;
+   
+
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } else {
+
+        const postHeartResult = await userService.postHeart(userId,employmentId);
+        return res.send(postHeartResult);
+    }
+};
+
+exports.postFollow = async function (req, res) {
+
+    // jwt - userId, path variable :userId
+
+    const userIdFromJWT = req.verifiedToken.userId;
+
+    const userId = req.body.userId;
+    const companyId=req.body.companyId;
+   
+
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } else {
+
+        const postFollowResult = await userService.postFollow(userId,companyId);
+        return res.send(postFollowResult);
+    }
+};
+
+exports.deleteBookMark = async function (req, res) {
+
+    // jwt - userId, path variable :userId
+
+    const userIdFromJWT = req.verifiedToken.userId;
+
+    const userId = req.params.userId;
+    const employmentId=req.params.employmentId;
+   
+
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } else {
+
+        const deleteBookMarkResult = await userService.deleteBookMark(userId,employmentId);
+        return res.send(deleteBookMarkResult);
+    }
+};
+
+exports.deleteHeart = async function (req, res) {
+
+    // jwt - userId, path variable :userId
+
+    const userIdFromJWT = req.verifiedToken.userId;
+
+    const userId = req.params.userId;
+    const employmentId=req.params.employmentId;
+   
+
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } else {
+
+        const deleteHeartResult = await userService.deleteHeart(userId,employmentId);
+        return res.send(deleteHeartResult);
+    }
+};
 
 
+exports.deleteFollow = async function (req, res) {
+
+    // jwt - userId, path variable :userId
+
+    const userIdFromJWT = req.verifiedToken.userId;
+
+    const userId = req.params.userId;
+    const companyId=req.params.companyId;
+   
+
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } else {
+
+        const deleteFollowResult = await userService.deleteFollow(userId,companyId);
+        return res.send(deleteFollowResult);
+    }
+};
 
 
 

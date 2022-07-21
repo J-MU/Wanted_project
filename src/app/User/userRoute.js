@@ -18,6 +18,23 @@ module.exports = function(app){
     // 3. 특정 유저 조회 API
     //app.get('/app/users/:userId', user.getUserById);
 
+    // 4. 북마크 등록 API
+    app.post('/app/users/bookmark',jwtMiddleware,user.postBookMark);
+
+    // 5. 좋아요 등록 API
+    app.post('/app/users/heart',jwtMiddleware,user.postHeart);
+
+    // 6. 회사 Follow API
+    app.post('/app/users/follow',jwtMiddleware,user.postFollow);
+
+    //7. 북마크 해제 API
+    app.patch('/app/users/:userId/employments/:employmentId/bookmark/status',jwtMiddleware,user.deleteBookMark);
+
+    //8. 좋아요 취소 API
+    app.patch('/app/users/:userId/employments/:employmentId/heart/status',jwtMiddleware,user.deleteHeart);
+
+    //9. Follow 취소 API
+    app.patch('/app/users/:userId/companies/:companyId/follow/status',jwtMiddleware,user.deleteFollow);
 
     // TODO: After 로그인 인증 방법 (JWT)
     // 로그인 하기 API (JWT 생성)

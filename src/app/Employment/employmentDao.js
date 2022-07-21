@@ -84,6 +84,54 @@ async function getExampleEmployment(connection) {
     return tagInfo[0];
 }
 
+async function getBookMarkCount(connection,employmentId) {
+    
+    const getBookMarkCountQuery = `
+            SELECT bookMarkCount
+            FROM Employments
+            WHERE employmentId=${employmentId}
+         `;
+    const BookmarkCountResult = await connection.query(getBookMarkCountQuery);
+    const BookMarkCount=BookmarkCountResult[0][0].bookMarkCount; 
+    return BookMarkCount;
+}
+async function getHeartCount(connection,employmentId) {
+    
+    const getHeartCountQuery = `
+            SELECT heartCount
+            FROM Employments
+            WHERE employmentId=${employmentId}
+         `;
+    const heartCountResult = await connection.query(getHeartCountQuery);
+    const heartCount=heartCountResult[0][0].heartCount; 
+    return heartCount;
+}
+
+async function updateBookMarkCount(connection,employmentId,BookMarkCount) {
+    
+    const plusBookMarkCountQuery = `
+            UPDATE WANTED.Employments
+            SET Employments.bookMarkCount=${BookMarkCount}
+            WHERE Employments.employmentId=${employmentId};
+         `;
+    const plusBookmarkCountResult = await connection.query(plusBookMarkCountQuery);
+    
+    return plusBookmarkCountResult[0];
+}
+
+
+async function updateHeartCount(connection,employmentId,heartCount) {
+    
+    const plusHeartCountQuery = `
+            UPDATE WANTED.Employments
+            SET Employments.heartCount=${heartCount}
+            WHERE Employments.employmentId=${employmentId};
+         `;
+    const plusHeartCountResult = await connection.query(plusHeartCountQuery);
+    
+    return plusHeartCountResult[0];
+}
+
   module.exports = {
     getEmploymentCarouselData,
     getThemeData,
@@ -91,5 +139,9 @@ async function getExampleEmployment(connection) {
     getCompaniesMatchingTag,
     getTagInfo,
     getExampleEmployment,
+    updateBookMarkCount,
+    getBookMarkCount,
+    updateHeartCount,
+    getHeartCount,
   };
   
