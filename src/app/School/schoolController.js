@@ -13,10 +13,8 @@ const resumeProvider = require("../Resume/resumeProvider");
  */
 
 exports.getSchools =  async function (req, res) {
-    const schoolName = req.body.schoolName;
 
-    if(!schoolName) return res.send(response(baseResponse.SCHOOLNAME_EMPTY));
-    const getSchoolsResponse = await schoolProvider.getSchools(schoolName);
+    const getSchoolsResponse = await schoolProvider.getSchools();
 
     return res.send(getSchoolsResponse);
 }

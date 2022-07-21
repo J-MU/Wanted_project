@@ -60,6 +60,7 @@ exports.postResumes = async function(req, res) {
  */
 
 exports.getResume = async function(req, res) {
+    console.log("사ㅅ바사바 분신사바");
     const userId = req.verifiedToken.userId
 
     const resumeId = parseInt(req.params.resumeId)
@@ -199,3 +200,15 @@ exports.deleteResumeEducation = async function (req, res) {
     return res.send(deleteResumeEducationResponse);
 
 };
+
+/**
+ * 이력서 인기있는 스킬
+ * [get] /app/resumes/popularSkills
+ */
+
+exports.getPopularSkills =  async function (req, res) {
+    console.log('good');
+    const getPopularSkillsResponse = await resumeProvider.getPopularSkills();
+
+    return res.send(getPopularSkillsResponse);
+}

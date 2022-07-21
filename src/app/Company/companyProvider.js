@@ -6,10 +6,10 @@ const {response, errResponse} = require("../../../config/response");
 const baseResponse = require("../../../config/baseResponseStatus");
 
 //이력서 회사 검색
-exports.getCompanies = async function (companyName) {
+exports.getCompanies = async function () {
     try {
         const connection = await pool.getConnection(async (conn) => conn);
-        const getCompaniesResult = await companyDao.getCompanies(connection,companyName);
+        const getCompaniesResult = await companyDao.getCompanies(connection);
         connection.release();
 
         return response(baseResponse.SUCCESS,getCompaniesResult);

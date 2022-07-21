@@ -26,14 +26,13 @@ async function updateFollowCount(connection,companyId,followCount) {
     return updateFollowCountResult[0];
 }
 //회사 검색
-async function getCompanies (connection, companyName) {
+async function getCompanies (connection) {
     const  getCompaniesQuery = `
         select companyName
-        from Companies
-        where companyName LIKE '%${companyName}%';
+        from Companies;
     `;
 
-    const  getCareerCompaniesRows = await connection.query(getCompaniesQuery, companyName);
+    const  getCareerCompaniesRows = await connection.query(getCompaniesQuery);
 
     return  getCareerCompaniesRows[0]
 }

@@ -15,10 +15,8 @@ exports.gethoho = async function(req, res) {
  */
 
 exports.getCompanies = async function (req, res) {
-    const companyName = req.body.companyName
 
-    if(!companyName) return res.send(response(baseResponse.COMPANYNAME_EMPTY));
-    const getCompaniesResponse = await companyProvider.getCompanies(companyName);
+    const getCompaniesResponse = await companyProvider.getCompanies();
 
     return res.send(getCompaniesResponse);
 }
