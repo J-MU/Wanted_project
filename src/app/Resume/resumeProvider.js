@@ -114,3 +114,20 @@ exports.getEducationSchool = async function (schoolName) {
 }
 
 
+//인기있는 스킬
+exports.getPopularSkills = async function ( ) {
+    try{
+        const connection = await pool.getConnection(async (conn) => conn);
+        const getPopularSkillsResult = await resumeDao.getPopularSkills(connection);
+        connection.release();
+
+        return response(baseResponse.SUCCESS,getPopularSkillsResult);
+
+    }
+    catch(err) {
+        logger.error(`App - createUser Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+
+}
+

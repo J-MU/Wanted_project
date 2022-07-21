@@ -255,6 +255,18 @@ async function  deleteResumeEducation(connection, educationId) {
     return  deleteResumeEducationRows
 }
 
+//인기있는 스킬 조회
+
+async function getPopularSkills (connection) {
+    const  getPopularSkillsQuery = `
+        select name
+        from Skills
+        limit 10;
+    `;
+
+    const  getPopularSkillsRows = await connection.query(getPopularSkillsQuery);
+    return  getPopularSkillsRows[0]
+}
 
  module.exports = {
     postResumeInfo,
@@ -277,6 +289,7 @@ async function  deleteResumeEducation(connection, educationId) {
      deleteResumeCareer,
      getEducationSchool,
      postEducationSchool,
-     deleteResumeEducation
+     deleteResumeEducation,
+    getPopularSkills
 };
   

@@ -199,3 +199,15 @@ exports.deleteResumeEducation = async function (req, res) {
     return res.send(deleteResumeEducationResponse);
 
 };
+
+/**
+ * 이력서 인기있는 스킬
+ * [get] /app/resumes/popularSkills
+ */
+
+exports.getPopularSkills =  async function (req, res) {
+    console.log('good');
+    const getPopularSkillsResponse = await resumeProvider.getPopularSkills();
+
+    return res.send(getPopularSkillsResponse);
+}
