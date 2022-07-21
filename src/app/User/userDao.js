@@ -230,7 +230,7 @@ async function updateUserState(connection,userId,stepLevel){
 
   const updateUserStateQuery=`
     UPDATE Users
-    SET status='STEP2'
+    SET status='STEP3'
     WHERE  userId=${userId};
   `
 
