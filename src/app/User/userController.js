@@ -83,7 +83,12 @@ exports.postUsers = async function (req, res) {
 exports.postJobCatgory=async function(req,res){
     /* body: JobGroup, Job, career(년차), skills[]  */
     const {userId,JobGroupId,JobId,career,skills}=req.body;
+    console.log("일단 이 함수 호출 된긴 했음.");
     console.log(req.body);
+
+    console.log(skills);
+    console.log(typeof skills);
+    console.log(Array.isArray(skills));
     
     //NULL 체크
     if(!userId)

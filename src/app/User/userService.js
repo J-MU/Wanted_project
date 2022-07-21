@@ -143,6 +143,7 @@ exports.postJobCatgory=async function(userId,jobGroupId,jobId,career,skills){   
         const insertJobCatgoryResult=await userDao.insertJobCategoryInfo(connection,profileId,jobGroupId); //
         console.log("확인");
         console.log(skills);
+        
         for (let index = 0; index < skills.length; index++) {
             const insertUserSkill=await userDao.insertUserSkills(connection,userId,skills[index]);
         }
