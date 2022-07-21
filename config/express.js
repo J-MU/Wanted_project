@@ -25,6 +25,8 @@ module.exports = function () {
     require('../src/app/PostTag/postTagRoute')(app);
     require('../src/app/Resume/resumeRoute')(app);
     require('../src/app/Employment/employmentRoute')(app);
+    require('../src/app/Company/companyRoute')(app);
+    require('../src/app/School/schoolRoute')(app);
     // require('../src/app/Board/boardRoute')(app);
 
     return app;

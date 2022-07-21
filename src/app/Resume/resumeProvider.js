@@ -95,21 +95,7 @@ exports.getResumeTitle = async function (getResumeParams) {
 
 }
 
-//이력서 회사 검색
-exports.getCareerCompanies = async function (companyName) {
-    try {
-        const connection = await pool.getConnection(async (conn) => conn);
-        const getCareerCompaniesResult = await resumeDao.getCareerCompanies(connection,companyName);
-        connection.release();
 
-        return response(baseResponse.SUCCESS,getCareerCompaniesResult);
-
-    }
-    catch(err) {
-        logger.error(`App - createUser Service error\n: ${err.message}`);
-        return errResponse(baseResponse.DB_ERROR);
-    }
-}
 
 //이력서 학교 검색
 exports.getEducationSchool = async function (schoolName) {

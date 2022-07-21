@@ -25,9 +25,21 @@ async function updateFollowCount(connection,companyId,followCount) {
     
     return updateFollowCountResult[0];
 }
+//회사 검색
+async function getCompanies (connection, companyName) {
+    const  getCompaniesQuery = `
+        select companyName
+        from Companies
+        where companyName LIKE '%${companyName}%';
+    `;
 
+    const  getCareerCompaniesRows = await connection.query(getCompaniesQuery, companyName);
+
+    return  getCareerCompaniesRows[0]
+}
 
 module.exports = {
     getFollowCount,
     updateFollowCount,
+    getCompanies
 }

@@ -194,19 +194,6 @@ async function patchResumeTitle (connection, getResumeParams) {
     return  patchResumeTitleRows[0]
 }
 
-//회사 검색
-async function getCareerCompanies (connection, companyName) {
-    const  getCareerCompaniesQuery = `
-        select companyName
-        from Companies
-        where companyName LIKE '%${companyName}%';
-    `;
-
-    const  getCareerCompaniesRows = await connection.query( getCareerCompaniesQuery, companyName);
-
-    return  getCareerCompaniesRows[0]
-}
-
 //이력서 경력 생성
 async function postResumeCareer(connection, postResumeCareerParams) {
     console.log(postResumeCareerParams);
@@ -286,7 +273,6 @@ async function  deleteResumeEducation(connection, educationId) {
      getResumeLink,
      getResumeTitle,
      patchResumeTitle,
-     getCareerCompanies,
      postResumeCareer,
      deleteResumeCareer,
      getEducationSchool,

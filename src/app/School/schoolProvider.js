@@ -1,18 +1,19 @@
 const { pool } = require("../../../config/database");
 const { logger } = require("../../../config/winston");
 
-const companyDao = require("./companyDao");
+const schoolDao = require("./schoolDao");
 const {response, errResponse} = require("../../../config/response");
 const baseResponse = require("../../../config/baseResponseStatus");
+const resumeDao = require("../Resume/resumeDao");
 
-//이력서 회사 검색
-exports.getCompanies = async function (companyName) {
+//학교 검색
+exports.getSchools = async function (schoolName) {
     try {
         const connection = await pool.getConnection(async (conn) => conn);
-        const getCompaniesResult = await companyDao.getCompanies(connection,companyName);
+        const getSchoolsResult = await schoolDao.getSchools(connection,schoolName);
         connection.release();
 
-        return response(baseResponse.SUCCESS,getCompaniesResult);
+        return response(baseResponse.SUCCESS,getSchoolsResult);
 
     }
     catch(err) {

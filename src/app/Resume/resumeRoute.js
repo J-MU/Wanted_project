@@ -26,8 +26,6 @@ module.exports = function(app) {
     //이력서 경력 추가하기
     app.post('/app/resumes/:resumeId/career', jwtMiddleware, resume.postResumeCareer);
 
-    //이력서 회사 검색
-    app.get('/app/resumes/career/companies', resume.getCareerCompanies);
 
     //이력서 회사 삭제
     app.patch('/app/resumes/career/:careerId/deleted',jwtMiddleware, resume.deleteResumeCareer);

@@ -111,19 +111,6 @@ exports.patchResumeTitle = async function(req, res) {
     return res.send(patchResumeTitleResponse);
 }
 
-/**
- * 이력서 회사 검색
- * [GET] /app/resumes/career/companies
- */
-
-exports.getCareerCompanies = async function (req, res) {
-    const companyName = req.body.companyName
-
-    if(!companyName) return res.send(response(baseResponse.COMPANYNAME_EMPTY));
-    const getCareerCompaniesResponse = await resumeProvider.getCareerCompanies(companyName);
-
-    return res.send(getCareerCompaniesResponse);
-}
 
 
 /**

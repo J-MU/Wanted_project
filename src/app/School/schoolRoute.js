@@ -1,8 +1,8 @@
 
 module.exports = function(app) {
-    const company = require('./companyController');
+    const school = require('./schoolController');
     const jwtMiddleware = require('../../../config/jwtMiddleware');
 
     //회사 검색 API
-    app.get('/app/companies', company.getCompanies);
+    app.get('/app/schools', school.getSchools);
 }
