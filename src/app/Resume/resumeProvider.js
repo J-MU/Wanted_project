@@ -131,3 +131,20 @@ exports.getPopularSkills = async function ( ) {
 
 }
 
+// 유저 스킬 가져오기
+
+exports.getResumeUserSkills = async function (userId) {
+    try{
+        const connection = await pool.getConnection(async (conn) => conn);
+        const getResumeUserSkillsResult = await resumeDao.getResumeUserSkills(connection,userId);
+        connection.release();
+
+        return response(baseResponse.SUCCESS,getResumeUserSkillsResult);
+
+    }
+    catch(err) {
+        logger.error(`App - createUser Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+
+}
