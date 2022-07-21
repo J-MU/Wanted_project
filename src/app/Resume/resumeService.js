@@ -182,10 +182,23 @@ exports.patchResumeStatus = async function(resumeId) {
 
         // 경력 있는지 확인
         const careerCheck = await resumeProvider.careerCheck(resumeId);
-        // 경력이 있다면 날짜 체크 되어 있는지 확인
+        if(careerCheck.length>0){
+            for (var x in careerCheck) {
+                if (careerCheck[x].startDate==null)
+                    return errResponse(baseResponse.INPUTDATE_ERROR);
+            }
+        }
 
-
-        // const connection = await pool.getConnection(async (conn) => conn);
+        //전공 들어가 있는지 확인
+        const majorCheck = await resumeProvider.majorCheck(resumeId);
+        console.log(majorCheck);
+        if(majorCheck.length>0){
+            for (var x in majorCheck) {
+                if (majorCheck[x].MajorOrDegree==null)
+                    return errResponse(baseResponse.INPUTMAJOR_ERROR);
+            }
+        }
+        // // const connection = await pool.getConnection(async (conn) => conn);
         // const patchResumeStatusResult = await resumeDao.patchResumeStatus(connection,resumeId);
         // connection.release();
         //

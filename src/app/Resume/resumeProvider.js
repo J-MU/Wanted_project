@@ -167,3 +167,12 @@ exports.careerCheck = async function(resumeId) {
     connection.release();
     return careerCheck;
 }
+
+//전공 있는지 체크
+
+exports.majorCheck = async function(resumeId) {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const majorCheck = await resumeDao.majorCheck(connection,resumeId);
+    connection.release();
+    return majorCheck;
+}

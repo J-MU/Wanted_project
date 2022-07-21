@@ -326,9 +326,19 @@ async function careerCheck (connection, resumeId) {
         from Careers
         where resumeId=?;
     `;
-    const careerCheckRows = await connection.query(careerCheckQuery,resumeId);
-    console.log(careerCheckRows[0]);
-    return  num;
+    const careerCheckRows = await connection.query(careerCheckQuery,resumeId);;
+    return   careerCheckRows[0];
+}
+
+//전공 체크
+async function majorCheck (connection, resumeId) {
+    const  majorCheckQuery = `
+        select name, MajorOrDegree
+        from Education
+        where resumeId=?
+    `;
+    const  majorCheckRows = await connection.query(majorCheckQuery,resumeId);;
+    return   majorCheckRows[0];
 }
 
  module.exports = {
@@ -358,6 +368,7 @@ async function careerCheck (connection, resumeId) {
     postResumeAwards,
     deleteResumeAwards,
     selfIntroductionCheck,
-     careerCheck
+     careerCheck,
+     majorCheck
 };
   
