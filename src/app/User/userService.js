@@ -20,6 +20,7 @@ const {connect} = require("http2");
 // Service: Create, Update, Delete 비즈니스 로직 처리
 
 exports.createUser = async function (name, phoneNumber, email, password, IsAcceptedPrivacyTerm, IsAcceptedMarketingTerm) {
+    const connection = await pool.getConnection(async (conn) => conn);
     try {
         //TODO 이메일체크 함수를 telCheck
 
@@ -27,9 +28,11 @@ exports.createUser = async function (name, phoneNumber, email, password, IsAccep
         console.log("email Check");
         const emailRows = await userProvider.emailCheck(email);
         console.log(emailRows);
+        console.log("email check2");
         if (emailRows.length > 0)
             return errResponse(baseResponse.SIGNUP_REDUNDANT_EMAIL);
-            console.log("email Check complete");
+            
+        console.log("email Check complete");
         // 비밀번호 암호화
         const hashedPassword = await crypto
             .createHash("sha512")
@@ -39,7 +42,7 @@ exports.createUser = async function (name, phoneNumber, email, password, IsAccep
 
         const insertUserInfoParams = [name, phoneNumber, email, hashedPassword, IsAcceptedPrivacyTerm, IsAcceptedMarketingTerm];
 
-        const connection = await pool.getConnection(async (conn) => conn);
+        
         console.log('test1');
         await connection.beginTransaction();
 
@@ -51,14 +54,15 @@ exports.createUser = async function (name, phoneNumber, email, password, IsAccep
         const result={};
         result.userId=userId;
         result.jobGroup=getJobGroupRows;
-
+        console.log("여기까지 진짜 왔어..?");
         await connection.commit() // 커밋
-       
+        console.log("여기까지 진짜 왔어..?2");
         
         return response(baseResponse.SUCCESS,result);
 
 
     } catch (err) {
+        console.log("여기까진 진짜 안왔으면 좋겠다..");
         connection.rollback();
         logger.error(`App - createUser Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);

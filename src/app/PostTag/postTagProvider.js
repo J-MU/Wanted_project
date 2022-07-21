@@ -15,7 +15,7 @@ exports.getTags = async function () {
         connection.release();
 
 
-        return postTags[0];
+        return postTags;
     }catch(err){
         logger.error(`App - Get PostTags Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
