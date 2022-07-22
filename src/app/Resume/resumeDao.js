@@ -272,7 +272,7 @@ async function getPopularSkills (connection) {
 
 async function getResumeUserSkills (connection, userId) {
     const  getResumeUserSkillsQuery = `
-        select name
+        select name , uS.skillId
         from Skills
                  inner join userSkills as uS on uS.skillId=Skills.skillId
         where userId=?;
@@ -362,6 +362,28 @@ async function postResumeStatus(connection, resumeId) {
     return  postResumeStatusRows
 }
 
+//유저 스킬 추가하기
+async function  postResumeUserSkills(connection,  params ) {
+    const  postUserResumeSkillsQuery = `
+        insert into ResumeSkillsMapping(resumeId, skillId)
+        values(${params[0]},${params[1]});
+    `;
+    const postUserResumeRows = await connection.query( postUserResumeSkillsQuery, params );
+    return  postUserResumeRows
+}
+
+
+//스킬 추가
+
+async function postResumeSkills(connection, postResumeSkillsParams){
+    console.log(postResumeSkillsParams);
+    const  postResumeSkillsQuery = `
+        insert into ResumeSkillsMapping(resumeId, skillId)
+        values(${postResumeSkillsParams[0]},${postResumeSkillsParams[1]});
+    `;
+    const postResumeSkillsRows = await connection.query(postResumeSkillsQuery, postResumeSkillsParams );
+    return  postResumeSkillsRows
+}
 
  module.exports = {
     postResumeInfo,
@@ -393,6 +415,8 @@ async function postResumeStatus(connection, resumeId) {
      careerCheck,
      majorCheck,
      awardsCheck,
-     postResumeStatus
+     postResumeStatus,
+     postResumeUserSkills,
+    postResumeSkills
 };
   

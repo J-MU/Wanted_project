@@ -281,5 +281,42 @@ exports.patchResumeStatus = async function (req, res) {
  *
  */
 exports.postResumeUserSkills = async function(req, res) {
+    const resumeId= parseInt(req.params.resumeId);
+    const userId = req.verifiedToken.userId
 
+    const postResumeUserSkillsResponse = await resumeService.postResumeUserSkills(resumeId,userId);
+
+    return res.send(postResumeUserSkillsResponse);
+}
+
+/**
+ * 스킬 추가
+ *
+ */
+
+exports.postResumeSkills =  async function(req, res) {
+    const resumeId= parseInt(req.params.resumeId);
+    const skillId = parseInt(req.body.skillId);
+
+    const postResumeSkillsResponse = await resumeService.postResumeSkills(resumeId,skillId);
+
+    return res.send(postResumeSkillsResponse);
+
+}
+
+
+/**
+ * 스킬 삭제
+ *
+ */
+
+exports.patchResumeSkills = async function(req, res) {
+    const resumeId= parseInt(req.params.resumeId);
+    const skillId = parseInt(req.body.skillId);
+
+    const patchResumeSkills = [resumeId, skillId]
+
+    const patchResumeSkillsResponse = await resumeService.patchResumeSkills(resumeId,patchResumeSkills);
+
+    return res.send(patchResumeSkillsResponse);
 }
