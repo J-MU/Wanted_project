@@ -166,6 +166,10 @@ async function getEmployments(connection,params) {
     let careerWhereQuery="";
     let jobGroupWhereQuery="";
     let jobWhereQuery= "";
+    let companyTagQuery="";
+    let companyTagCondition=``;
+    let skillTagQuery="";
+    let skillTagCondition=``;
 
     if(params.userId!=0) baseQuerycondition=`AND userId=${params.userId}`;
     if(params.country) countryWhereQuery=` AND Employments.country="${params.country}" `;
@@ -187,6 +191,58 @@ async function getEmployments(connection,params) {
         jobWhereQuery;
         
     console.log("BaseWhereQuery:",baseWhereQuery);
+
+    if(!Array.isArray(params.companyTagId)){
+        companyTagCondition=companyTagCondition+` tagId=${params.tagId}`;
+    }else{
+        for (let index = 0; index < params.companyTagId.length; index++) {
+            if(index==0){
+                companyTagCondition =companyTagCondition+ ` tagId=${params.companyTagId[index]}`;
+                continue;
+            }
+            companyTagCondition =companyTagCondition+ ` OR tagId=${params.companyTagId[index]}`;
+        }
+    }
+       
+    
+    companyTagQuery=`
+        INNER JOIN (
+        SELECT * FROM CompanyTagsMapping
+        where 1=1 and (`+companyTagCondition+`)
+        GROUP BY companyId
+        )TM on TM.companyId=C.companyId`;
+
+    console.log("companyTagQuery:",companyTagQuery);
+   
+    
+    if(!Array.isArray(params.skills)){
+        skillTagCondition=skillTagCondition+` skillId=${params.skills}`;
+    }else{
+        for (let index = 0; index < params.skills.length; index++) {
+            if(index==0){
+                skillTagCondition =skillTagCondition+ ` skillId=${params.skills[index]}`;
+                continue;
+            }
+            skillTagCondition =skillTagCondition+ ` OR skillId=${params.skills[index]}`;
+        }
+    }
+
+
+    skillTagQuery=`    
+        INNER JOIN (
+        select skillId,employmentId from EmploymentSkillMapping
+        where 1=1 AND (`+skillTagCondition +`)
+        Group By employmentId # 1 2 5 6 7 11 13
+        )SM on SM.employmentId=Employments.employmentId
+    `;
+
+    console.log("skillTagQuery: ",skillTagQuery);
+
+    //    #ORDER BY responseRate DESC
+    //    #ORDER BY Employments.createdAt DESC
+    //    #ORDER BY (Employments.recommenderSigningBonus+Employments.recommendedSigningBonus) DESC
+    //    #ORDER BY Employments.clickedCount DESC
+    
     const totalQuery = `
             select Employments.employmentId,
             jobName,
@@ -213,31 +269,11 @@ async function getEmployments(connection,params) {
         )IsBookMark
         on IsBookMark.employmentId=Employments.employmentId
         LEFT JOIN JobCategories JC on Employments.categoryId = JC.categoryId
-        LEFT JOIN JobGroupCategories JGC on JC.jobGroupCategoryId = JGC.jobGroupCategoryId`+baseWhereQuery;
+        LEFT JOIN JobGroupCategories JGC on JC.jobGroupCategoryId = JGC.jobGroupCategoryId`+
+        companyTagQuery+
+        skillTagQuery+
+        baseWhereQuery;
     
-    const companyTagQuery=`
-        INNER JOIN (
-        SELECT * FROM CompanyTagsMapping
-        where 1=1 and (tagId=2 or tagId=3)
-        GROUP BY companyId
-        )TM on TM.companyId=C.companyId`;
-    
-    const skillTagQuery=`    
-        INNER JOIN (
-        select skillId,employmentId from EmploymentSkillMapping
-        where skillId=3 or skillId=4
-        Group By employmentId # 1 2 5 6 7 11 13
-        )SM on SM.employmentId=Employments.employmentId`
-    
-    
-     
-    //    #AND (CT.tagId=3                               
-    //    #OR CT.tagId=2
-    //    #OR CT.tagId=4)
-    //    #ORDER BY responseRate DESC
-    //    #ORDER BY Employments.createdAt DESC
-    //    #ORDER BY (Employments.recommenderSigningBonus+Employments.recommendedSigningBonus) DESC
-    //    #ORDER BY Employments.clickedCount DESC
         
          
     console.log("Query:");
