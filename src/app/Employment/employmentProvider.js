@@ -60,12 +60,14 @@ exports.getDataForMainPage = async function (userId) {
         let tagInfo=await employmentDao.getTagInfo(connection,tagList[0]);
         totalData.companiesMatchingTag1.tagId=tagInfo[0].tagId;
         totalData.companiesMatchingTag1.tagName=tagInfo[0].name;
+        totalData.companiesMatchingTag1.tagURL=tagInfo[0].tagImgUrl;
         console.log("여기까진 왓ㄱㅆ지?")
         totalData.companiesMatchingTag1.companyList=await employmentDao.getCompaniesMatchingTag(connection,tagList[0],userId);
 
         tagInfo=await employmentDao.getTagInfo(connection,tagList[1]);
         totalData.companiesMatchingTag2.tagId=tagInfo[0].tagId;
         totalData.companiesMatchingTag2.tagName=tagInfo[0].name;
+        totalData.companiesMatchingTag2.tagURL=tagInfo[0].tagImgUrl;
         totalData.companiesMatchingTag2.companyList=await employmentDao.getCompaniesMatchingTag(connection,tagList[1],userId);
         console.log("여기까지왔니?998")
         totalData.hotPosition=await employmentDao.getExampleEmployment(connection,userId);

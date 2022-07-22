@@ -65,7 +65,7 @@ FROM Companies
 async function getTagInfo(connection,tagId) {
     console.log("여기까지2"); 
     const getCompaniesMatchingTagQuery = `
-            select tagId,name from CompanyTags
+            select tagId,name,tagImgUrl from CompanyTags
             WHERE tagId=${tagId};
          `;
     const tagInfo = await connection.query(getCompaniesMatchingTagQuery);
