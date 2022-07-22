@@ -5,6 +5,8 @@ module.exports = function(app) {
     const resume = require('./resumeController');
     const jwtMiddleware = require('../../../config/jwtMiddleware');
 
+    //이력서 유저 스킬 추가
+    app.post('/app/resumes/:resumeId/userSkills', jwtMiddleware, resume.postResumeUserSkills);
 
     //유저 스킬 가져오기
     app.get('/app/resumes/userSkills', jwtMiddleware, resume.getResumeUserSkills);
@@ -12,8 +14,11 @@ module.exports = function(app) {
     //이력서 인기 스킬 가져오기
     app.get('/app/resumes/popularSkills', resume.getPopularSkills);
 
-    //이력서 유저 스킬 추가
-    app.post('/app/resumes/:resumeId/userSkills', jwtMiddleware, resume.postResumeUserSkills);
+    //이력서 스킬 추가
+    app.post('/app/resumes/:resumeId/Skills', jwtMiddleware, resume.postResumeSkills);
+
+    //이력서 스킬 삭제
+    app.patch('/app/resumes/:resumeId/Skills/deleted',jwtMiddleware, resume.patchResumeSkills);
     //이력서 전체 조회
     //app.get('/app/resumes', jwtMiddleware, resume.getResumes);
 

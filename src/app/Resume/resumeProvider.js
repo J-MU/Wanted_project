@@ -138,6 +138,7 @@ exports.getResumeUserSkills = async function (userId) {
     try{
         const connection = await pool.getConnection(async (conn) => conn);
         const getResumeUserSkillsResult = await resumeDao.getResumeUserSkills(connection,userId);
+
         connection.release();
 
         return response(baseResponse.SUCCESS,getResumeUserSkillsResult);

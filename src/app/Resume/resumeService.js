@@ -244,3 +244,38 @@ exports.patchResumeStatus = async function(resumeId) {
     }
 
 }
+
+//이력서 유저 스킬 추가
+exports.postResumeUserSkills = async function(resumeId,userId) {
+    try {
+        const connection = await pool.getConnection(async (conn) => conn);
+        const getResumeUserSkillsResult = await resumeDao.getResumeUserSkills(connection,userId);
+
+        for (x in getResumeUserSkillsResult) {
+            const param = getResumeUserSkillsResult[x].skillId
+            const params =[resumeId, param]
+            const postResumeUserSkills = await resumeDao.postResumeUserSkills(connection, params);
+        }
+        connection.release();
+        return response(baseResponse.SUCCESS);
+
+    }
+
+    catch (err) {
+        logger.error(`App - createUser Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+
+}
+
+//이력서 스킬 추가
+exports.postResumeSkills = async function(resumeId,skillId) {
+    const postResumeSkillsParams = [resumeId,skillId]
+    const connection = await pool.getConnection(async (conn) => conn);
+    const postResumeSkillsResult = await resumeDao.postResumeSkills(connection,postResumeSkillsParams);
+
+    connection.release();
+    return response(baseResponse.SUCCESS);
+
+
+}
