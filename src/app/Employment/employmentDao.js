@@ -76,8 +76,14 @@ async function getTagInfo(connection,tagId) {
     return tagInfo[0];
 }
 
-async function getExampleEmployment(connection,userId) {
+async function getExampleEmployment(connection,userId,limit) {
+    let limitStr;
+
     
+    limitStr=" LIMIT "+limit;
+    
+    
+
     const getCompaniesMatchingTagQuery = `
                 SELECT      
                     Employments.employmentId,
@@ -96,8 +102,8 @@ async function getExampleEmployment(connection,userId) {
                         where userId=${userId} and status='ACTIVE'
                     )IsBookMark on IsBookMark.employmentId=Employments.employmentId
                     ORDER BY RAND()
-                    LIMIT 12;
-         `;
+         `+limitStr;
+
     const tagInfo = await connection.query(getCompaniesMatchingTagQuery);
     
     return tagInfo[0];

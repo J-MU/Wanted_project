@@ -43,3 +43,25 @@ exports.getJobGroupCategories = async function () {
         return errResponse(baseResponse.DB_ERROR);
     }
 };
+
+exports.checkInheritanceJobandJobGroupCategory = async function (jobId) {
+    
+    try{
+        const connection = await pool.getConnection(async (conn) => conn);
+        
+        const JobGroupCategoryId=await jobDao.getJobGroupCategoryId(connection,jobId);
+        let boolean=false;
+        if(JobGroupCategoryId.length>0)
+            boolean=true;
+
+        console.log("JobGroupCategory ID:");
+        console.log(JobGroupCategoryId,boolean);
+        connection.release();
+
+        return boolean;
+    }catch(err){
+        logger.error(`App - checkInheritanceJobandJobGroupCategory Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+};
+

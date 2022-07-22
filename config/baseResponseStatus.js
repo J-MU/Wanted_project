@@ -36,6 +36,8 @@ module.exports = {
     NOT_DEVELOPMENT_CANT_HAVE_SKILL:{"isSuccess": false, "code": 2055, "message": "직군이 개발이 아니면 skill을 등록할 수 없습니다."},
     // USER_USERID_NOT_EXIST : { "isSuccess": false, "code": 2013, "message": "해당 회원이 존재하지 않습니다." },
 
+    // Employments: 2100
+    OUT_OF_CAREER_RANGE: {"isSuccess": false, "code": 2101, "message": "경력 범위를 벗어났습니다."},
     // USER_USEREMAIL_EMPTY : { "isSuccess": false, "code": 2014, "message": "이메일을 입력해주세요." },
     // USER_USEREMAIL_NOT_EXIST : { "isSuccess": false, "code": 2015, "message": "해당 이메일을 가진 회원이 존재하지 않습니다." },
     // USER_ID_NOT_MATCH : { "isSuccess": false, "code": 2016, "message": "유저 아이디 값을 확인해주세요" },
@@ -47,7 +49,9 @@ module.exports = {
     //Job,JobGroup :2300
     JOB_GROUP_EMPTY:{"isSuccess": false, "code": 2300, "message": "직군을 입력해주세요"},
     JOB_EMPTY:{"isSuccess": false, "code": 2301, "message": "직무를 입력해주세요"},
-
+    OUT_OF_JOBGROUP_RANGE:{"isSuccess": false, "code": 2301, "message": "직군을 입력해주세요"},
+    OUT_OF_JOB_RANGE:{"isSuccess": false, "code": 2301, "message": "직무를 입력해주세요"},
+    NOT_INHERITANCE_CATEGORIES:{"isSuccess": false, "code": 2301, "message": "직무를 입력해주세요"},
     //resume : 2400
     RESUMEID_EMPTY : {"isSuccess": false, "code": 2400, "message": "이력서ID를 입력해주세요"},
     SCHOOLNAME_EMPTY  : {"isSuccess": false, "code": 2401, "message": "학교이름을 입력해주세요"},
@@ -57,7 +61,11 @@ module.exports = {
     FAILED_ERROR : {"isSuccess": false, "code": 2405, "message": "작성완료를 하려면 빈 칸을 채워주세요."},
     //company : 2150
     COMPANYNAME_EMPTY : {"isSuccess": false, "code": 2150, "message": "회사이름을 입력해주세요"},
+    COMPANY_TAG_TOO_MANY: {"isSuccess": false, "code": 2151, "message": "company tag는 3개까지 선택 가능합니다."},
+    
 
+    // 기타 error
+    OUT_OF_ORDER_BY_OPTION:{"isSuccess": false, "code": 2500, "message": "유효한 정렬 option이 아닙니다."},
     // Response error
     SIGNUP_REDUNDANT_EMAIL : { "isSuccess": false, "code": 3001, "message":"중복된 이메일입니다." },
     SIGNUP_REDUNDANT_NICKNAME : { "isSuccess": false, "code": 3002, "message":"중복된 닉네임입니다." },
@@ -66,6 +74,7 @@ module.exports = {
     SIGNIN_PASSWORD_WRONG : { "isSuccess": false, "code": 3004, "message": "비밀번호가 잘못 되었습니다." },
     SIGNIN_INACTIVE_ACCOUNT : { "isSuccess": false, "code": 3005, "message": "비활성화 된 계정입니다. 고객센터에 문의해주세요." },
     SIGNIN_WITHDRAWAL_ACCOUNT : { "isSuccess": false, "code": 3006, "message": "탈퇴 된 계정입니다. 고객센터에 문의해주세요." },
+
 
 
 

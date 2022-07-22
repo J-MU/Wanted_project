@@ -54,16 +54,18 @@ exports.getEmployments = async function (req, res) {    //TODO 로그인이 되�
         params.country=req.query.country;
     if(req.query.location)
         params.location=req.query.location; //TODO LOCATION세분화 해야함.
-    if(req.query.companyTagId)
+    if(req.query.companyTagId)  //TODO companyTagList가 length가 3이하인지 validation해야함.
         params.companyTagId=req.query.companyTagId;
     if(req.query.career)
         params.career=req.query.career;
-    if(req.query.skillTagId)
+    if(req.query.skillTagId)    //ok~
         params.skills=req.query.skillTagId;
     if(req.query.orderBy)
         params.orderBy=req.query.orderBy;
 
     console.log(params);
+
+    const EmploymentsRow=await employmentProvider.getEmployments(params);
 
     return res.send(response(baseResponse.SUCCESS));
 }
