@@ -385,6 +385,21 @@ async function postResumeSkills(connection, postResumeSkillsParams){
     return  postResumeSkillsRows
 }
 
+//스킬 삭제
+async function deleteResumeSkills(connection,deleteResumeSkillsParams ) {
+    console.log(deleteResumeSkillsParams[0])
+
+    const  deleteResumeSkillsQuery = `
+    UPDATE ResumeSkillsMapping 
+    SET status = 'DELETED'
+    WHERE resumeId=${deleteResumeSkillsParams[0]} and skillId=${deleteResumeSkillsParams[0]};
+    `;
+
+    const deleteResumeSkillsRows = await connection.query(deleteResumeSkillsQuery,deleteResumeSkillsParams);
+
+    return  deleteResumeSkillsRows
+}
+
  module.exports = {
     postResumeInfo,
     postResumeCareerInfo,
@@ -417,6 +432,7 @@ async function postResumeSkills(connection, postResumeSkillsParams){
      awardsCheck,
      postResumeStatus,
      postResumeUserSkills,
-    postResumeSkills
+    postResumeSkills,
+     deleteResumeSkills
 };
   

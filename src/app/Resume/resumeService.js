@@ -279,3 +279,21 @@ exports.postResumeSkills = async function(resumeId,skillId) {
 
 
 }
+
+
+//이력서 스킬 삭제
+
+exports.deleteResumeSkills = async function(deleteResumeSkillsParams){
+    try {
+        const connection = await pool.getConnection(async (conn) => conn);
+        const deleteResumeSkillsResult = await resumeDao.deleteResumeSkills(connection,deleteResumeSkillsParams);
+        connection.release();
+
+        return response(baseResponse.SUCCESS);
+    }
+
+    catch (err) {
+        logger.error(`App - createUser Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}

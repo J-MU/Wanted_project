@@ -239,7 +239,7 @@ exports.postResumeAwards = async function (req, res) {
     const details = req.body.details
 
     const postResumeAwardsParams = [resumeId, period, name, details]
-
+    if(!name) return res.send(response(baseResponse.AWARDSNAME_EMPTY));
     const postResumeAwardsResponse = await resumeService.postResumeAwards(postResumeAwardsParams);
 
     return res.send(postResumeAwardsResponse);
@@ -310,13 +310,15 @@ exports.postResumeSkills =  async function(req, res) {
  *
  */
 
-exports.patchResumeSkills = async function(req, res) {
+exports.deleteResumeSkills = async function(req, res) {
     const resumeId= parseInt(req.params.resumeId);
-    const skillId = parseInt(req.body.skillId);
+    const skillId = parseInt(req.params.skillId);
 
-    const patchResumeSkills = [resumeId, skillId]
+    const deleteResumeSkillsParams = [resumeId, skillId]
 
-    const patchResumeSkillsResponse = await resumeService.patchResumeSkills(resumeId,patchResumeSkills);
+    console.log(deleteResumeSkillsParams)
 
-    return res.send(patchResumeSkillsResponse);
+    const deleteResumeSkillsResponse = await resumeService.deleteResumeSkills(deleteResumeSkillsParams);
+
+    return res.send(deleteResumeSkillsResponse);
 }
