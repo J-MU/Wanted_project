@@ -8,6 +8,12 @@ module.exports = function(app) {
 
     //유저 스킬 가져오기
     app.get('/app/resumes/userSkills', jwtMiddleware, resume.getResumeUserSkills);
+
+    //이력서 인기 스킬 가져오기
+    app.get('/app/resumes/popularSkills', resume.getPopularSkills);
+
+    //이력서 유저 스킬 추가
+    app.post('/app/resumes/:resumeId/userSkills', jwtMiddleware, resume.postResumeUserSkills);
     //이력서 전체 조회
     //app.get('/app/resumes', jwtMiddleware, resume.getResumes);
 
@@ -19,8 +25,6 @@ module.exports = function(app) {
     app.post('/app/resumes',  jwtMiddleware, resume.postResumes);
 
 
-    //이력서 인기 스킬 가져오기
-    app.get('/app/resumes/popularSkills', resume.getPopularSkills);
 
     //이력서 조회
     app.get('/app/resumes/:resumeId', jwtMiddleware, resume.getResume );
@@ -58,4 +62,6 @@ module.exports = function(app) {
 
     //이력서 작성 완료
     app.patch('/app/resumes/:resumeId/status', jwtMiddleware, resume.patchResumeStatus);
+
+
 };

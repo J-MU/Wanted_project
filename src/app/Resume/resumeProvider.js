@@ -176,3 +176,12 @@ exports.majorCheck = async function(resumeId) {
     connection.release();
     return majorCheck;
 }
+
+//수상 잇는지 체크
+
+exports.awardsCheck = async function(resumeId) {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const awardsCheck = await resumeDao.awardsCheck(connection,resumeId);
+    connection.release();
+    return awardsCheck;
+}

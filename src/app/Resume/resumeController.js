@@ -267,15 +267,19 @@ exports.deleteResumeAwards = async function (req, res) {
 
 exports.patchResumeStatus = async function (req, res) {
     const resumeId= parseInt(req.params.resumeId);
-    //간단소개슬 400자 이상
 
-    //날짜
+    const checkResumeResponse = await resumeService.patchResumeStatus(resumeId);
+    // const patchResumeStatusResponse
 
 
-    //전공 및 학위
-    console.log('test01');
-    const patchResumeStatusResponse = await resumeService.patchResumeStatus(resumeId);
-
-    return res.send(patchResumeStatusResponse);
+    return res.send(checkResumeResponse);
 
 };
+
+/**
+ * 유저 스킬 추가
+ *
+ */
+exports.postResumeUserSkills = async function(req, res) {
+
+}

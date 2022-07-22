@@ -4,7 +4,6 @@ module.exports = {
     SUCCESS : { "isSuccess": true, "code": 1000, "message":"성공" },
     NO_REDUCTION_USER:{"isSuccess":true,"code":1001,"message":"중복 유저 없음"},
     HAVE_REDUCTION_USER:{"isSuccess":true,"code":1002,"message":"이미 가입된 유저"},
-
     // Common
     TOKEN_EMPTY : { "isSuccess": false, "code": 2000, "message":"JWT 토큰을 입력해주세요." },
     TOKEN_VERIFICATION_FAILURE : { "isSuccess": false, "code": 3000, "message":"JWT 토큰 검증 실패" },
@@ -55,6 +54,7 @@ module.exports = {
     SELFINTRODUCTIONNUM_ERROR : {"isSuccess": false, "code": 2402, "message": "글자수 400자 미만은 이력서 작성을 완료할 수 없습니다."},
     INPUTDATE_ERROR :  {"isSuccess": false, "code": 2403, "message": "경력의 기간을 작성해주세요"},
     INPUTMAJOR_ERROR :  {"isSuccess": false, "code": 2404, "message": "전공 및 학위를 작성해주세요"},
+    FAILED_ERROR : {"isSuccess": false, "code": 2405, "message": "작성완료를 하려면 빈 칸을 채워주세요."},
     //company : 2150
     COMPANYNAME_EMPTY : {"isSuccess": false, "code": 2150, "message": "회사이름을 입력해주세요"},
 

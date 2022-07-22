@@ -341,6 +341,28 @@ async function majorCheck (connection, resumeId) {
     return   majorCheckRows[0];
 }
 
+//수상 있는지 체크
+async function awardsCheck(connection, resumeId) {
+    const awardsCheckQuery = `
+        select name, details
+        from awards
+        where resumeId=?
+    `;
+    const  awardsCheckRows = await connection.query(awardsCheckQuery,resumeId);;
+    return   awardsCheckRows[0];
+}
+
+//작성 완료로 바꿈
+async function postResumeStatus(connection, resumeId) {
+    const  postResumeStatusQuery = `
+    UPDATE Resumes t SET t.status = '작성 완료'
+    WHERE resumeId=?;
+    `;
+    const postResumeStatusRows = await connection.query(postResumeStatusQuery,resumeId);
+    return  postResumeStatusRows
+}
+
+
  module.exports = {
     postResumeInfo,
     postResumeCareerInfo,
@@ -369,6 +391,8 @@ async function majorCheck (connection, resumeId) {
     deleteResumeAwards,
     selfIntroductionCheck,
      careerCheck,
-     majorCheck
+     majorCheck,
+     awardsCheck,
+     postResumeStatus
 };
   
