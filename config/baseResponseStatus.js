@@ -38,6 +38,7 @@ module.exports = {
 
     // Employments: 2100
     OUT_OF_CAREER_RANGE: {"isSuccess": false, "code": 2101, "message": "경력 범위를 벗어났습니다."},
+    SEARCH_LOCATION_ERROR_TYPE:{"isSuccess": false, "code": 2102, "message": "Location 형식이 맞지않습니다."},
     // USER_USEREMAIL_EMPTY : { "isSuccess": false, "code": 2014, "message": "이메일을 입력해주세요." },
     // USER_USEREMAIL_NOT_EXIST : { "isSuccess": false, "code": 2015, "message": "해당 이메일을 가진 회원이 존재하지 않습니다." },
     // USER_ID_NOT_MATCH : { "isSuccess": false, "code": 2016, "message": "유저 아이디 값을 확인해주세요" },

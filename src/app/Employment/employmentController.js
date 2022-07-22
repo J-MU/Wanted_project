@@ -29,7 +29,7 @@ exports.getEmployments = async function (req, res) {    //TODO 로그인이 되�
     const params={};
 
     console.log("여기까지 왔나?999");
-    
+    params.userId=0;
     if(req.verifiedToken){
         params.userId = req.verifiedToken.userId
     }
@@ -52,8 +52,21 @@ exports.getEmployments = async function (req, res) {    //TODO 로그인이 되�
         params.jobId=req.query.jobId;
     if(req.query.country)
         params.country=req.query.country;
-    if(req.query.location)
-        params.location=req.query.location; //TODO LOCATION세분화 해야함.
+    
+    
+
+    const locationRegex=new RegExp('.\..'); // sdf.dsfsd 형태 (city.region)
+   
+    if(req.query.location && !locationRegex.test(req.query.location)){
+        return response(baseResponse.SEARCH_LOCATION_ERROR_TYPE);
+    }
+    if(req.query.location){
+        const location=req.query.location.split('.');
+        params.city=location[0];
+        params.region=location[1];
+    }
+        
+        
     if(req.query.companyTagId)  //TODO companyTagList가 length가 3이하인지 validation해야함.
         params.companyTagId=req.query.companyTagId;
     if(req.query.career)
@@ -67,5 +80,5 @@ exports.getEmployments = async function (req, res) {    //TODO 로그인이 되�
 
     const EmploymentsRow=await employmentProvider.getEmployments(params);
 
-    return res.send(response(baseResponse.SUCCESS));
+    return res.send(response(baseResponse.SUCCESS,EmploymentsRow));
 }

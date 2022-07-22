@@ -118,20 +118,20 @@ exports.getEmployments = async function (params) {
 
     */
     // 1. jobGroupId -> job범위안에 들어가있는지. //TODO joId not null이면 적용.
-    if((params.jobGroupId)&!(1<=params.jobGroupId & params.jobGroupId<=19)){
+    if((params.jobGroupId)&&!(1<=params.jobGroupId & params.jobGroupId<=19)){
         return response(baseResponse.OUT_OF_JOBGROUP_RANGE);
     }
 
     //2. jobId -> job 범위안에 들어가 있는지. 
-    if((params.jobId)&!(1<=params.jobId & params.jobId<=42))
+    if((params.jobId)&&!(1<=params.jobId && params.jobId<=42))
         return response(baseResponse.OUT_OF_JOB_RANGE);
 
     //3. jobGroupId가 없는데 jobId가 들어오진 않았는지.
-    if(params.jobId&(!params.jobGroupId)  )
+    if(params.jobId&&(!params.jobGroupId)  )
         return response(baseResponse.JOB_GROUP_EMPTY);
     
     //4. jobGroupId와 jobId가 부모자식 관계인지
-    if(params.jobGroupId & params.jobId){
+    if(params.jobGroupId && params.jobId){
         const isInheritance=await jobProvider.checkInheritanceJobandJobGroupCategory(params.jobId);
         console.log("isInheritance : ");
         console.log(isInheritance);
@@ -141,26 +141,26 @@ exports.getEmployments = async function (params) {
     
 
     //5.  companyTagId가 3개 이하인지.
-    if(params.companyTagId & params.campanyTagId.length>3)
+    if(params.companyTagId && Array.isArray(params.companyTagId)&&params.companyTagId.length>3)
         return response(baseResponse.COMPANY_TAG_TOO_MANY);
     
     //6. career가 0~10 사이인지.
-    if(params.career & !(params.career>=0 & params.career<=MAX_CAREER_SIZE))
+    if(params.career && !(params.career>=0 && params.career<=MAX_CAREER_SIZE))
         return response(baseResponse.OUT_OF_CAREER_RANGE);
 
     //7. orderBy가 0~3사이인지.
-    if(params.orderBy & !(params.orderBy>=0 & params.orderBy<=MAX_ORDER_BY_OPTION_SIZE))
+    if(params.orderBy && !(params.orderBy>=0 && params.orderBy<=MAX_ORDER_BY_OPTION_SIZE))
         return response(baseResponse.OUT_OF_ORDER_BY_OPTION);
 
 
     try{
         const connection = await pool.getConnection(async (conn) => conn);
         
-        
+        console.log("여까지 옴?");
         totalData=await employmentDao.getEmployments(connection,params);
 
         connection.release();
-        return elementsRow;
+        return totalData;
     }catch(err){
         logger.error(`App - Get Filtering Employments Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);

@@ -158,8 +158,36 @@ async function updateHeartCount(connection,employmentId,heartCount) {
 }
 
 async function getEmployments(connection,params) {
+    console.log("Query 시작");
+    let baseQuerycondition="";
+    let countryWhereQuery="";
+    let cityWhereQuery="";
+    let regionWhereQuery="";
+    let careerWhereQuery="";
+    let jobGroupWhereQuery="";
+    let jobWhereQuery= "";
+
+    if(params.userId!=0) baseQuerycondition=`AND userId=${params.userId}`;
+    if(params.country) countryWhereQuery=` AND Employments.country="${params.country}" `;
+    if(params.city) cityWhereQuery=` AND Employments.city="${params.city}"`;
+    if(params.region) regionWhereQuery=` AND Employments.region="${params.region}"`;
+    if(params.career) careerWhereQuery=` AND Employments.career>=${params.career}`;
+    if(params.jobGroupId) jobGroupWhereQuery=` AND JGC.jobGroupCategoryId=${params.jobGroupId}`;
+    if(params.jobId) jobWhereQuery= ` AND JC.categoryId=${params.jobId}`;     
+
     
-    const getEmploymentsUsingFilteringQuery = `
+    const baseWhereQuery=`
+        WHERE 1=1`+
+        baseQuerycondition+
+        countryWhereQuery+
+        cityWhereQuery+
+        regionWhereQuery+
+        careerWhereQuery+
+        jobGroupWhereQuery+
+        jobWhereQuery;
+        
+    console.log("BaseWhereQuery:",baseWhereQuery);
+    const totalQuery = `
             select Employments.employmentId,
             jobName,
             employmentImgUrl,
@@ -172,7 +200,7 @@ async function getEmployments(connection,params) {
             IF(IsBookMark.userId,true,false) as isBookMark,
             JC.name ,# 없어도 되는데 넣어놓은거 테스트용
             JGC.name, # 없어도 되는데 넣어놓은거 테스트용2
-        #       CT.name, # 없어도 되는데 넣어놓은거 테스트용 3
+            #CT.name, # 없어도 되는데 넣어놓은거 테스트용 3 
             Employments.responseRate, # 없어도 되는데 넣어놓은거 테스트용 4
             Employments.createdAt, # 없어도 되는데 넣어놓은거 테스트용 5
             Employments.clickedCount # 없어도 되는데 넣어놓은거 테스트용 6
@@ -181,38 +209,40 @@ async function getEmployments(connection,params) {
         on Employments.companyId = C.CompanyId
         LEFT JOIN (
             select * from WANTED.BookMark
-            where userId=${params.userId} and status='ACTIVE'
+            where  status='ACTIVE' `+baseQuerycondition+`
         )IsBookMark
         on IsBookMark.employmentId=Employments.employmentId
         LEFT JOIN JobCategories JC on Employments.categoryId = JC.categoryId
-        LEFT JOIN JobGroupCategories JGC on JC.jobGroupCategoryId = JGC.jobGroupCategoryId
+        LEFT JOIN JobGroupCategories JGC on JC.jobGroupCategoryId = JGC.jobGroupCategoryId`+baseWhereQuery;
+    
+    const companyTagQuery=`
         INNER JOIN (
         SELECT * FROM CompanyTagsMapping
-        where tagId=2 or tagId=3
+        where 1=1 and (tagId=2 or tagId=3)
         GROUP BY companyId
-        )TM on TM.companyId=C.companyId
+        )TM on TM.companyId=C.companyId`;
+    
+    const skillTagQuery=`    
         INNER JOIN (
         select skillId,employmentId from EmploymentSkillMapping
         where skillId=3 or skillId=4
         Group By employmentId # 1 2 5 6 7 11 13
-        )SM on SM.employmentId=Employments.employmentId
-        WHERE 1=1
-        #
-        #AND    Employments.country="${params.country}"                    # 한국 고쳐야함.
-        #AND Employments.city="${params.city}"                          # 서울 고쳐야함.
-        #AND Employments.career>=${params.career}                   # 경력
-        #AND JGC.jobGroupCategoryId=${params.jobGroupCategoryId}    # 직군 선택
-        #AND JC.categoryId=${params.jobCategoryId}                  # 직무 선택
-        #AND (CT.tagId=3                               # tag는 3개 까지 가능
-        #OR CT.tagId=2
-        #OR CT.tagId=4)
-        #ORDER BY responseRate DESC
-        #ORDER BY Employments.createdAt DESC
-        #ORDER BY (Employments.recommenderSigningBonus+Employments.recommendedSigningBonus) DESC
-        ORDER BY Employments.clickedCount DESC
-        ;
-         `;
-    const employmentsRows = await connection.query(getEmploymentsUsingFilteringQuery);
+        )SM on SM.employmentId=Employments.employmentId`
+    
+    
+     
+    //    #AND (CT.tagId=3                               
+    //    #OR CT.tagId=2
+    //    #OR CT.tagId=4)
+    //    #ORDER BY responseRate DESC
+    //    #ORDER BY Employments.createdAt DESC
+    //    #ORDER BY (Employments.recommenderSigningBonus+Employments.recommendedSigningBonus) DESC
+    //    #ORDER BY Employments.clickedCount DESC
+        
+         
+    console.log("Query:");
+    console.log(totalQuery);
+    const employmentsRows = await connection.query(totalQuery);
     
     return employmentsRows[0];
 }
