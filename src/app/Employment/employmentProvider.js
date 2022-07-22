@@ -157,7 +157,7 @@ exports.getEmployments = async function (params) {
         const connection = await pool.getConnection(async (conn) => conn);
         
         
-        totalData=await employmentDao.getCompaniesMatchingTag(connection,tagList[0],userId);
+        totalData=await employmentDao.getEmployments(connection,params);
 
         connection.release();
         return elementsRow;

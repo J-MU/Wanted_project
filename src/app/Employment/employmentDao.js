@@ -157,6 +157,67 @@ async function updateHeartCount(connection,employmentId,heartCount) {
     return plusHeartCountResult[0];
 }
 
+async function getEmployments(connection,params) {
+    
+    const getEmploymentsUsingFilteringQuery = `
+            select Employments.employmentId,
+            jobName,
+            employmentImgUrl,
+            country,
+            city,
+            if(responseRate>=95,"응답률 매우 높음",null) as 응답률,
+            recommendedSigningBonus+recommenderSigningBonus as "채용 보너스",
+            C.companyName,
+            C.companyId,
+            IF(IsBookMark.userId,true,false) as isBookMark,
+            JC.name ,# 없어도 되는데 넣어놓은거 테스트용
+            JGC.name, # 없어도 되는데 넣어놓은거 테스트용2
+        #       CT.name, # 없어도 되는데 넣어놓은거 테스트용 3
+            Employments.responseRate, # 없어도 되는데 넣어놓은거 테스트용 4
+            Employments.createdAt, # 없어도 되는데 넣어놓은거 테스트용 5
+            Employments.clickedCount # 없어도 되는데 넣어놓은거 테스트용 6
+        from WANTED.Employments
+        LEFT JOIN Companies C
+        on Employments.companyId = C.CompanyId
+        LEFT JOIN (
+            select * from WANTED.BookMark
+            where userId=${params.userId} and status='ACTIVE'
+        )IsBookMark
+        on IsBookMark.employmentId=Employments.employmentId
+        LEFT JOIN JobCategories JC on Employments.categoryId = JC.categoryId
+        LEFT JOIN JobGroupCategories JGC on JC.jobGroupCategoryId = JGC.jobGroupCategoryId
+        INNER JOIN (
+        SELECT * FROM CompanyTagsMapping
+        where tagId=2 or tagId=3
+        GROUP BY companyId
+        )TM on TM.companyId=C.companyId
+        INNER JOIN (
+        select skillId,employmentId from EmploymentSkillMapping
+        where skillId=3 or skillId=4
+        Group By employmentId # 1 2 5 6 7 11 13
+        )SM on SM.employmentId=Employments.employmentId
+        WHERE 1=1
+        #
+        #AND    Employments.country="${params.country}"                    # 한국 고쳐야함.
+        #AND Employments.city="${params.city}"                          # 서울 고쳐야함.
+        #AND Employments.career>=${params.career}                   # 경력
+        #AND JGC.jobGroupCategoryId=${params.jobGroupCategoryId}    # 직군 선택
+        #AND JC.categoryId=${params.jobCategoryId}                  # 직무 선택
+        #AND (CT.tagId=3                               # tag는 3개 까지 가능
+        #OR CT.tagId=2
+        #OR CT.tagId=4)
+        #ORDER BY responseRate DESC
+        #ORDER BY Employments.createdAt DESC
+        #ORDER BY (Employments.recommenderSigningBonus+Employments.recommendedSigningBonus) DESC
+        ORDER BY Employments.clickedCount DESC
+        ;
+         `;
+    const employmentsRows = await connection.query(getEmploymentsUsingFilteringQuery);
+    
+    return employmentsRows[0];
+}
+
+
   module.exports = {
     getEmploymentCarouselData,
     getThemeData,
@@ -168,5 +229,6 @@ async function updateHeartCount(connection,employmentId,heartCount) {
     getBookMarkCount,
     updateHeartCount,
     getHeartCount,
+    getEmployments,
   };
   
