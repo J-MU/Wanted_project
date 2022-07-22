@@ -159,7 +159,9 @@ async function updateHeartCount(connection,employmentId,heartCount) {
 
 async function getEmployments(connection,params) {
     console.log("Query 시작");
-    let baseQuerycondition="";
+    console.log(params.userId);
+    
+    let baseQuerycondition=` AND userId=${params.userId}`;
     let countryWhereQuery="";
     let cityWhereQuery="";
     let regionWhereQuery="";
@@ -170,11 +172,12 @@ async function getEmployments(connection,params) {
     let companyTagCondition=``;
     let skillTagQuery="";
     let skillTagCondition=``;
+    let orderByQuery=``;
 
-    if(params.userId!=0) baseQuerycondition=`AND userId=${params.userId}`;
+    
     if(params.country) countryWhereQuery=` AND Employments.country="${params.country}" `;
     if(params.city) cityWhereQuery=` AND Employments.city="${params.city}"`;
-    if(params.region) regionWhereQuery=` AND Employments.region="${params.region}"`;
+    if(params.region && params.region!="all") regionWhereQuery=` AND Employments.region="${params.region}"`;
     if(params.career) careerWhereQuery=` AND Employments.career>=${params.career}`;
     if(params.jobGroupId) jobGroupWhereQuery=` AND JGC.jobGroupCategoryId=${params.jobGroupId}`;
     if(params.jobId) jobWhereQuery= ` AND JC.categoryId=${params.jobId}`;     
@@ -237,12 +240,25 @@ async function getEmployments(connection,params) {
     `;
 
     console.log("skillTagQuery: ",skillTagQuery);
+    console.log("orderBy:",params.orderBy);
+    switch(params.orderBy){
+        case '0':
+            orderByQuery=" ORDER BY responseRate DESC";
+            break;
+        case '1':
+            orderByQuery=" ORDER BY Employments.createdAt DESC"
+            break;
+        case '2':
+            orderByQuery=" ORDER BY (Employments.recommenderSigningBonus+Employments.recommendedSigningBonus) DESC";
+            break;
+        case '3':
+            orderByQuery="ORDER BY Employments.clickedCount DESC"
+            break;
+        default:
+            console.error("OrderBy Error");
 
-    //    #ORDER BY responseRate DESC
-    //    #ORDER BY Employments.createdAt DESC
-    //    #ORDER BY (Employments.recommenderSigningBonus+Employments.recommendedSigningBonus) DESC
-    //    #ORDER BY Employments.clickedCount DESC
-    
+    }
+
     const totalQuery = `
             select Employments.employmentId,
             jobName,
@@ -272,7 +288,8 @@ async function getEmployments(connection,params) {
         LEFT JOIN JobGroupCategories JGC on JC.jobGroupCategoryId = JGC.jobGroupCategoryId`+
         companyTagQuery+
         skillTagQuery+
-        baseWhereQuery;
+        baseWhereQuery
+        +orderByQuery;
     
         
          
