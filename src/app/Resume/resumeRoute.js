@@ -18,7 +18,7 @@ module.exports = function(app) {
     app.post('/app/resumes/:resumeId/Skills', jwtMiddleware, resume.postResumeSkills);
 
     //이력서 스킬 삭제
-    app.patch('/app/resumes/:resumeId/Skills/deleted',jwtMiddleware, resume.patchResumeSkills);
+    app.patch('/app/resumes/:resumeId/Skills/:skillId/deleted',jwtMiddleware, resume.deleteResumeSkills);
     //이력서 전체 조회
     //app.get('/app/resumes', jwtMiddleware, resume.getResumes);
 

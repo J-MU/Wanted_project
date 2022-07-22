@@ -13,7 +13,7 @@ module.exports = {
     //로그인 : 2000
     SIGNUP_NAME_EMPTY :  { "isSuccess": false, "code": 2001, "message":"이름을 입력해주세요" },
     SIGNUP_PHONENUMBER_EMPTY :  { "isSuccess": false, "code": 2002, "message":"전화번호를 입력해주세요" },
-    // SIGNUP_PHONENUMBER_ERROR_TYPE :  { "isSuccess": false, "code": 2003, "message":"전화번호 입력해주세요" },
+    SIGNUP_PHONENUMBER_ERROR_TYPE :  { "isSuccess": false, "code": 2003, "message":"전화번호 형식에 맞게 입력해주세요" },
     SIGNUP_EMAIL_EMPTY : { "isSuccess": false, "code": 2004, "message":"이메일을 입력해주세요" },
     SIGNUP_EMAIL_ERROR_TYPE : { "isSuccess": false, "code": 2005, "message":"이메일 형식을 정확하게 입력해주세요." },
     SIGNUP_PASSWORD_EMPTY : { "isSuccess": false, "code": 2006, "message": "비밀번호를 입력 해주세요." },
@@ -60,6 +60,7 @@ module.exports = {
     INPUTDATE_ERROR :  {"isSuccess": false, "code": 2403, "message": "경력의 기간을 작성해주세요"},
     INPUTMAJOR_ERROR :  {"isSuccess": false, "code": 2404, "message": "전공 및 학위를 작성해주세요"},
     FAILED_ERROR : {"isSuccess": false, "code": 2405, "message": "작성완료를 하려면 빈 칸을 채워주세요."},
+    AWARDSNAME_EMPTY : {"isSuccess": false, "code": 2406, "message": "활동명을 입력해주세요."},
     //company : 2150
     COMPANYNAME_EMPTY : {"isSuccess": false, "code": 2150, "message": "회사이름을 입력해주세요"},
     COMPANY_TAG_TOO_MANY: {"isSuccess": false, "code": 2151, "message": "company tag는 3개까지 선택 가능합니다."},

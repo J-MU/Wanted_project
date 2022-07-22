@@ -33,14 +33,14 @@ exports.postUsers = async function (req, res) {
     if (!name)
         return res.send(response(baseResponse.SIGNUP_NAME_EMPTY));
     // phoneNumber 빈 값 체크
-    // if (!phoneNumber)
-    //     return res.send(response(baseResponse.SIGNUP_PHONENUMBER_EMPTY));
+    if (!phoneNumber)
+        return res.send(response(baseResponse.SIGNUP_PHONENUMBER_EMPTY));
     console.log("password:",password);
-    //TODO phoneNumber Validation
 
     // phoneNumber 정규 표현식
-    // if (!/^[0-9]{3}-[0-9]{3,4}-[0-9]{4}/.test(phoneNumber))
-    //     return res.send(response(baseResponse.SIGNUP_PHONENUMBER_ERROR_TYPE));
+    if (!/^01([0|1|6|7|8|9])?([0-9]{3,4})?([0-9]{4})$/.test(phoneNumber))
+        console.log(phoneNumber)
+        return res.send(response(baseResponse.SIGNUP_PHONENUMBER_ERROR_TYPE));
 
     // 빈 값 체크
     // if (!email)
