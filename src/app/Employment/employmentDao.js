@@ -76,6 +76,35 @@ async function getTagInfo(connection,tagId) {
     return tagInfo[0];
 }
 
+async function getRandomCompanies(connection,userId) {
+    console.log("랜덤 컴퍼니 SQL 호출"); 
+    const getCompaniesQuery = `
+                SELECT Companies.CompanyId,
+                companyName,
+                CompanyFirstImg.imgUrl,
+                Logo,
+                IF(IsFollow.userId,true,false) as isFollow
+            FROM Companies
+                LEFT JOIN CompanyTagsMapping CTM on Companies.companyId = CTM.companyId
+                LEFT JOIN CompanyTags on CompanyTags.tagId=CTM.tagId
+                LEFT JOIN (
+                    SELECT C.CompanyId,imgUrl FROM CompanyImgs
+                    JOIN Companies C on CompanyImgs.companyId = C.CompanyId
+                    GROUP BY C.companyId
+                )CompanyFirstImg
+                ON CompanyFirstImg.CompanyId=Companies.CompanyId
+                LEFT JOIN (
+                    SELECT * FROM Follow
+                    WHERE userId=${userId}
+                )IsFollow ON IsFollow.companyId=Companies.CompanyId
+            ORDER BY RAND()
+            LIMIT 5;
+         `;
+
+    const randomCompanies = await connection.query(getCompaniesQuery);
+    
+    return randomCompanies[0];
+}
 async function getExampleEmployment(connection,userId,limit) {
     let limitStr;
 
@@ -160,7 +189,7 @@ async function updateHeartCount(connection,employmentId,heartCount) {
 async function getEmployments(connection,params) {
     console.log("Query 시작");
     console.log(params.userId);
-    
+
     let baseQuerycondition=` AND userId=${params.userId}`;
     let countryWhereQuery="";
     let cityWhereQuery="";
@@ -185,7 +214,6 @@ async function getEmployments(connection,params) {
     
     const baseWhereQuery=`
         WHERE 1=1`+
-        baseQuerycondition+
         countryWhereQuery+
         cityWhereQuery+
         regionWhereQuery+
@@ -194,9 +222,13 @@ async function getEmployments(connection,params) {
         jobWhereQuery;
         
     console.log("BaseWhereQuery:",baseWhereQuery);
-
-    if(!Array.isArray(params.companyTagId)){
-        companyTagCondition=companyTagCondition+` tagId=${params.tagId}`;
+    
+    console.log(params.companyTagId);
+    if(!params.companyTagId){
+        companyTagCondition="1=1";
+    }
+    else if(!Array.isArray(params.companyTagId)){
+        companyTagCondition=companyTagCondition+` tagId=${params.companyTagId}`;
     }else{
         for (let index = 0; index < params.companyTagId.length; index++) {
             if(index==0){
@@ -217,8 +249,10 @@ async function getEmployments(connection,params) {
 
     console.log("companyTagQuery:",companyTagQuery);
    
-    
-    if(!Array.isArray(params.skills)){
+    if(!params.skills){
+        skillTagCondition="1=1";
+    }
+    else if(!Array.isArray(params.skills)){
         skillTagCondition=skillTagCondition+` skillId=${params.skills}`;
     }else{
         for (let index = 0; index < params.skills.length; index++) {
@@ -313,5 +347,9 @@ async function getEmployments(connection,params) {
     updateHeartCount,
     getHeartCount,
     getEmployments,
+    getRandomCompanies,
   };
+  
+
+
   

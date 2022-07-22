@@ -157,7 +157,9 @@ exports.getEmployments = async function (params) {
         const connection = await pool.getConnection(async (conn) => conn);
         
         console.log("여까지 옴?");
-        totalData=await employmentDao.getEmployments(connection,params);
+        const totalData={};
+        totalData.companies=await employmentDao.getRandomCompanies(connection,params.userId);
+        totalData.employments=await employmentDao.getEmployments(connection,params);
 
         connection.release();
         return totalData;
