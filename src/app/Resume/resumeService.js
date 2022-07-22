@@ -134,11 +134,11 @@ exports.deleteResumeEducation = async function (educationId) {
 };
 
 //이력서 수상 추가
-exports.postResumeAwards = async function(resumeId){
+exports.postResumeAwards = async function(postResumeAwardsParams){
     try {
 
         const connection = await pool.getConnection(async (conn) => conn);
-        const postResumeAwardsResult = await resumeDao.postResumeAwards(connection,resumeId);
+        const postResumeAwardsResult = await resumeDao.postResumeAwards(connection,postResumeAwardsParams);
         connection.release();
 
         return response(baseResponse.SUCCESS);
@@ -148,4 +148,66 @@ exports.postResumeAwards = async function(resumeId){
         logger.error(`App - createUser Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
     }
+}
+
+
+//이력서 수상 삭제
+
+exports.deleteResumeAwards = async function(awardsId) {
+    try {
+        //TODO deleted확인
+        const connection = await pool.getConnection(async (conn) => conn);
+        const deleteResumeAwardsResult = await resumeDao.deleteResumeAwards(connection,awardsId);
+        connection.release();
+
+        return response(baseResponse.SUCCESS);
+    }
+
+    catch (err) {
+        logger.error(`App - createUser Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+
+}
+
+//이력서 상태 수정
+
+exports.patchResumeStatus = async function(resumeId) {
+    try {
+        // 간단 소개글 글자 수 확인하기
+        const selfIntroductionRows = await resumeProvider.selfIntroductionCheck(resumeId);
+
+        if(selfIntroductionRows<400)
+            return errResponse(baseResponse.SELFINTRODUCTIONNUM_ERROR);
+
+        // 경력 있는지 확인
+        const careerCheck = await resumeProvider.careerCheck(resumeId);
+        if(careerCheck.length>0){
+            for (var x in careerCheck) {
+                if (careerCheck[x].startDate==null)
+                    return errResponse(baseResponse.INPUTDATE_ERROR);
+            }
+        }
+
+        //전공 들어가 있는지 확인
+        const majorCheck = await resumeProvider.majorCheck(resumeId);
+        console.log(majorCheck);
+        if(majorCheck.length>0){
+            for (var x in majorCheck) {
+                if (majorCheck[x].MajorOrDegree==null)
+                    return errResponse(baseResponse.INPUTMAJOR_ERROR);
+            }
+        }
+        // // const connection = await pool.getConnection(async (conn) => conn);
+        // const patchResumeStatusResult = await resumeDao.patchResumeStatus(connection,resumeId);
+        // connection.release();
+        //
+        // return response(baseResponse.SUCCESS);
+    }
+
+    catch (err) {
+        logger.error(`App - createUser Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+
 }

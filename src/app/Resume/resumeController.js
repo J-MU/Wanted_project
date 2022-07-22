@@ -234,9 +234,48 @@ exports.getResumeUserSkills = async function (req, res) {
 
 exports.postResumeAwards = async function (req, res) {
     const resumeId =parseInt(req.params.resumeId)
-    
-    const postResumeAwardsResponse = await resumeService.postResumeAwards(resumeId);
+    const period = req.body.period
+    const name = req.body.name
+    const details = req.body.details
+
+    const postResumeAwardsParams = [resumeId, period, name, details]
+
+    const postResumeAwardsResponse = await resumeService.postResumeAwards(postResumeAwardsParams);
 
     return res.send(postResumeAwardsResponse);
 
 }
+
+/**
+ * 수상 및 기타 삭제
+ * [patch] /app/resumes/awards/:awardsId
+ */
+
+exports.deleteResumeAwards = async function (req, res) {
+    const awardsId = parseInt(req.params.awardsId)
+
+    const deleteResumeAwardsResponse = await resumeService.deleteResumeAwards(awardsId);
+
+    return res.send(deleteResumeAwardsResponse);
+
+}
+
+/**
+ * 이력서 작성 완료 API
+ *
+ */
+
+exports.patchResumeStatus = async function (req, res) {
+    const resumeId= parseInt(req.params.resumeId);
+    //간단소개슬 400자 이상
+
+    //날짜
+
+
+    //전공 및 학위
+    console.log('test01');
+    const patchResumeStatusResponse = await resumeService.patchResumeStatus(resumeId);
+
+    return res.send(patchResumeStatusResponse);
+
+};
