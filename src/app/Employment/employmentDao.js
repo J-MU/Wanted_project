@@ -41,7 +41,8 @@ async function getCompaniesMatchingTag(connection,tagId,userId) {
     companyName,
     CompanyFirstImg.imgUrl,
     Logo,
-    IF(IsFollow.userId,true,false) as isFollow
+    IF(IsFollow.userId,true,false) as isFollow,
+    CC.categoryName
 FROM Companies
      LEFT JOIN CompanyTagsMapping CTM on Companies.companyId = CTM.companyId
      LEFT JOIN CompanyTags on CompanyTags.tagId=CTM.tagId
@@ -55,6 +56,8 @@ FROM Companies
          SELECT * FROM Follow
          WHERE userId=${userId}
      )IsFollow ON IsFollow.companyId=Companies.CompanyId
+     LEFT JOIN CompanyCategoryMapping CCM on Companies.CompanyId = CCM.companyId
+     LEFT JOIN CompanyCategory CC on CCM.categoryId = CC.categoryId
      WHERE CompanyTags.tagId=${tagId};
          `;
     const companiesMatchingTagRows = await connection.query(getCompaniesMatchingTagQuery);
