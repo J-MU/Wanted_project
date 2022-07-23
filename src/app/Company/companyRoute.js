@@ -8,4 +8,5 @@ module.exports = function(app) {
 
     app.get('/app/companyTag/:companyTagId/companies',jwtMiddleware,company.getCompaniesUsingTag);
 
+    app.get('/app/companies/:companyId',jwtMiddleware,company.getCompanyDetails);
 }

@@ -54,3 +54,29 @@ exports.getCompaniesUsingTag=async function(companyTagId,userId){
     }
 }
 
+exports.getCompanyDetails = async function (userId,companyId) {
+    try {
+        const totalData={};
+        const connection = await pool.getConnection(async (conn) => conn);
+        totalData.CompanyDetails = await companyDao.getCompanyDetails(connection,userId,companyId);
+        const companyImgs=await companyDao.getCompanyImgs(connection,companyId);
+        
+        totalData.companyImgs=[];
+        for (let index = 0; index < companyImgs.length; index++) {
+            totalData.companyImgs.push(companyImgs[index].imgUrl);
+        }
+
+        const companyTags=await companyDao.getCompaniesTag(connection,companyId);
+        totalData.companyTags=companyTags;
+
+        totalData.Employments=await companyDao.getEmploymentsOfCompany(connection,userId,companyId);
+        connection.release();
+
+        return response(baseResponse.SUCCESS,totalData);
+
+    }
+    catch(err) {
+        logger.error(`App - GET Company Details Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}

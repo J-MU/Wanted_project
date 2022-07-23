@@ -45,4 +45,15 @@ exports.getCompaniesUsingTag = async function (req, res) {
     return res.send(companyRows);
 }
 
+exports.getCompanyDetails = async function (req, res) {
+    let userId=0;
+
+    if(req.verifiedToken){
+        userId = req.verifiedToken.userId;
+    }
+    const companyId=req.params.companyId;
+    const getCompanyDetails = await companyProvider.getCompanyDetails(userId,companyId);
+
+    return res.send(getCompanyDetails);
+}
 

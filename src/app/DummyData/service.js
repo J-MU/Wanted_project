@@ -13,13 +13,38 @@ exports.postDummyData = async function (req,res) {
 
         console.log("Dummy Data 삽입!!!!!!!!!!!!!똬돤!");
         const connection = await pool.getConnection(async (conn) => conn);
-        const hiredAt="2020-11-01"; 
+        const hiredAt="2020-12-01"; 
         let salary;
         let population=Math.random() * (20 - 5) + 5;;
         //const population =1000;
         for (let index = 0; index < population; index++) {
             salary=Math.random() * (60000000 - 20000000) + 20000000;
             const dummy = await dummyDao.insertDummy(connection,hiredAt,salary);
+        }
+        
+        console.log("여기까지 왔나욘?")
+        connection.release();
+
+        return res.send(response(baseResponse.SUCCESS));
+
+    } catch (err) {
+        logger.error(`App - editUser Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}
+
+
+exports.firedDummy = async function (req,res) {
+    try {
+
+        console.log("Dummy Data 삽입!!!!!!!!!!!!!똬돤!");
+        const connection = await pool.getConnection(async (conn) => conn);
+       
+        let population=Math.random() * (500 - 450) + 450;;
+        //const population =1000;
+        for (let index = 0; index < population; index++) {
+            salary=Math.random() * (60000000 - 20000000) + 20000000;
+            const dummy = await dummyDao.firedDummy(connection,hiredAt,salary);
         }
         
         console.log("여기까지 왔나욘?")

@@ -101,7 +101,73 @@ async function getRandomTags (connection,tagId) {
    
     return  randomTags[0];
 }
+async function getCompanyDetails(connection,userId,companyId){
+    const  getCompanyDetailsQuery = `
+        SELECT 
+            companyName,
+            Logo,
+            description,
+            IF(IsFollow.userId,true,false) as IsFollow
+        FROM Companies
+        LEFT JOIN (
+        select * from Follow
+        WHERE status='ACTIVE' AND userId=${userId}
+        )IsFollow on IsFollow.companyId=Companies.CompanyId
+        WHERE Companies.CompanyId=${companyId};  
+    `;
 
+    const  companyDetails = await connection.query(getCompanyDetailsQuery);
+
+    console.log("companyDetails: ");
+    console.log(companyDetails[0]);
+
+    return  companyDetails[0];
+}
+
+
+async function getCompanyImgs(connection,companyId){
+    const  getCompanyImgsQuery = `
+        SELECT
+            imgUrl
+        FROM CompanyImgs
+        WHERE companyId=${companyId}; 
+    `;
+
+    const  companyImgs = await connection.query(getCompanyImgsQuery);
+
+    console.log("companyImgs: ");
+    console.log(companyImgs[0]);
+
+    return  companyImgs[0];
+}
+
+
+async function getEmploymentsOfCompany(connection,userId,companyId){
+    const  getEmploymentsOfCompanyQuery = `
+            SELECT
+                Employments.employmentId,
+                jobName,
+                dueDate, # dueDate 상시채용 생각하기.
+                (recommenderSigningBonus+Employments.recommendedSigningBonus) as 'SigningBonus',
+                IF(IsBookMark.userId,true,false) as isBookMark
+            FROM Employments
+            LEFT JOIN Companies C on Employments.companyId = C.CompanyId
+            LEFT JOIN (
+                select * from WANTED.BookMark
+                where status='ACTIVE' and userId=${userId}
+            )IsBookMark on IsBookMark.employmentId=Employments.employmentId
+            WHERE C.CompanyId=${companyId}
+            ORDER BY Employments.createdAt
+            LIMIT 4;
+    `;
+
+    const  employmentsOfCompany = await connection.query(getEmploymentsOfCompanyQuery);
+
+    console.log("employmentsOfCompany: ");
+    console.log(employmentsOfCompany[0]);
+
+    return  employmentsOfCompany[0];
+}
 
 
 module.exports = {
@@ -112,4 +178,7 @@ module.exports = {
     getCompaniesTag,
     getTagInfo,
     getRandomTags,
+    getCompanyDetails,
+    getCompanyImgs,
+    getEmploymentsOfCompany,
 }
