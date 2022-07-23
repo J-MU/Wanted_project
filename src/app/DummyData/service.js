@@ -13,11 +13,13 @@ exports.postDummyData = async function (req,res) {
 
         console.log("Dummy Data 삽입!!!!!!!!!!!!!똬돤!");
         const connection = await pool.getConnection(async (conn) => conn);
-        const hiredAt="2019-06-01";
-        const salary=Math.random() * (60000000 - 20000000) + 20000000;
-        //const population=Math.random() * (20 - 5) + 5
-        const population =1000;
+        const hiredAt="2022-07-01"; 
+        let salary;
+        let population;
+        //const population =1000;
         for (let index = 0; index < population; index++) {
+            salary=Math.random() * (60000000 - 20000000) + 20000000;
+            population=Math.random() * (20 - 5) + 5;
             const dummy = await dummyDao.insertDummy(connection,hiredAt,salary);
         }
         
