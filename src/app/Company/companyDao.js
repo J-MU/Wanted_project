@@ -37,8 +37,79 @@ async function getCompanies (connection) {
     return  getCareerCompaniesRows[0]
 }
 
+async function getCompaniesUsingTag (connection,tagId,userId) {
+    const  getCompaniesUsingTagQuery = `
+        SELECT 
+            Companies.companyId,
+            companyName,
+            Logo,
+            IF(IsFollow.userId,true,false) as IsFollow
+        FROM Companies
+        LEFT JOIN (
+        select * from Follow
+        WHERE status='ACTIVE' AND userId=${userId}
+        )IsFollow on IsFollow.companyId=Companies.CompanyId
+        LEFT JOIN CompanyTagsMapping CTM on Companies.CompanyId = CTM.companyId
+        LEFT JOIN CompanyTags CT on CTM.tagId = CT.tagId
+        WHERE CT.tagId=${tagId};
+    `;
+
+    const  companyRows = await connection.query(getCompaniesUsingTagQuery);
+
+    return  companyRows[0];
+}
+
+
+async function getCompaniesTag (connection,companyId) {
+    const  getCompaniesTagQuery = `
+        SELECT CompanyTags.tagId,name FROM Companies
+        LEFT JOIN CompanyTagsMapping ON Companies.CompanyId=CompanyTagsMapping.companyId
+        LEFT JOIN CompanyTags ON CompanyTagsMapping.tagId=CompanyTags.tagId
+        WHERE Companies.CompanyId=${companyId};
+    `;
+
+    const  companyTagsRows = await connection.query(getCompaniesTagQuery);
+
+    return  companyTagsRows[0];
+}
+
+
+async function getTagInfo (connection,tagId) {
+    const  getTagInfoQuery = `
+        select tagId,name from CompanyTags
+        where tagId=${tagId};
+    `;
+
+    const  tagInfo = await connection.query(getTagInfoQuery);
+
+    return  tagInfo[0][0];
+}
+
+
+async function getRandomTags (connection,tagId) {
+    const  getRandomTagsQuery = `
+        select tagId,name from CompanyTags
+        WHERE tagId!=${tagId}
+        ORDER BY RAND()
+        LIMIT 4;
+    `;
+
+    const  randomTags = await connection.query(getRandomTagsQuery);
+
+   console.log("RandomTags: ");
+   console.log(randomTags[0]);
+   
+    return  randomTags[0];
+}
+
+
+
 module.exports = {
     getFollowCount,
     updateFollowCount,
-    getCompanies
+    getCompanies,
+    getCompaniesUsingTag,
+    getCompaniesTag,
+    getTagInfo,
+    getRandomTags,
 }

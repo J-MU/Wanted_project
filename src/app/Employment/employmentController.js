@@ -82,3 +82,53 @@ exports.getEmployments = async function (req, res) {    //TODO 로그인이 되�
 
     return res.send(response(baseResponse.SUCCESS,EmploymentsRow));
 }
+
+
+
+exports.getEmploymentPostData = async function (req, res) {    //TODO 로그인이 되어있는 경우 고려해야함.
+    let userId=0;
+    console.log("천제제: 천재 제제 ? 천사 제제?");
+    console.log(isNaN(req.params.employmentId));
+    console.log("?");
+    if(isNaN(req.params.employmentId))
+      {
+        return res.send(response(baseResponse.EMPLOYMENT_ID_EMPTY));
+      }
+
+    if(req.verifiedToken){
+        userId = req.verifiedToken.userId
+    }
+    const employmentId=req.params.employmentId;
+
+    
+    const EmploymentPostData=await employmentProvider.getEmploymentPostData(employmentId,userId);
+
+    return res.send(response(baseResponse.SUCCESS,EmploymentPostData));
+}
+
+exports.getEmploymentsHavingHeart = async function (req, res) {
+    let userId;
+
+    console.log("천사였네!");
+    if(req.verifiedToken){
+        userId = req.verifiedToken.userId;
+    }
+
+    const companyRows = await employmentProvider.getEmploymentsHavingHeart(userId);
+
+    return res.send(companyRows);
+}
+
+
+exports.getEmploymentsHavingBookMark = async function (req, res) {
+    let userId;
+
+    console.log("천사였네!");
+    if(req.verifiedToken){
+        userId = req.verifiedToken.userId;
+    }
+    
+    const employmentRows = await employmentProvider.getEmploymentsHavingBookMark(userId);
+
+    return res.send(employmentRows);
+}

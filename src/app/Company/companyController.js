@@ -20,3 +20,29 @@ exports.getCompanies = async function (req, res) {
 
     return res.send(getCompaniesResponse);
 }
+
+/**
+ * 태그를 통해 회사목록 검색 API
+ * [GET] /app/companyTag/:companyTagId/companies
+ */
+exports.getCompaniesUsingTag = async function (req, res) {
+    let userId=0;
+
+    if(req.verifiedToken){
+        userId = req.verifiedToken.userId;
+    }
+
+    console.log("parmas::?");
+    console.log(req.params);
+    console.log(req.params.companyTagId);
+    if(!req.params || !req.params.companyTagId)
+        return res.send(response(baseResponse.COMPANY_TAG_EMPTY));
+    
+    const companyTagId=req.params.companyTagId;
+
+    const companyRows = await companyProvider.getCompaniesUsingTag(companyTagId,userId);
+
+    return res.send(companyRows);
+}
+
+

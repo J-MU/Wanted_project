@@ -20,3 +20,37 @@ exports.getCompanies = async function () {
         return errResponse(baseResponse.DB_ERROR);
     }
 }
+
+exports.getCompaniesUsingTag=async function(companyTagId,userId){
+    try {
+        const connection = await pool.getConnection(async (conn) => conn);
+        const totalData={};
+
+        const tagList=[];
+        tagList[0]=await companyDao.getTagInfo(connection,companyTagId);
+        const randomTagList=await companyDao.getRandomTags(connection,companyTagId);
+        
+        for (let index = 0; index < randomTagList.length; index++) {
+            tagList.push(randomTagList[index]);   
+        }
+        totalData.tagList=tagList;
+
+
+        const companyRows = await companyDao.getCompaniesUsingTag(connection,companyTagId,userId);
+        console.log(companyRows);
+        for (let index = 0; index < companyRows.length; index++) {
+            companyRows[index].companyTags=await companyDao.getCompaniesTag(connection,companyRows[index].companyId);
+        }
+        totalData.companyRows=companyRows;
+
+        
+        console.log(totalData);
+        connection.release();
+        return response(baseResponse.SUCCESS,totalData);
+    }
+    catch(err) {
+        logger.error(`App - get Companies Using Tag Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}
+

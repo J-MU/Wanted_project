@@ -186,6 +186,41 @@ async function updateHeartCount(connection,employmentId,heartCount) {
     return plusHeartCountResult[0];
 }
 
+
+async function getEmploymentDetails(connection,employmentId,userId) {
+    
+    const getEmploymentDetailQuery = `
+    SELECT
+                Employments.employmentId,
+                companyId,
+                jobName,
+                country,
+                city,
+                address,
+                description,
+                dueDate
+                heartCount,
+                recommenderSigningBonus,
+                recommendedSigningBonus,
+                IF(IsBookMark.userId,true,false) as isBookMark,
+                IF(IsHeart.userId,true,false) as isHeart
+                from Employments
+                LEFT JOIN (
+                    select * from WANTED.BookMark
+                    where status='ACTIVE' and userId=${userId}
+                )IsBookMark on IsBookMark.employmentId=Employments.employmentId
+                LEFT JOIN (
+                    select * from WANTED.Heart
+                    WHERE status='ACTIVE' AND userId=${userId}
+                )IsHeart on IsHeart.employmentId=Employments.employmentId
+                WHERE Employments.employmentId=${employmentId};
+         `;
+    
+         const EmploymentDetailsData = await connection.query(getEmploymentDetailQuery);
+    
+    return EmploymentDetailsData[0][0];
+}
+
 async function getEmployments(connection,params) {
     console.log("Query 시작");
     console.log(params.userId);
@@ -334,6 +369,124 @@ async function getEmployments(connection,params) {
     return employmentsRows[0];
 }
 
+async function getCompanyDetails(connection,companyId,userId) {
+    
+    const getCompanyDetailsQuery = `
+            SELECT 
+            companyName,
+            CC.categoryName,
+            Logo,
+            IF(IsFollow.userId,true,false) as IsFollow
+            FROM Companies
+            LEFT JOIN CompanyCategoryMapping CCM on Companies.CompanyId = CCM.companyId
+            LEFT JOIN CompanyCategory CC on CCM.categoryId = CC.categoryId
+            LEFT JOIN (
+            select * from Follow
+            WHERE status='ACTIVE' AND userId=${userId}
+            )IsFollow on IsFollow.companyId=Companies.CompanyId
+            WHERE Companies.companyId=${companyId};
+         `;
+    const companyDetailsData = await connection.query(getCompanyDetailsQuery);
+    
+    return companyDetailsData[0][0];
+}
+
+async function getCompanyTag(connection,companyId) {
+    console.log("Query3 시작")
+    
+    const getCompanyTagQuery = `
+            SELECT CT.tagId,CT.name FROM Companies
+            LEFT JOIN CompanyTagsMapping ON Companies.CompanyId=CompanyTagsMapping.companyId
+            LEFT JOIN CompanyTags CT on CompanyTagsMapping.tagId = CT.tagId
+            where Companies.CompanyId=${companyId};
+         `;
+    
+    const companyTagData = await connection.query(getCompanyTagQuery);
+    
+    return companyTagData[0];
+}
+
+async function getSkills(connection,employmentId) {
+    console.log("Query3 시작")
+    
+    const getSkillsQuery = `
+            SELECT S.skillId,S.name from Employments
+            LEFT JOIN EmploymentSkillMapping ESM on Employments.employmentId = ESM.employmentId
+            LEFT JOIN Skills S on ESM.skillId = S.skillId
+            WHERE Employments.employmentId=${employmentId};
+         `;
+    
+    const skills = await connection.query(getSkillsQuery);
+    
+    return skills[0];
+}
+
+async function getEmploymentImgs(connection,employmentId) {
+    console.log("Query3 시작")
+    
+    const getEmploymentImgsQuery = `
+            SELECT EmploymentImgs.ImgUrl FROM EmploymentImgs
+            WHERE employmentId=${employmentId};
+         `;
+    
+    const ImgUrls = await connection.query(getEmploymentImgsQuery);
+    
+    return ImgUrls[0];
+}
+
+
+async function getEmploymentsHavingHeart (connection,userId) {
+    const  getEmploymentsHavingHeartQuery = `
+        SELECT 
+            Employments.employmentId,
+            jobName,
+            country,
+            city,
+            (recommendedSigningBonus+Employments.recommenderSigningBonus) AS 'SigningBonus',
+            heartCount,
+            C.companyName
+        FROM Employments
+        LEFT JOIN Companies C on Employments.companyId = C.CompanyId
+        RIGHT JOIN  (
+            select * from WANTED.Heart
+            WHERE status='ACTIVE' AND userId=${userId}
+            ORDER BY createdAt
+        )IsHeart on IsHeart.employmentId=Employments.employmentId;
+    `;
+
+    const  employmentsRows = await connection.query(getEmploymentsHavingHeartQuery);
+
+   console.log(employmentsRows[0]);
+   
+    return  employmentsRows[0];
+}
+
+
+async function getEmploymentsHavingBookMark (connection,userId) {
+    const  getEmploymentsHavingBookMarkQuery = `
+        SELECT 
+            Employments.employmentId,
+            jobName,
+            country,
+            city,
+            (recommendedSigningBonus+Employments.recommenderSigningBonus) AS 'SigningBonus',
+            bookMarkCount,
+            C.companyName
+        FROM Employments
+        LEFT JOIN Companies C on Employments.companyId = C.CompanyId
+        RIGHT JOIN  (
+            select * from WANTED.BookMark
+            WHERE status='ACTIVE' AND userId=${userId}
+            ORDER BY createdAt
+        )IsBookMark on IsBookMark.employmentId=Employments.employmentId;
+    `;
+
+    const  employmentsRows = await connection.query(getEmploymentsHavingBookMarkQuery);
+
+   console.log(employmentsRows[0]);
+   
+    return  employmentsRows[0];
+}
 
   module.exports = {
     getEmploymentCarouselData,
@@ -348,7 +501,14 @@ async function getEmployments(connection,params) {
     getHeartCount,
     getEmployments,
     getRandomCompanies,
-  };
+    getEmploymentDetails,
+    getCompanyDetails,
+    getCompanyTag,
+    getSkills,
+    getEmploymentImgs,
+    getEmploymentsHavingHeart,
+    getEmploymentsHavingBookMark,
+};
   
 
 

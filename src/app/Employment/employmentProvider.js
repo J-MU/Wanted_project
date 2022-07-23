@@ -168,3 +168,59 @@ exports.getEmployments = async function (params) {
         return errResponse(baseResponse.DB_ERROR);
     }
 };
+
+exports.getEmploymentPostData= async function (employmentId,userId) {
+    
+    try{
+        const connection = await pool.getConnection(async (conn) => conn);
+
+        const totalData={};
+
+        totalData.employmentDetails=await employmentDao.getEmploymentDetails(connection,employmentId,userId);
+        totalData.employmentDetails.ImgUrls=await employmentDao.getEmploymentImgs(connection,employmentId);
+        const companyId=totalData.employmentDetails.companyId;
+        totalData.companyData=await employmentDao.getCompanyDetails(connection,companyId,userId);
+        totalData.companyData.companyTag=await employmentDao.getCompanyTag(connection,companyId);
+        
+        totalData.employmentDetails.skills=await employmentDao.getSkills(connection,employmentId);
+        console.log(totalData);
+
+        connection.release();
+        return totalData;
+    }catch(err){
+        logger.error(`App - Get Filtering Employments Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+
+}
+
+exports.getEmploymentsHavingHeart=async function(userId){
+    try {
+        const connection = await pool.getConnection(async (conn) => conn);
+        console.log(userId);
+        
+        const employmentRows = await employmentDao.getEmploymentsHavingHeart(connection,userId);
+        connection.release();
+        return response(baseResponse.SUCCESS,employmentRows);
+    }
+    catch(err) {
+        logger.error(`App - get Employments Having Heart Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}
+
+
+exports.getEmploymentsHavingBookMark=async function(userId){
+    try {
+        const connection = await pool.getConnection(async (conn) => conn);
+        console.log(userId);
+        
+        const employmentRows = await employmentDao.getEmploymentsHavingBookMark(connection,userId);
+        connection.release();
+        return response(baseResponse.SUCCESS,employmentRows);
+    }
+    catch(err) {
+        logger.error(`App - get Employments Having BookMark Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}
