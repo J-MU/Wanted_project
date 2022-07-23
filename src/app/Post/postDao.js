@@ -12,18 +12,59 @@ async function getCarousel(connection) {
     const carouselRow = await connection.query(getCarouselQuery);
     return carouselRow[0]
 }
-async function getInsitePostTags(connection_A) {
+async function getInsitePostTags(connection) {
     //postTags 가져오기
 
     const getPostTagsQuery = `
-        select tagId,name from postTags;
+        select tagId,name 
+        from postTags
+        where tagId<19
+        order by rand() limit 9;
     `;
-    const PostTagsRow = await connection_A.query(getPostTagsQuery);
+    const PostTagsRow = await connection.query(getPostTagsQuery);
     return PostTagsRow[0];
 
 }
 
-async function getInsitePosts(connectionA, tagId) {
+async function getInsitePostInterestedTags(connection, userId) {
+    //interestedTags 가져오기
+
+    const getInsitePostInterestedTagsQuery = `
+        select UPTM.postTagId as tagId, postTags.name as name
+        from postTags
+                 inner join UserPostTagMapping UPTM on postTags.tagId = UPTM.postTagId
+        where userId =?;
+    `;
+    const PostInterestedTagsRow = await connection.query(getInsitePostInterestedTagsQuery,userId);
+
+    const postTagsRow = PostInterestedTagsRow[0]
+
+    const num = 9-(PostInterestedTagsRow[0].length)
+
+    const getInsitePostTagsQuery = `
+        select tagId, name
+        from postTags
+        where tagId<19 and tagId not in (
+
+            select  UPTM.postTagId
+            from postTags
+            inner join UserPostTagMapping UPTM on postTags.tagId = UPTM.postTagId
+            where userId =1
+
+            )
+        order by rand() limit ?;
+    `;
+    const PostNotInterestedTagsRow = await connection.query(getInsitePostTagsQuery,num);
+
+    for (var i=0; i<PostNotInterestedTagsRow[0].length ;i++) {
+        postTagsRow.push(PostNotInterestedTagsRow[0][i])
+    }
+
+   return postTagsRow
+
+}
+
+async function getInsitePosts(connection, tagId) {
 
     //태그 가져오기 9개. 거기서 첫번째 태그 포스트 9개 넣기.
 
@@ -31,15 +72,17 @@ async function getInsitePosts(connectionA, tagId) {
     select postThumbnailUrl, postName, postContent, writer, pf.platformImgUrl
     from insitePosts
     inner join platforms as pf on insitePosts.platformId = pf.platformId
-    where tagId=3
+    where tagId=?
     limit 4;
     `;
 
-    const  getInsitePostsRow = await connectionA.query(getInsitePostsQuery,tagId);
+    const  getInsitePostsRow = await connection.query(getInsitePostsQuery,tagId);
     return getInsitePostsRow[0];
 }
 
-async function getArticlePosts(connectionB) {
+
+
+async function getArticlePosts(connection) {
 
     // article 불러오기
     const getArticlePostsQuery=`
@@ -47,7 +90,7 @@ async function getArticlePosts(connectionB) {
     from articlePosts
     order by rand() limit 5;
     `;
-    const [articlePostsRow] = await connectionB.query(getArticlePostsQuery);
+    const [articlePostsRow] = await connection.query(getArticlePostsQuery);
 
     var resultRow = [];
     for (var i=0; i<5; i++) {
@@ -59,7 +102,7 @@ async function getArticlePosts(connectionB) {
         where aTM.articlePostId=?;
     `;
 
-        const articleTagsRow = await connectionB.query(getArticlePostTagsQuery,articlePostId)
+        const articleTagsRow = await connection.query(getArticlePostTagsQuery,articlePostId)
         articlePostsRow[i].postTags = articleTagsRow[0];
         resultRow.push(articlePostsRow[i]);
     }
@@ -68,7 +111,7 @@ async function getArticlePosts(connectionB) {
 
 }
 
-async function getVodPosts(connectionC) {
+async function getVodPosts(connection) {
     //vod 불러오기
 
     const getVodPostsQuery = `
@@ -77,11 +120,24 @@ async function getVodPosts(connectionC) {
     order by rand() limit 5;
     `;
 
-    const vodPostsRow = await connectionC.query(getVodPostsQuery);
+    const vodPostsRow = await connection.query(getVodPostsQuery);
 
     return vodPostsRow[0];
 }
 
+async function getPostsByTagId(connection,tagId) {
+
+    const getPostsByTagIdQuery = `
+    select postUrl, postThumbnailUrl, postName, postContent, writer, platformImgUrl
+    from insitePosts
+    inner join platforms as p on p.platformId= insitePosts.platformsId
+    where tagId=?
+    `;
+
+    const getPostsByTagIdRow = await connection.query(getPostsByTagIdQuery,tagId);
+
+    return getPostsByTagId[0];
+}
 
 
 module.exports = {
@@ -89,5 +145,7 @@ module.exports = {
     getInsitePostTags,
     getInsitePosts,
     getArticlePosts,
-    getVodPosts
+    getVodPosts,
+    getInsitePostInterestedTags,
+    getPostsByTagId
 };

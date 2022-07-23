@@ -13,9 +13,22 @@ const {emit} = require("nodemon");
  */
 
 exports.getPosts = async function (req, res) {
-    // const userId=req.verifiedToken.userId
 
-    const getPostsResponse = await postProvider.getPosts();
+    // const userId=req.verifiedToken.userId
+    let token = req.verifiedToken;
+    if(!token) {
+        token=null
+    }
+    else {
+        token = req.verifiedToken.userId
+    }
+    // if(req.verifiedToken) {
+    //     console.log('True')
+    // }
+    // else {
+    //     console.log('False')
+    // }
+    const getPostsResponse = await postProvider.getPosts(token);
 
     return res.send(getPostsResponse);
 
@@ -35,3 +48,20 @@ exports.getArticlePosts = async function (req, res) {
     return res.send(getPostsResponse);
 
 };
+
+/**
+ * 인사이트 태그 누를 때마다 다른 거
+ * /app/posts/insitePostTags/tagId=?
+ *
+ */
+
+exports.getPostsByTagId = async function (req, res) {
+
+    const tagId= req.params.tagId;
+
+
+    const getPostsByTagId = await postProvider.getPostsByTagId(tagId);
+
+    return res.send(getPostsByTagId)
+
+}
