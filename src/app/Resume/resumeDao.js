@@ -362,6 +362,16 @@ async function postResumeStatus(connection, resumeId) {
     return  postResumeStatusRows
 }
 
+//작성 중으로 바꿈
+async function postResumeStatusIng (connection, resumeId){
+    const  postResumeStatusIngQuery = `
+    UPDATE Resumes t SET t.status = '작성 중'
+    WHERE resumeId=?;
+    `;
+    const postResumeStatusIngRows = await connection.query(postResumeStatusIngQuery,resumeId);
+    return  postResumeStatusIngRows
+}
+
 //유저 스킬 추가하기
 async function  postResumeUserSkills(connection,  params ) {
     const  postUserResumeSkillsQuery = `
@@ -433,6 +443,7 @@ async function deleteResumeSkills(connection,deleteResumeSkillsParams ) {
      postResumeStatus,
      postResumeUserSkills,
     postResumeSkills,
-     deleteResumeSkills
+     deleteResumeSkills,
+     postResumeStatusIng
 };
   

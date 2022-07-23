@@ -267,8 +267,9 @@ exports.deleteResumeAwards = async function (req, res) {
 
 exports.patchResumeStatus = async function (req, res) {
     const resumeId= parseInt(req.params.resumeId);
+    const status = req.body.status;
 
-    const checkResumeResponse = await resumeService.patchResumeStatus(resumeId);
+    const checkResumeResponse = await resumeService.patchResumeStatus(resumeId,status);
     // const patchResumeStatusResponse
 
 
