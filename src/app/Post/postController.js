@@ -42,10 +42,11 @@ exports.getPosts = async function (req, res) {
 
 exports.getArticlePosts = async function (req, res) {
     // const userId=req.verifiedToken.userId
+    const filter = req.body.filter;
 
-    const getPostsResponse = await postProvider.getPosts();
+    const getArticlePostsResponse = await postProvider.getArticlePosts(filter);
 
-    return res.send(getPostsResponse);
+    return res.send(getArticlePostsResponse);
 
 };
 

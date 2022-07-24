@@ -81,3 +81,22 @@ exports.getPostsByTagId = async function (tagId){
         return errResponse(baseResponse.DB_ERROR);
     }
 }
+
+exports.getArticlePosts = async function (filter) {
+    try {
+        console.log(filter)
+        const connection = await pool.getConnection(async (conn) => conn);
+        if(filter=='마감임박순'){
+            const getArticlePostsByDate = await postDao.getArticlePostsByDate(connection)
+
+            connection.release();
+            return response(baseResponse.SUCCESS,getArticlePostsByDate);
+        }
+
+
+    }
+    catch(err){
+        logger.error(`App - Get PostTags Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}
