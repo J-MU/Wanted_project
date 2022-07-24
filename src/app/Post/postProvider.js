@@ -19,7 +19,7 @@ exports.getPosts = async function (token) {
         console.log("Query1 ");
         const getInsitePostTagsResult = await postDao.getInsitePostTags(connection);
 
-        const tagId = getInsitePostTagsResult[0].tagId
+        const tagId = 3
 
         console.log("Query 2");
         const getInsitePostsResult = await postDao.getInsitePosts(connection, tagId);
@@ -81,6 +81,25 @@ exports.getPostsByTagId = async function (tagId){
         const getPostsByTagIdResult = await postDao.getPostsByTagId(connection,tagId);
         connection.release();
         return response(baseResponse.SUCCESS,getPostsByTagIdResult);
+    }
+    catch(err){
+        logger.error(`App - Get PostTags Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}
+
+exports.getArticlePosts = async function (filter) {
+    try {
+        console.log(filter)
+        const connection = await pool.getConnection(async (conn) => conn);
+        if(filter=='마감임박순'){
+            const getArticlePostsByDate = await postDao.getArticlePostsByDate(connection)
+
+            connection.release();
+            return response(baseResponse.SUCCESS,getArticlePostsByDate);
+        }
+
+
     }
     catch(err){
         logger.error(`App - Get PostTags Service error\n: ${err.message}`);

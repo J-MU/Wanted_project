@@ -88,14 +88,14 @@ async function getInsitePosts(connection, tagId) {
 
 
 async function getArticlePosts(connection) {
-
+    const num =5
     // article 불러오기
     const getArticlePostsQuery=`
     select postId, postThumbnailUrl, title
     from articlePosts
-    order by rand() limit 5;
+    order by rand() limit ?;
     `;
-    const [articlePostsRow] = await connection.query(getArticlePostsQuery);
+    const [articlePostsRow] = await connection.query(getArticlePostsQuery,num);
 
     var resultRow = [];
     for (var i=0; i<5; i++) {
@@ -144,6 +144,63 @@ async function getPostsByTagId(connection,tagId) {
     return getPostsByTagIdRow[0];
 }
 
+async function getArticlePostsByDate (connection) {
+    const getArticlePostsByDateQuery = `
+        select postId,
+               postThumbnailUrl,
+               postImgUrl,
+               title,
+               concat(
+                       (date_format(startDate, '%Y.%m.%d ')),
+                       case DAYOFWEEK(startDate)
+                           when '1' then '(일)'
+                           when '2' then '(월)'
+                           when '3' then '(화)'
+                           when '4' then '(수)'
+                           when '5' then '(목)'
+                           when '6' then '(금)'
+                           when '7' then '(토)'
+                           end
+                   ,' ~ '
+                   ,(date_format(dueDate, '%Y.%m.%d ')),
+                       case DAYOFWEEK(dueDate)
+                           when '1' then '(일)'
+                           when '2' then '(월)'
+                           when '3' then '(화)'
+                           when '4' then '(수)'
+                           when '5' then '(목)'
+                           when '6' then '(금)'
+                           when '7' then '(토)'
+                           end
+                   ) as startAndDueDate
+
+
+        from articlePosts
+        where startDate is not null
+    `;
+
+    const getPostsByTagIdRow = await connection.query(getArticlePostsByDateQuery);
+    console.log(getPostsByTagIdRow[0])
+    const num = getPostsByTagIdRow[0].length
+    var resultRow = [];
+    for (var i=0; i<num; i++) {
+        var articlePostId = getPostsByTagIdRow[0][i].postId;
+        const getArticlePostTagsQuery=`
+        select concat("#",name) as name, articlePostId
+        from postTags
+        inner join articleTagsMapping as aTM on postTags.tagId = aTM.tagId
+        where aTM.articlePostId=?;
+    `;
+
+        const articleTagsRow = await connection.query(getArticlePostTagsQuery,articlePostId)
+        getPostsByTagIdRow[0][i].postTags =getPostsByTagIdRow[0];
+        resultRow.push(getPostsByTagIdRow[0][i]);
+
+    }
+
+    return resultRow
+}
+
 
 module.exports = {
     getCarousel,
@@ -152,5 +209,6 @@ module.exports = {
     getArticlePosts,
     getVodPosts,
     getInsitePostInterestedTags,
-    getPostsByTagId
+    getPostsByTagId,
+    getArticlePostsByDate
 };
