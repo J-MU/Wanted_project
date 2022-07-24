@@ -10,7 +10,7 @@ module.exports = function(app){
 
 
     // 인사이트 태그 누를 때마다 다른 거
-    app.get('/app/posts/insitePostTags/:tagId', post.getPostsByTagId);
+    app.get('/app/posts/insitePostTags', post.getPostsByTagId);
     // 아티클 post 전체보기
     app.get('/app/posts/article', post.getArticlePosts);
 
