@@ -1,3 +1,5 @@
+const { USER_NAME_EMPTY } = require("../../../config/baseResponseStatus");
+
 // 모든 유저 조회
 async function selectUser(connection) {
   const selectUserListQuery = `
@@ -32,6 +34,17 @@ async function selectUserId(connection, userId) {
   return userRow;
 }
 
+async function getUserNameUsingUserId(connection,userId){
+
+  const selectUserNameQuery=`
+    SELECT name
+    FROM Users
+    WHERE userId=${userId}
+  `;
+
+  const userName=await connection.query(selectUserNameQuery);
+  return userName[0][0].name;
+}
 // 유저 생성
 async function insertUserInfo(connection, insertUserInfoParams) {
   console.log('insertUserInfo');
@@ -106,6 +119,18 @@ async function insertProfileInfo(connection,userId,career) {
     );
 
     return insertProfileInfoResult;
+}
+
+async function getProfileIdAndCareerUsingUserId(connection,userId){
+  const getProfileIdUsingUserIdQuery=`
+      SELECT profileId,career FROM Users
+      LEFT JOIN Profiles ON Users.userId=Profiles.userId
+      WHERE Users.userId=${userId};
+  `;
+
+  const profileId=await connection.query(getProfileIdUsingUserIdQuery);
+
+  return profileId[0]
 }
 
 
@@ -245,7 +270,7 @@ async function updateUserState(connection,userId,stepLevel){
 
   const updateUserStateQuery=`
     UPDATE Users
-    SET status='STEP3'
+    SET status="${stepLevel}"
     WHERE  userId=${userId};
   `
 
@@ -256,6 +281,55 @@ async function updateUserState(connection,userId,stepLevel){
 
   return updateResult;
 }
+
+
+async function getUserStatus(connection,userId,stepLevel){
+
+  const getUserStatusQuery=`
+    SELECT status 
+    FROM Users
+    WHERE userId=${userId};
+  `
+
+  console.log(getUserStatusQuery);
+  const userStatus=await connection.query(getUserStatusQuery);
+
+
+
+  return userStatus[0];
+}
+
+async function getDefaultResumeInfo(connection,userId){
+
+  const getDefaultResumeInfoQuery=`
+    
+  `
+
+  console.log(getDefaultResumeInfoQuery);
+  const temp=await connection.query(getDefaultResumeInfoQuery);
+
+
+
+  return temp[0];
+}
+
+async function postResumeId(connection,userId,resumeId){
+
+  const postResumeIdQuery=`
+      UPDATE Profiles
+      SET resumeId=${resumeId}
+      WHERE userId=${userId}
+  `;
+
+  console.log(postResumeIdQuery);
+  const insertResumeInfo=await connection.query(postResumeIdQuery);
+
+
+
+  return insertResumeInfo[0];
+}
+
+
 module.exports = {
   selectUser,
   insertJobGroupCategoryInfo,
@@ -277,4 +351,9 @@ module.exports = {
   deleteHeart,
   deleteFollow,
   updateUserState,
+  getUserStatus,
+  getProfileIdAndCareerUsingUserId,
+  getUserNameUsingUserId,
+  postResumeId,
+  getDefaultResumeInfo,
 };

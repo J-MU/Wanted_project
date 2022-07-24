@@ -13,7 +13,7 @@ exports.getSchools = async function () {
         const getSchoolsResult = await schoolDao.getSchools(connection);
         connection.release();
 
-        return response(baseResponse.SUCCESS,getSchoolsResult);
+        return getSchoolsResult;
 
     }
     catch(err) {

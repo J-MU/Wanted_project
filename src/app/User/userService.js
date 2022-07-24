@@ -207,6 +207,7 @@ exports.postDefaultResume=async function(userId,userName,email,telephone,jobId,c
         const resumeId=postResumeResult[0].insertId;
         console.log(resumeId);
         console.log("Query2");
+        const insertProfileResumeId=await userDao.postResumeId(connection,userId,resumeId);
         const postResumeCareerResult=await resumeDao.postResumeCareerInfo(connection,resumeId,companyId,companyName);
         console.log("Query3");
         const postEducationResult=await resumeDao.postResumeEducationInfo(connection,resumeId,schoolName);
@@ -215,7 +216,7 @@ exports.postDefaultResume=async function(userId,userName,email,telephone,jobId,c
             const postResumeSkillResult=await resumeDao.postResumeSkillInfo(connection,resumeId,skills[index]);    
         }
 
-        const updateUserState=await userDao.updateUserState(connection,userId,"STEP3");
+        const updateUserState=await userDao.updateUserState(connection,userId,"ACTIVE");
 
         await connection.commit() // 커밋
 

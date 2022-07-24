@@ -63,5 +63,21 @@ exports.checkInheritanceJobandJobGroupCategory = async function (jobId) {
         logger.error(`App - checkInheritanceJobandJobGroupCategory Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
     }
-};
+}
+
+exports.getJobNameUsingProfileId=async function(profileId){
+    const connection = await pool.getConnection(async (conn) => conn);
+
+    try{
+        const jobName=await jobDao.getJobNameUsingProfileId(connection,profileId);
+
+        console.log("jobName:",jobName);
+        return jobName[0].name;
+    }catch(err){
+        logger.error(`App - get Job Name Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }finally{
+        connection.release();
+    }
+}
 
