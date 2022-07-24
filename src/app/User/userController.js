@@ -391,6 +391,39 @@ exports.isMember = async function (req, res) {
 
 };
 
+exports.getProfileData = async function (req, res) {
+
+    console.log("여기들어오는건 맞지...?");
+    const userIdFromJWT = req.verifiedToken.userId;
+    const userId = req.params.userId;
+    let profileData;
+
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } 
+
+    const userStatus=await userProvider.getUserStatus(userId);
+    console.log("여기 돌아는 왔니?");
+    console.log(userStatus);
+    //어느 Provider function을 호출할지를 결정해야함.
+    if(userStatus=="STEP2"){
+        console.log("STEP2");
+        profileData=await userProvider.getProfileDataSTEP2(userId); // 여기 구현 완료!!
+    }
+    else if(userStatus=="ACTIVE"){
+        console.log("ACTIVE");
+        profileData=await userProvider.getProfileDataACTIVE(userId);
+    }else{
+        return res.send(errResponse(baseResponse.USER_STATUS_TYPE_ERROR));
+    }
+
+
+    console.log("userStatus: ",userStatus);
+    return res.send(profileData);
+
+    
+};
+
 
 
 

@@ -14,7 +14,7 @@ exports.getCompanies = async function () {
         const getCompaniesResult = await companyDao.getCompanies(connection);
         connection.release();
 
-        return response(baseResponse.SUCCESS,getCompaniesResult);
+        return getCompaniesResult;
 
     }
     catch(err) {

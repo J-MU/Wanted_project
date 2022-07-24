@@ -34,6 +34,7 @@ module.exports = {
     USER_USERID_EMPTY : { "isSuccess": false, "code": 2053, "message": "userId를 입력해주세요." },
     USER_NAME_EMPTY: { "isSuccess": false, "code": 2054, "message": "user 이름을 입력해주세요" },
     NOT_DEVELOPMENT_CANT_HAVE_SKILL:{"isSuccess": false, "code": 2055, "message": "직군이 개발이 아니면 skill을 등록할 수 없습니다."},
+    USER_STATUS_TYPE_ERROR:{"isSuccess": false, "code": 2056, "message": "STATUS가 비정상적인 값입니다."},
     // USER_USERID_NOT_EXIST : { "isSuccess": false, "code": 2013, "message": "해당 회원이 존재하지 않습니다." },
 
     // Employments: 2100
@@ -42,7 +43,7 @@ module.exports = {
     EMPLOYMENT_ID_EMPTY:{"isSuccess": false, "code": 2103, "message": "채용 Id를 입력하시오"},
     // USER_USEREMAIL_EMPTY : { "isSuccess": false, "code": 2014, "message": "이메일을 입력해주세요." },
     // USER_USEREMAIL_NOT_EXIST : { "isSuccess": false, "code": 2015, "message": "해당 이메일을 가진 회원이 존재하지 않습니다." },
-    // USER_ID_NOT_MATCH : { "isSuccess": false, "code": 2016, "message": "유저 아이디 값을 확인해주세요" },
+    USER_ID_NOT_MATCH : { "isSuccess": false, "code": 2014, "message": "유저 아이디 값을 확인해주세요" },
     // USER_NICKNAME_EMPTY : { "isSuccess": false, "code": 2017, "message": "변경할 닉네임 값을 입력해주세요" },
 
     // USER_STATUS_EMPTY : { "isSuccess": false, "code": 2018, "message": "회원 상태값을 입력해주세요" },

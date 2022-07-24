@@ -11,10 +11,11 @@ module.exports = function(app){
     // 2. 회원가입(2페이지) 
     app.post('/app/job',user.postJobCatgory);
 
-    // 3. 회원가입(3페이지)
+    // 3. 회원가입(3페이지) Default Resume 생성.
     app.post('/app/users/post-default-resume', user.postDefaultResume);
 
     app.post('/app/users/interestedTags',user.postInterestedTags);
+   
     // 3. 특정 유저 조회 API
     //app.get('/app/users/:userId', user.getUserById);
 
@@ -45,6 +46,8 @@ module.exports = function(app){
     // 회원 정보 수정 API (JWT 검증 및 Validation - 메소드 체이닝 방식으로 jwtMiddleware 사용)
   //  app.patch('/app/users/:userId', jwtMiddleware, user.patchUsers)
 
+    // 11. user Profile 조회 API
+    app.get('/app/users/:userId/profile',jwtMiddleware,user.getProfileData);
   
 
 
