@@ -19,7 +19,7 @@ exports.getPosts = async function (token) {
         console.log("Query1 ");
         const getInsitePostTagsResult = await postDao.getInsitePostTags(connection);
 
-        const tagId = getInsitePostTagsResult[0].tagId
+        const tagId = 3
 
         console.log("Query 2");
         const getInsitePostsResult = await postDao.getInsitePosts(connection, tagId);
