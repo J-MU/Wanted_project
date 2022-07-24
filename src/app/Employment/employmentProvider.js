@@ -224,3 +224,17 @@ exports.getEmploymentsHavingBookMark=async function(userId){
         return errResponse(baseResponse.DB_ERROR);
     }
 }
+
+exports.getEmploymentsUsingCompanyId=async function(userId,companyId){
+    try{
+        const connection = await pool.getConnection(async (conn) => conn);
+
+
+        const employmentRows=await employmentDao.getEmploymentsUsingCompanyId(connection,userId,companyId);
+        connection.release();
+        return response(baseResponse.SUCCESS,employmentRows)
+    }catch(err){
+        logger.error(`App - get Employments Using CompanyId Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}

@@ -20,6 +20,8 @@ module.exports = function(app){
     // 채용 상세 페이지 조회
     app.get('/app/employments/:employmentId',jwtMiddleware,employment.getEmploymentPostData);
 
+    // 회사 상세페이지에서 회사에서 채용중인 employment 조회(처음 4개 제외)
+    app.get('/app/companies/:companyId/employments',jwtMiddleware,employment.getEmploymentsUsingCompanyId);
     
     
     

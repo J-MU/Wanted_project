@@ -2,6 +2,8 @@ const { pool } = require("../../../config/database");
 const { logger } = require("../../../config/winston");
 
 const companyDao = require("./companyDao");
+const employeeProvider=require("../Employee/employeeProvider");
+
 const {response, errResponse} = require("../../../config/response");
 const baseResponse = require("../../../config/baseResponseStatus");
 
@@ -65,11 +67,19 @@ exports.getCompanyDetails = async function (userId,companyId) {
         for (let index = 0; index < companyImgs.length; index++) {
             totalData.companyImgs.push(companyImgs[index].imgUrl);
         }
-
+       
         const companyTags=await companyDao.getCompaniesTag(connection,companyId);
         totalData.companyTags=companyTags;
 
         totalData.Employments=await companyDao.getEmploymentsOfCompany(connection,userId,companyId);
+       
+        /* 직원 분석 Data recieve Code*/
+        const period=1;       // 1년
+        const analysisType=1; // 전체 인원
+        totalData.news=await companyDao.getCompanyNews(connection,companyId);
+        totalData.AnalysisEmployees=await employeeProvider.getAnalysisEmployee(period,analysisType);
+
+
         connection.release();
 
         return response(baseResponse.SUCCESS,totalData);

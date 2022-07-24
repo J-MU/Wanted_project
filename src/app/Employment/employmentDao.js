@@ -488,6 +488,36 @@ async function getEmploymentsHavingBookMark (connection,userId) {
     return  employmentsRows[0];
 }
 
+async function getEmploymentsUsingCompanyId(connection,userId,companyId){
+    const  getEmploymentsUsingCompanyIdQuery = `
+            SELECT
+                Employments.employmentId,
+                jobName,
+                dueDate, # dueDate 상시채용 생각하기.
+                (recommenderSigningBonus+Employments.recommendedSigningBonus) as 'SigningBonus',
+                IF(IsBookMark.userId,true,false) as isBookMark
+            FROM Employments
+            LEFT JOIN Companies C on Employments.companyId = C.CompanyId
+            LEFT JOIN (
+                select * from WANTED.BookMark
+                where status='ACTIVE' and userId=${userId}
+            )IsBookMark on IsBookMark.employmentId=Employments.employmentId
+            WHERE C.CompanyId=${companyId}
+            ORDER BY Employments.createdAt
+            LIMIT 4,9999; 
+    `;
+    // TODO employments 더미 더 넣어야함. MySQL 공식 문서에서 LIMIT옆에 엄청 큰 숫자 넣으래..진짜루..
+    console.log("Query:");
+    console.log(getEmploymentsUsingCompanyIdQuery);
+
+    const  employmentRows = await connection.query(getEmploymentsUsingCompanyIdQuery);
+
+    console.log("employmentRows: ");
+    console.log(employmentRows[0]);
+
+    return  employmentRows[0];
+}
+
   module.exports = {
     getEmploymentCarouselData,
     getThemeData,
@@ -508,6 +538,7 @@ async function getEmploymentsHavingBookMark (connection,userId) {
     getEmploymentImgs,
     getEmploymentsHavingHeart,
     getEmploymentsHavingBookMark,
+    getEmploymentsUsingCompanyId,
 };
   
 

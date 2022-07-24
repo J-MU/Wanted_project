@@ -121,7 +121,7 @@ exports.getEmploymentsHavingHeart = async function (req, res) {
 
 
 exports.getEmploymentsHavingBookMark = async function (req, res) {
-    let userId;
+    let userId=0;
 
     console.log("천사였네!");
     if(req.verifiedToken){
@@ -130,5 +130,23 @@ exports.getEmploymentsHavingBookMark = async function (req, res) {
     
     const employmentRows = await employmentProvider.getEmploymentsHavingBookMark(userId);
 
+    return res.send(employmentRows);
+}
+
+exports.getEmploymentsUsingCompanyId=async function(req,res){
+    let userId=0;
+
+    if(!req.params || isNaN(req.params.companyId))
+        return res.send(response(baseResponse.COMPANY_EMPTY));
+    const companyId=req.params.companyId;
+
+    console.log("천사였네!");
+    if(req.verifiedToken){
+        userId = req.verifiedToken.userId;
+    }
+
+    console.log("userId:",userId);
+    const employmentRows = await employmentProvider.getEmploymentsUsingCompanyId(userId,companyId);
+    
     return res.send(employmentRows);
 }

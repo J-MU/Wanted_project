@@ -170,6 +170,23 @@ async function getEmploymentsOfCompany(connection,userId,companyId){
 }
 
 
+async function getCompanyNews(connection,companyId){
+    const  getCompanyNewsQuery = `
+        select newsName,newsFullUrl,newsUrl,uploadDate from CompanyNews
+        LEFT JOIN Companies C on CompanyNews.companyId = C.CompanyId
+        WHERE C.CompanyId=${companyId}
+        LIMIT 4;
+    `;
+
+    const  companyNews = await connection.query(getCompanyNewsQuery);
+
+    console.log("companyNews: ");
+    console.log(companyNews[0]);
+
+    return  companyNews[0];
+}
+
+
 module.exports = {
     getFollowCount,
     updateFollowCount,
@@ -181,4 +198,5 @@ module.exports = {
     getCompanyDetails,
     getCompanyImgs,
     getEmploymentsOfCompany,
+    getCompanyNews,
 }
