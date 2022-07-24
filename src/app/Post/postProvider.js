@@ -12,7 +12,7 @@ exports.getPosts = async function (token) {
     console.log("Provider호출");
     const connection = await pool.getConnection(async (conn) => conn);
     const getCarouselResult = await postDao.getCarousel(connection);
-
+    console.log("get Carousel 끝");
 
     if(token==null) {
         console.log("token null");
@@ -23,7 +23,7 @@ exports.getPosts = async function (token) {
 
         console.log("Query 2");
         const getInsitePostsResult = await postDao.getInsitePosts(connection, tagId);
-
+        console.log(getInsitePostsResult);
         console.log("Query 3");
         const getArticlePostsResult = await postDao.getArticlePosts(connection);
 

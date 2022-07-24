@@ -1,6 +1,7 @@
 const util = require('util')
 
 async function getCarousel(connection) {
+    console.log("getCarousel에서 죽음?");
     //배너 사진 가져오기 3개 가져오기 랜덤으로 배열에 담음
     const getCarouselQuery = `
     select imgUrl, title as carouseTitle, content, link
@@ -10,6 +11,7 @@ async function getCarousel(connection) {
     `;
 
     const carouselRow = await connection.query(getCarouselQuery);
+    console.log("getCarousel끝나기 직전");
     return carouselRow[0]
 }
 async function getInsitePostTags(connection) {
@@ -68,6 +70,7 @@ async function getInsitePosts(connection, tagId) {
 
     //태그 가져오기 9개. 거기서 첫번째 태그 포스트 9개 넣기.
 
+    console.log("tagId:",tagId);
     const getInsitePostsQuery = `
     select postThumbnailUrl, postName, postContent, writer, pf.platformImgUrl
     from insitePosts
@@ -75,6 +78,8 @@ async function getInsitePosts(connection, tagId) {
     where tagId=?
     limit 4;
     `;
+
+    
 
     const  getInsitePostsRow = await connection.query(getInsitePostsQuery,tagId);
     return getInsitePostsRow[0];
