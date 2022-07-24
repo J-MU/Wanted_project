@@ -36,8 +36,13 @@ exports.postResumes = async function(userId) {
         const connection = await pool.getConnection(async (conn) => conn);
         const postResumesResult = await resumeDao.postResumes(connection,userId);
         connection.release();
+        const num = postResumesResult.length
+        const resumeId = {'resumeId' : postResumesResult[num-1].resumeId }
 
-        return response(baseResponse.SUCCESS);
+
+
+
+        return response(baseResponse.SUCCESS,resumeId);
 
     }
     catch(err) {

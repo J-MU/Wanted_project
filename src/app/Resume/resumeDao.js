@@ -74,7 +74,16 @@ async function postResumes(connection, userId){
         limit 1;
     `;
     const postResumesRows = await connection.query(postResumesQuery, userId);
-    return postResumesRows
+
+    const resumeIdQuery= `
+    select resumeId
+    from Resumes as R
+    where userId=?;
+    `
+
+    const resumeIdQueryRows = await connection.query(resumeIdQuery, userId);
+
+    return resumeIdQueryRows[0]
 }
 
 //이력서 개인정보 및 간단 소개글 가져오기
