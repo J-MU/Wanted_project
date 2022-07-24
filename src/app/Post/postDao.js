@@ -130,13 +130,13 @@ async function getPostsByTagId(connection,tagId) {
     const getPostsByTagIdQuery = `
     select postUrl, postThumbnailUrl, postName, postContent, writer, platformImgUrl
     from insitePosts
-    inner join platforms as p on p.platformId= insitePosts.platformsId
+    inner join platforms as p on p.platformId=insitePosts.platformId
     where tagId=?
     `;
 
     const getPostsByTagIdRow = await connection.query(getPostsByTagIdQuery,tagId);
 
-    return getPostsByTagId[0];
+    return getPostsByTagIdRow[0];
 }
 
 

@@ -57,8 +57,9 @@ exports.getArticlePosts = async function (req, res) {
 
 exports.getPostsByTagId = async function (req, res) {
 
-    const tagId= req.params.tagId;
+    const tagId= req.query.tagId;
 
+    //validation
 
     const getPostsByTagId = await postProvider.getPostsByTagId(tagId);
 
