@@ -42,6 +42,7 @@ exports.getPosts = async function (token) {
         resultResponse.vodPosts = getVodPostsResult;
 
         console.log("Response 앞");
+        connection.release();
         return resultResponse;
     }
 
