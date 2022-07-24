@@ -355,4 +355,5 @@ module.exports = {
   getProfileIdAndCareerUsingUserId,
   getUserNameUsingUserId,
   postResumeId,
+  getDefaultResumeInfo,
 };

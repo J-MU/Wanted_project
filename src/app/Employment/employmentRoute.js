@@ -1,7 +1,7 @@
 module.exports = function(app){
     const employment = require('./employmentController');
     const jwtMiddleware = require('../../../config/jwtMiddleWareIsNotLoginOk');
-    const jwtMiddlewareMustLogin = require('../../../config/jwtMiddleWare');
+    const jwtMiddlewareMustLogin = require('../../../config/jwtMiddleware');
     
 
     // 채용 메인 페이지 조회
