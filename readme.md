@@ -95,3 +95,7 @@
 - 채용 조회 페이지 API 구축 완료
 - API 41,43,48,49 구축
 - Dummy Data 삽입
+
+## 2022.07.24 -Ayaan
+- profile API 구축중
+- Dummy Data 삽입
