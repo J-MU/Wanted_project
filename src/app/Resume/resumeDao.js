@@ -43,7 +43,7 @@ async function postResumeSkillInfo(connection,resumeId,skillId) {
 //이력서 전체 조회
 async function getResumes(connection, userId) {
     const getResumesQuery = `
-    select resumeName, date_format(updatedAt,'%Y.%m.%d') as 'updatedAt' , status
+    select resumeId, resumeName, date_format(updatedAt,'%Y.%m.%d') as 'updatedAt' , status
     from Resumes
     where userId=?;
     `;

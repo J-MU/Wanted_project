@@ -9,26 +9,24 @@ const baseResponse = require("../../../config/baseResponseStatus");
 //홈 화면 불러오기
 
 exports.getPosts = async function (token) {
-    console.log("Provider호출");
+
     const connection = await pool.getConnection(async (conn) => conn);
     const getCarouselResult = await postDao.getCarousel(connection);
-    console.log("get Carousel 끝");
+
 
     if(token==null) {
-        console.log("token null");
-        console.log("Query1 ");
+
         const getInsitePostTagsResult = await postDao.getInsitePostTags(connection);
 
         const tagId = 3
 
-        console.log("Query 2");
+
         const getInsitePostsResult = await postDao.getInsitePosts(connection, tagId);
         console.log(getInsitePostsResult);
-        console.log("Query 3");
+
         const getArticlePostsResult = await postDao.getArticlePosts(connection);
 
 
-        console.log("Query 4");
         const getVodPostsResult = await postDao.getVodPosts(connection);
 
 
@@ -41,7 +39,7 @@ exports.getPosts = async function (token) {
         resultResponse.articlePosts = getArticlePostsResult;
         resultResponse.vodPosts = getVodPostsResult;
 
-        console.log("Response 앞");
+
         connection.release();
         return resultResponse;
     }

@@ -180,7 +180,7 @@ async function getArticlePostsByDate (connection) {
     `;
 
     const getPostsByTagIdRow = await connection.query(getArticlePostsByDateQuery);
-    console.log(getPostsByTagIdRow[0])
+
     const num = getPostsByTagIdRow[0].length
     var resultRow = [];
     for (var i=0; i<num; i++) {
@@ -193,11 +193,10 @@ async function getArticlePostsByDate (connection) {
     `;
 
         const articleTagsRow = await connection.query(getArticlePostTagsQuery,articlePostId)
-        getPostsByTagIdRow[0][i].postTags =getPostsByTagIdRow[0];
+        getPostsByTagIdRow[0][i].postTags =articleTagsRow[0];
         resultRow.push(getPostsByTagIdRow[0][i]);
 
     }
-
     return resultRow
 }
 
