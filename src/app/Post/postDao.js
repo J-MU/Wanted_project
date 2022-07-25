@@ -91,26 +91,22 @@ async function getInsitePosts(connection, tagId) {
 
 
 // article 불러오기
-async function getArticlePosts(connection) {
-    const num =5
+async function getArticlePosts(connection, params) {
+
 
     const getArticlePostsQuery=`
     select postId, postThumbnailUrl,  postImgUrl, title
     from articlePosts
-    order by rand() limit ?;
+    inner join articleTagsMapping aTM on articlePosts.postId = aTM.articlePostId
+    where tagId =${params[1]}
+    order by rand() limit ${params[0]};
     `;
-    const [articlePostsRow] = await connection.query(getArticlePostsQuery,num);
-
-    for (var i=0; i<articlePostsRow.length; i++) {
-        if(articlePostsRow[i].startAndDueDate==null){
-
-            articlePostsRow[i].startAndDueDate = '상시'
-        }
-    }
-
+    const [articlePostsRow] = await connection.query(getArticlePostsQuery,params);
+    console.log(articlePostsRow)
     var resultRow = [];
-    for (var i=0; i<5; i++) {
+    for (var i=0; i<params[0]; i++) {
         var articlePostId = articlePostsRow[i].postId;
+        console.log(articlePostId)
         const getArticlePostTagsQuery=`
         select concat("#",name) as name, postTags.tagId
         from postTags
@@ -367,6 +363,65 @@ async function getArticlePostsByCurrent(connection) {
 
 }
 
+//아티클 눌렀을 때 전체 조회
+
+async function getArticlePostDetails (connection, postId) {
+    const getArticlePostDetailsQuery = `
+        select D.content, D.videoContent, D.writer, date_format(D.createdAt, '%Y.%m.%d') as createdAt
+        from articlePostDetails as D
+        where postId=?;
+    `;
+    const  getArticlePostDetailsRow = await connection.query(getArticlePostDetailsQuery,postId);
+
+    return getArticlePostDetailsRow[0];
+}
+
+async function getArticlePostImg (connection, postId) {
+    const getArticlePostImgQuery= `
+            select imgUrl
+            from articlePostImg
+            where postId=?
+    `
+    const  getArticlePostImgRow = await connection.query(getArticlePostImgQuery,postId);
+
+    return getArticlePostImgRow[0]
+}
+
+async function getArticleTag (connection, postId) {
+    const getArticleTagQuery= `
+            select tagId
+            from articleTagsMapping
+            where articlePostId=?
+            order by rand() limit 1 
+    `
+    const  getArticleTagRow = await connection.query(getArticleTagQuery,postId);
+    return getArticleTagRow[0][0].tagId
+}
+
+//탑텐 가져오기
+async function getTopTenContents (connection) {
+    const getTopTenContentsQuery= `
+        select postId, talkerName, title, subtitle, thumnailImgUrl
+        from vodPosts
+        order by count desc limit 5;
+    `
+    const  getTopTenContentsRow = await connection.query(getTopTenContentsQuery);
+    return getTopTenContentsRow[0]
+}
+
+//vod포스트 가져오기
+async function getVodPostsByTags (connection,vodTagId) {
+    const getVodPostsByTagsQuery= `
+        select postId, talkerName, title, subtitle, thumnailImgUrl
+        from vodPosts
+        where tagId=? limit 5;
+    `
+    const  getVodPostsByTagsRow = await connection.query(getVodPostsByTagsQuery,vodTagId);
+    return getVodPostsByTagsRow[0]
+}
+
+
+
 module.exports = {
     getCarousel,
     getInsitePostTags,
@@ -378,6 +433,12 @@ module.exports = {
     getArticlePostsByDate,
     getArticlePostsByTagIdAndDate,
     getArticlePostsByTagId,
-    getArticlePostsByCurrent
+    getArticlePostsByCurrent,
+    getArticlePostDetails,
+    getArticlePostImg,
+    getArticleTag,
+    getTopTenContents,
+    getVodPostsByTags
 
 };
+

@@ -83,3 +83,30 @@ exports.getArticlePostsByTagId = async function (req, res) {
     return res.send(getArticlePostsByTagIdResponse)
 
 }
+
+/**
+ * 아티클 자세히 보기
+ * [GET] /app/posts/articlePost/details?postId=
+ */
+
+exports.getArticlePostDetails = async function (req, res) {
+    const postId = req.query.postId
+
+    const getArticlePostDetailsResponse = await postProvider.getArticlePostDetails(postId);
+
+    return res.send(getArticlePostDetailsResponse)
+
+}
+
+
+/**
+ *
+ *
+ */
+
+exports.getVodPosts = async function (req, res) {
+    const getVodPostsResponse = await postProvider.getVodPosts();
+
+    return res.send(getVodPostsResponse);
+
+}
