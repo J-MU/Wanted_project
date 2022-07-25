@@ -37,21 +37,6 @@ exports.getPosts = async function (req, res) {
 
 
 /**
- * 홈 화면 가져오기
- * [GET] /app/posts/article
- */
-
-exports.getArticlePosts = async function (req, res) {
-    // const userId=req.verifiedToken.userId
-    const filter = req.body.filter;
-
-    const getArticlePostsResponse = await postProvider.getArticlePosts(filter);
-
-    return res.send(getArticlePostsResponse);
-
-};
-
-/**
  * 인사이트 태그 누를 때마다 다른 거
  * /app/posts/insitePostTags/tagId=?
  *
@@ -66,5 +51,35 @@ exports.getPostsByTagId = async function (req, res) {
     const getPostsByTagId = await postProvider.getPostsByTagId(tagId);
 
     return res.send(getPostsByTagId)
+
+}
+
+/**
+ * 아티클 전체보기
+ * [GET] /app/posts/article
+ */
+
+exports.getArticlePosts = async function (req, res) {
+    // const userId=req.verifiedToken.userId
+    const filter = req.body.filter;
+
+    const getArticlePostsResponse = await postProvider.getArticlePosts(filter);
+
+    return res.send(getArticlePostsResponse);
+
+};
+
+/**
+ * 아티클 태그 누를 때마다 다른 거 보여주기
+ * [GET] /app/posts/articlePostTags
+ */
+
+exports.getArticlePostsByTagId = async function (req, res) {
+    const tagId = req.query.tagId;
+
+    const filter = req.body.filter;
+    const getArticlePostsByTagIdResponse = await postProvider.getArticlePostsByTagId(tagId,filter);
+
+    return res.send(getArticlePostsByTagIdResponse)
 
 }
