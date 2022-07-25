@@ -9,10 +9,9 @@ const jwtMiddleware = (req, res, next) => {
     // read the token from header or url
 
     const token = req.headers['x-access-token'] || req.query.token;
-    console.log(req.headers)
+    console.log(token)
     // token does not exist
     if(!token) {
-        console.log('토큰 진짜 없어?')
         console.log('토큰 없네......')
         return res.send(errResponse(baseResponse.TOKEN_EMPTY))
     }
