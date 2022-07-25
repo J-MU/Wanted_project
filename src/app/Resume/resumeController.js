@@ -54,6 +54,7 @@ exports.postResumes = async function(req, res) {
 
 }
 
+
 /**
  * 이력서 조회
  * [GET] /app/resumes/:resumeId

@@ -1,8 +1,9 @@
 const util = require('util')
 
+//배너 사진 가져오기 3개 가져오기 랜덤으로 배열에 담음
 async function getCarousel(connection) {
     console.log("getCarousel에서 죽음?");
-    //배너 사진 가져오기 3개 가져오기 랜덤으로 배열에 담음
+
     const getCarouselQuery = `
     select imgUrl, title as carouseTitle, content, link
     from Carousel
@@ -14,8 +15,10 @@ async function getCarousel(connection) {
     console.log("getCarousel끝나기 직전");
     return carouselRow[0]
 }
+
+//postTags 가져오기
 async function getInsitePostTags(connection) {
-    //postTags 가져오기
+
 
     const getPostTagsQuery = `
         select tagId,name 
@@ -28,8 +31,9 @@ async function getInsitePostTags(connection) {
 
 }
 
+//interestedTags 가져오기
 async function getInsitePostInterestedTags(connection, userId) {
-    //interestedTags 가져오기
+
 
     const getInsitePostInterestedTagsQuery = `
         select UPTM.postTagId as tagId, postTags.name as name
@@ -66,9 +70,9 @@ async function getInsitePostInterestedTags(connection, userId) {
 
 }
 
+//태그 가져오기 9개. 거기서 첫번째 태그 포스트 9개 넣기.
 async function getInsitePosts(connection, tagId) {
 
-    //태그 가져오기 9개. 거기서 첫번째 태그 포스트 9개 넣기.
 
     console.log("tagId:",tagId);
     const getInsitePostsQuery = `
@@ -86,16 +90,23 @@ async function getInsitePosts(connection, tagId) {
 }
 
 
-
+// article 불러오기
 async function getArticlePosts(connection) {
     const num =5
-    // article 불러오기
+
     const getArticlePostsQuery=`
     select postId, postThumbnailUrl, title
     from articlePosts
     order by rand() limit ?;
     `;
     const [articlePostsRow] = await connection.query(getArticlePostsQuery,num);
+
+    for (var i=0; i<articlePostsRow.length; i++) {
+        if(articlePostsRow[i].startAndDueDate==null){
+
+            articlePostsRow[i].startAndDueDate = '상시'
+        }
+    }
 
     var resultRow = [];
     for (var i=0; i<5; i++) {
@@ -116,8 +127,10 @@ async function getArticlePosts(connection) {
 
 }
 
+//vod 불러오기
+
 async function getVodPosts(connection) {
-    //vod 불러오기
+
 
     const getVodPostsQuery = `
     select postId, talkerName, LEFT(title,35) as title, LEFT(subtitle,23) as subtitle, thumnailImgUrl
@@ -144,6 +157,8 @@ async function getPostsByTagId(connection,tagId) {
     return getPostsByTagIdRow[0];
 }
 
+
+//아티클 포스트 마감순으로 가져오기
 async function getArticlePostsByDate (connection) {
     const getArticlePostsByDateQuery = `
         select postId,
@@ -180,7 +195,7 @@ async function getArticlePostsByDate (connection) {
     `;
 
     const getPostsByTagIdRow = await connection.query(getArticlePostsByDateQuery);
-    console.log(getPostsByTagIdRow[0])
+
     const num = getPostsByTagIdRow[0].length
     var resultRow = [];
     for (var i=0; i<num; i++) {
@@ -193,14 +208,106 @@ async function getArticlePostsByDate (connection) {
     `;
 
         const articleTagsRow = await connection.query(getArticlePostTagsQuery,articlePostId)
-        getPostsByTagIdRow[0][i].postTags =getPostsByTagIdRow[0];
+        getPostsByTagIdRow[0][i].postTags =articleTagsRow[0];
         resultRow.push(getPostsByTagIdRow[0][i]);
 
     }
-
     return resultRow
 }
 
+//아티클 포스트 by 태그 by 마감임박순
+async function getArticlePostsByTagIdAndDate (connection,tagId) {
+    console.log(tagId)
+    // article 불러오기
+    const getArticlePostsByTagIdAndDateQuery=`
+    select postId, postThumbnailUrl,  postImgUrl, title,
+           concat(
+                   (date_format(startDate, '%Y.%m.%d ')),
+                   case DAYOFWEEK(startDate)
+                       when '1' then '(일)'
+                       when '2' then '(월)'
+                       when '3' then '(화)'
+                       when '4' then '(수)'
+                       when '5' then '(목)'
+                       when '6' then '(금)'
+                       when '7' then '(토)'
+                       end
+               ,' ~ '
+               ,(date_format(dueDate, '%Y.%m.%d ')),
+                   case DAYOFWEEK(dueDate)
+                       when '1' then '(일)'
+                       when '2' then '(월)'
+                       when '3' then '(화)'
+                       when '4' then '(수)'
+                       when '5' then '(목)'
+                       when '6' then '(금)'
+                       when '7' then '(토)'
+                       end
+               ) as startAndDueDate
+    from articlePosts
+    inner join articleTagsMapping aTM on articlePosts.postId = aTM.articlePostId
+    where tagId=? and startDate is not null;
+    `;
+
+    const getArticlePostsByTagIdAndDateRow = await connection.query(getArticlePostsByTagIdAndDateQuery,tagId);
+
+    // for (var i=0; i<getArticlePostsByTagIdRow[0].length; i++) {
+    //     if(getArticlePostsByTagIdRow[0][i].startAndDueDate==null){
+    //
+    //         getArticlePostsByTagIdRow[0][i].startAndDueDate = '상시'
+    //     }
+    // }
+    //console.log(getArticlePostsByTagIdRow[0])
+    var resultRow = [];
+    for (var i=0; i<getArticlePostsByTagIdAndDateRow[0].length; i++) {
+        var articlePostId = getArticlePostsByTagIdAndDateRow[0][i].postId;
+        const getArticlePostTagsQuery=`
+        select concat("#",name) as name, postTags.tagId
+        from postTags
+        inner join articleTagsMapping as aTM on postTags.tagId = aTM.tagId
+        where aTM.articlePostId=?;
+    `;
+
+        const articleTagsRow = await connection.query(getArticlePostTagsQuery,articlePostId)
+        getArticlePostsByTagIdAndDateRow[0][i].postTags = articleTagsRow[0];
+        resultRow.push( getArticlePostsByTagIdAndDateRow[0][i]);
+    }
+    //console.log(util.inspect(resultRow, {showHidden: false, depth: null,  colors: true}));
+    return resultRow
+}
+
+// 아티클 포스트 by 태그 , 나머지들
+async function getArticlePostsByTagId (connection, tagId) {
+    const getArticlePostsByTagIdQuery=`
+        select postId, postThumbnailUrl, postImgUrl, title
+        from articlePosts
+                 inner join articleTagsMapping aTM on articlePosts.postId = aTM.articlePostId
+        where tagId=?;
+    `;
+    const getArticlePostsByTagIdRow = await connection.query(getArticlePostsByTagIdQuery,tagId);
+
+    for (var i=0; i<getArticlePostsByTagIdRow[0].length; i++) {
+        getArticlePostsByTagIdRow[0][i].startAndDueDate = '상시'
+        console.log(getArticlePostsByTagIdRow[0]);
+    }
+
+    var resultRow = [];
+    for (var i=0; i<getArticlePostsByTagIdRow[0].length; i++) {
+        var articlePostId = getArticlePostsByTagIdRow[0][i].postId;
+        const getArticlePostTagsQuery=`
+        select concat("#",name) as name, articlePostId
+        from postTags
+        inner join articleTagsMapping as aTM on postTags.tagId = aTM.tagId
+        where aTM.articlePostId=?;
+    `;
+
+        const articleTagsRow = await connection.query(getArticlePostTagsQuery,articlePostId)
+        getArticlePostsByTagIdRow[0][i].postTags = articleTagsRow[0];
+        resultRow.push(getArticlePostsByTagIdRow[0][i]);
+    }
+    //console.log(util.inspect(resultRow, {showHidden: false, depth: null,  colors: true}));
+    return resultRow
+}
 
 module.exports = {
     getCarousel,
@@ -210,5 +317,8 @@ module.exports = {
     getVodPosts,
     getInsitePostInterestedTags,
     getPostsByTagId,
-    getArticlePostsByDate
+    getArticlePostsByDate,
+    getArticlePostsByTagIdAndDate,
+    getArticlePostsByTagId,
+
 };
