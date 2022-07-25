@@ -28,6 +28,7 @@ module.exports = function () {
     require('../src/app/Company/companyRoute')(app);
     require('../src/app/School/schoolRoute')(app);
     require('../src/app/DummyData/router')(app);
+    require('../src/app/Employee/employeeRoute')(app);
     // require('../src/app/Board/boardRoute')(app);
 
     return app;

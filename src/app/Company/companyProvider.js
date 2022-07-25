@@ -75,9 +75,9 @@ exports.getCompanyDetails = async function (userId,companyId) {
        
         /* 직원 분석 Data recieve Code*/
         const period=1;       // 1년
-        const analysisType=1; // 전체 인원
+        const analysisType=1; // 전체  1:전체 2: 입사자 수 3: 퇴사자 수
         totalData.news=await companyDao.getCompanyNews(connection,companyId);
-        totalData.AnalysisEmployees=await employeeProvider.getAnalysisEmployee(period,analysisType);
+        totalData.AnalysisEmployees=await employeeProvider.getAnalysisEmployee(period,analysisType,companyId);
 
 
         connection.release();
