@@ -26,6 +26,8 @@ module.exports = {
     CAREER_EMPTY:{"isSuccess": false, "code": 2050, "message":"경력(년차)를 입력해주세요"},
     EDUCATION_NAME_EMPTY : {"isSuccess": false, "code": 2051, "message":"학교를 입력해주세요."},
     COMPANY_EMPTY : {"isSuccess": false, "code": 2052, "message":"직장을 입력해주세요."},
+    USER_EMAIL_EMPTY : {"isSuccess": false, "code": 2057, "message":"이메일을 입력해 주세요"},
+    USER_PHONENUMBER_EMPTY:{"isSuccess": false, "code": 2057, "message":"휴대폰 번호를 입력해주세요"},
     // SIGNIN_EMAIL_EMPTY : { "isSuccess": false, "code": 2008, "message":"이메일을 입력해주세요" },
     // SIGNIN_EMAIL_LENGTH : { "isSuccess": false, "code": 2009, "message":"이메일은 30자리 미만으로 입력해주세요." },
    
@@ -70,6 +72,8 @@ module.exports = {
 
     // 기타 error
     OUT_OF_ORDER_BY_OPTION:{"isSuccess": false, "code": 2500, "message": "유효한 정렬 option이 아닙니다."},
+    BODY_EMPTY:{"isSuccess": false, "code": 2501, "message": "BODY가 비었습니다."},
+    SKILLS_EMPTY:{"isSuccess": false, "code": 2501, "message": "SKILL이 비었습니다."},
     // Response error
     SIGNUP_REDUNDANT_EMAIL : { "isSuccess": false, "code": 3001, "message":"중복된 이메일입니다." },
     SIGNUP_REDUNDANT_NICKNAME : { "isSuccess": false, "code": 3002, "message":"중복된 닉네임입니다." },

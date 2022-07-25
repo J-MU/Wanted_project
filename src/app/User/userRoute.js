@@ -1,3 +1,5 @@
+const { application } = require('express');
+
 module.exports = function(app){
     const user = require('./userController');
     const jwtMiddleware = require('../../../config/jwtMiddleware');
@@ -49,9 +51,18 @@ module.exports = function(app){
     // 11. user Profile 조회 API
     app.get('/app/users/:userId/profile',jwtMiddleware,user.getProfileData);
   
+    // 12. user Profile Img 등록 API
+    app.patch('/app/profile/profileImg',jwtMiddleware,user.patchProfileImg);
 
+    // 13. user Profile 수정 API
+    app.put('/app/users/:userId/profile',jwtMiddleware,user.patchProfile);
 
-};
+    // 14. user 기본정보 확인 API
+    app.get('/app/users/:userId',jwtMiddleware,user.getUserInfo);
+    // 15. user Profile spec 수정 API
+    app.put('/app/users/:userId/profile/spec',jwtMiddleware,user.patchProfileSpec);
+
+  };
 
 
 // TODO: 자동로그인 API (JWT 검증 및 Payload 내뱉기)

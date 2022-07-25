@@ -266,11 +266,11 @@ exports.postBookMark=async function(userId,employmentId){
 
         const postBookMarkResult=await userDao.postBookMark(connection,userId,employmentId);
         console.log("1번 함수 호출성공")
-        const BookMarkCount=await employmentDao.getBookMarkCount(connection,employmentId);
+        let BookMarkCount=await employmentDao.getBookMarkCount(connection,employmentId);
         BookMarkCount=BookMarkCount+1;
         console.log("2번 함수 호출성공");
         console.log(BookMarkCount);
-        const postBookMarkCountResult=await employmentDao.plusBookMarkCount(connection,employmentId,BookMarkCount);
+        const postBookMarkCountResult=await employmentDao.updateBookMarkCount(connection,employmentId,BookMarkCount);
         await connection.commit();
         return response(baseResponse.SUCCESS);
     } catch(err){
@@ -292,9 +292,10 @@ exports.postHeart=async function(userId,employmentId){
 
         const postHeartResult=await userDao.postHeart(connection,userId,employmentId);
         console.log("1번 함수 호출성공")
-        const HeartCount=await employmentDao.getHeartCount(connection,employmentId);
+        let HeartCount=await employmentDao.getHeartCount(connection,employmentId);
         console.log("2번 함수 호출성공");
         console.log(HeartCount);
+        HeartCount=HeartCount+1;
         const postHeartCountResult=await employmentDao.updateHeartCount(connection,employmentId,HeartCount);
         await connection.commit();
         return response(baseResponse.SUCCESS);
@@ -320,7 +321,7 @@ exports.postFollow=async function(userId,companyId){
         const followCount=await companyDao.getFollowCount(connection,companyId);
         console.log("2번 함수 호출성공");
         console.log(followCount);
-        const postFollowCountResult=await companyDao.plusFollowCount(connection,companyId,followCount);
+        const postFollowCountResult=await companyDao.updateFollowCount(connection,companyId,followCount);
         await connection.commit();
         return response(baseResponse.SUCCESS);
     } catch(err){
@@ -348,6 +349,7 @@ exports.deleteBookMark=async function(userId,employmentId){
         console.log("1번 함수 호출성공")
         let BookMarkCount=await employmentDao.getBookMarkCount(connection,employmentId);
         BookMarkCount=BookMarkCount-1;
+        // TODO BookMarkCount가 0이하일때 error response;
         console.log("2번 함수 호출성공");
         console.log(BookMarkCount);
         const plusBookMarkCount=await employmentDao.updateBookMarkCount(connection,employmentId,BookMarkCount);
@@ -413,6 +415,80 @@ exports.deleteFollow=async function(userId,companyId){
     } catch(err){
         logger.error(`App - delete Follow Service error\n: ${err.message}`);
         await connection.rollback() // 롤백
+        return errResponse(baseResponse.DB_ERROR);
+    }finally{
+        connection.release();
+    }
+}
+
+exports.patchProfileImg=async function(userId,profileImg){
+    const connection = await pool.getConnection(async (conn) => conn);
+    try{
+        const postProfileImgResult=await userDao.patchProfileImg(connection,userId,profileImg);
+
+        return response(baseResponse.SUCCESS);
+    } catch(err){
+        logger.error(`App - POST ProfileImg Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }finally{
+        connection.release();
+    }
+}
+
+
+exports.updateProfileInfo=async function(userId,userName,userEmail,userPhoneNumber){
+    const connection = await pool.getConnection(async (conn) => conn);
+    try{
+        const updateProfileInfoResult=await userDao.updateProfileInfo(connection,userId,userName,userEmail,userPhoneNumber);
+
+        return response(baseResponse.SUCCESS);
+    } catch(err){
+        logger.error(`App - UPDATE Profile Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }finally{
+        connection.release();
+    }
+}
+
+exports.updateProfileSpecInfo=async function(params){
+    /* userId,
+      JobGroupId,                             -> profileJobGroupMapping
+      JobId,                                  -> profileJobMapping
+      career,salary,salaryPeriod,monetary     -> profile   
+      skills,                                   -> userSkills
+   */
+    console.log(params);
+    if(params.jobGroupId!=1&&params.skills!=null){
+        return errResponse(baseResponse.NOT_DEVELOPMENT_CANT_HAVE_SKILL);
+    }
+
+    const connection = await pool.getConnection(async (conn) => conn);
+    try{
+        connection.beginTransaction();
+        // UPDATE
+        console.log("Query1");
+        const updateProfile=await userDao.updateProfileData(connection,params);
+        console.log("Query2");
+        const updateJoGroup=await userDao.updateJobGroup(connection,params);
+        console.log("Query3");
+        const updateJob=await userDao.updateJob(connection,params);
+
+        // 기존정보 삭제
+        console.log("Query4");
+        const deleteSkills=await userDao.deleteSkills(connection,params.userId);
+
+        // 새로운 정보 삽입.
+        console.log("QueryA");
+        for (let index = 0; index < params.skills.length; index++) {
+            const updateSkills=await userDao.newPostSkills(connection,params.userId,params.skills[index]);    
+        }
+        
+
+        connection.commit();
+        return response(baseResponse.SUCCESS);
+    } catch(err){
+        connection.rollback();
+        logger.error(`App - UPDATE Profile Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
     }finally{
         connection.release();

@@ -121,9 +121,9 @@ async function insertProfileInfo(connection,userId,career) {
     return insertProfileInfoResult;
 }
 
-async function getProfileIdAndCareerUsingUserId(connection,userId){
+async function getProfileInfoUsingUserId(connection,userId){
   const getProfileIdUsingUserIdQuery=`
-      SELECT profileId,career FROM Users
+      SELECT profileId,career,profileImg FROM Users
       LEFT JOIN Profiles ON Users.userId=Profiles.userId
       WHERE Users.userId=${userId};
   `;
@@ -302,7 +302,13 @@ async function getUserStatus(connection,userId,stepLevel){
 async function getDefaultResumeInfo(connection,userId){
 
   const getDefaultResumeInfoQuery=`
-    
+    SELECT Users.name,email,phoneNumber,selfIntroduction,profileImg,E.name,E.MajorOrDegree,C.companyName,C.DepartmentAndTitle FROM Users
+    LEFT JOIN Profiles P on Users.userId = P.userId
+    LEFT JOIN Resumes R on P.resumeId = R.resumeId
+    LEFT JOIN Education E on P.resumeId = E.resumeId
+    LEFT JOIN Careers C on E.resumeId = C.resumeId
+    WHERE Users.userId=${userId}
+  ;
   `
 
   console.log(getDefaultResumeInfoQuery);
@@ -329,6 +335,120 @@ async function postResumeId(connection,userId,resumeId){
   return insertResumeInfo[0];
 }
 
+async function patchProfileImg(connection,userId,profileImg){
+
+  const postProfileImgQuery=`
+    UPDATE Profiles
+    SET Profiles.profileImg="${profileImg}"
+    WHERE userId=${userId};
+  `
+  console.log(postProfileImgQuery);
+  const patchProfileImg=await connection.query(postProfileImgQuery);
+
+  return patchProfileImg;
+}
+
+async function updateProfileInfo(connection,userId,userName,userEmail,userPhoneNumber){
+  /*career,salary,salaryPeriod,monetary     -> profile*/ 
+  const updateProfileInfoQuery=`
+      UPDATE Users
+      SET name="${userName}",
+          email="${userEmail}",
+          phoneNumber="${userPhoneNumber}"
+      WHERE userId=${userId}; 
+  `
+  console.log(updateProfileInfoQuery);
+  const updateProfileInfoResult=await connection.query(updateProfileInfoQuery);
+
+  return updateProfileInfoResult;
+}
+
+async function updateProfileData(connection,params){
+  console.log(params);
+  const updateProfileInfoQuery=`
+      UPDATE Profiles
+      SET career=${params.career},
+          salary=${params.salary},
+          salaryPeriod="${params.salaryPeriod}",
+          monetary="${params.monetary}"
+      WHERE userId=${params.userId};
+  `;
+
+  console.log(updateProfileInfoQuery);
+  const updateProfileInfoResult=await connection.query(updateProfileInfoQuery);
+
+  return updateProfileInfoResult;
+}
+
+
+async function updateJobGroup(connection,params){
+  console.log(params);
+  const updateJobGroupQuery=`
+      UPDATE profileJobGroupMapping
+      SET categoryId=${params.jobGroupId}
+      WHERE profileId=${params.profileId};
+  `;
+
+  console.log(updateJobGroupQuery);
+  const updateProfileInfoResult=await connection.query(updateJobGroupQuery);
+
+  return updateProfileInfoResult;
+}
+
+async function updateJob(connection,params){
+  console.log(params);
+  const updateJobQuery=`
+      UPDATE profileJobMapping
+      SET categoryId=${params.jobId}
+      WHERE profileId=${params.profileId};
+  `;
+
+  console.log(updateJobQuery);
+  const updateProfileInfoResult=await connection.query(updateJobQuery);
+
+  return updateProfileInfoResult;
+}
+
+
+async function deleteSkills(connection,userId){
+  const deleteSkillsQuery=`
+      UPDATE userSkills
+      SET status="DELETED"
+      WHERE userId=${userId};
+  `;
+
+  console.log(deleteSkillsQuery);
+  const updateProfileInfoResult=await connection.query(deleteSkillsQuery);
+
+  return updateProfileInfoResult;
+}
+
+async function newPostSkills(connection,userId,skillId){
+  console.log(skillId);
+  const postSkillsQuery=`
+      INSERT INTO userSkills(userId,skillId)
+      VALUES (${userId},${skillId});
+  `;
+
+  console.log(postSkillsQuery);
+  const updateProfileInfoResult=await connection.query(postSkillsQuery);
+
+  return updateProfileInfoResult;
+}
+
+async function getUserInfo(connection,userId){
+  const getUserInfoQuery=`
+    SELECT userId,name,email,phoneNumber 
+    FROM Users
+    WHERE userId=${userId};
+  `;
+
+  console.log(getUserInfoQuery);
+  const userInfos=await connection.query(getUserInfoQuery);
+
+  return userInfos[0];
+}
+
 
 module.exports = {
   selectUser,
@@ -352,8 +472,16 @@ module.exports = {
   deleteFollow,
   updateUserState,
   getUserStatus,
-  getProfileIdAndCareerUsingUserId,
+  getProfileInfoUsingUserId,
   getUserNameUsingUserId,
   postResumeId,
   getDefaultResumeInfo,
+  patchProfileImg,
+  updateProfileInfo,
+  updateProfileData,
+  updateJobGroup,
+  updateJob,
+  deleteSkills,
+  newPostSkills,
+  getUserInfo,
 };

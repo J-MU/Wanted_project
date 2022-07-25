@@ -6,6 +6,7 @@ const {response, errResponse} = require("../../../config/response");
 
 const regexEmail = require("regex-email");
 const {emit} = require("nodemon");
+const { insertUserSkills } = require("./userDao");
 
 /**
  * API No. 0
@@ -401,7 +402,7 @@ exports.getProfileData = async function (req, res) {
     if (userIdFromJWT != userId) {
         res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
     } 
-
+    console.log("TEST:",userId,userIdFromJWT);
     const userStatus=await userProvider.getUserStatus(userId);
     console.log("여기 돌아는 왔니?");
     console.log(userStatus);
@@ -425,8 +426,89 @@ exports.getProfileData = async function (req, res) {
 };
 
 
+exports.patchProfileImg=async function (req,res){
+    const userId=req.verifiedToken.userId;
+    const profileImgUrl=req.body.profileImg;
+
+    const insertProfileImgResult=await userService.patchProfileImg(userId,profileImgUrl);
+
+    return res.send(insertProfileImgResult);
+}
+
+exports.patchProfile=async function(req,res){
+    const userId=req.params.userId;
+    const userIdFromJWT=req.verifiedToken.userId;
+    console.log("여기까진 왔을까? 궁금해");
+    console.log(userId,userIdFromJWT);
+    console.log(req.body);
+    
+    if (userIdFromJWT != userId)  res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    if(!req.body) return res.send(response(baseResponse.BODY_EMPTY));
+    if(!req.body.userName)  return res.send(response(baseResponse.USER_NAME_EMPTY));
+    if(!req.body.userEmail) return res.send(response(baseResponse.USER_EMAIL_EMPTY));
+    if(!req.body.userPhoneNumber) return res.send(response(baseResponse.USER_PHONENUMBER_EMPTY));
+    
+    const userName=req.body.userName;
+    const userEmail=req.body.userEmail;
+    const userPhoneNumber=req.body.userPhoneNumber;
+
+    const patchProfileResult=await userService.updateProfileInfo(userId,userName,userEmail,userPhoneNumber);
+    
+    return res.send(patchProfileResult);
+}
 
 
+exports.patchProfileSpec=async function(req,res){
+    const userId=req.params.userId;
+    const userIdFromJWT=req.verifiedToken.userId;
+    console.log("여기까진 왔을까? 궁금해");
+   /* userId,JobGroupId,JobId,career,skills
+      salary,salaryPeriod,monetary);
+   */
+    console.log(req.body);
+    if (userIdFromJWT != userId)  res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    if(!req.body) return res.send(response(baseResponse.BODY_EMPTY));
+    if(!req.body.userId)  return res.send(response(baseResponse.USER_USERID_EMPTY));
+    if(!req.body.jobGroupId) return res.send(response(baseResponse.JOB_GROUP_EMPTY));
+    if(!req.body.jobId) return res.send(response(baseResponse.JOB_EMPTY));
+    if(!req.body.career) return res.send(response(baseResponse.CAREER_EMPTY));
+    if(!req.body.skills) return res.send(response(baseResponse.SKILLS_EMPTY));
+    
+    const profileObject=await userProvider.getProfileInfoUsingUserId(userId);
+
+    const params={};
+
+    if(Array.isArray(req.body.skills)){
+        params.skills=req.body.skills;
+    }else{
+        params.skills=[req.body.skills];
+    }
+    params.userId=userId;
+    params.jobGroupId=req.body.jobGroupId;
+    params.jobId=req.body.jobId;
+    params.career=req.body.career;
+    params.salary=req.body.salary;
+    params.salaryPeriod=req.body.salaryPeriod;
+    params.monetary=req.body.monetary;
+    params.profileId=profileObject.profileId;
+
+    console.log("Params: \n",params);
+    const patchProfileResult=await userService.updateProfileSpecInfo(params);
+    
+    return res.send(patchProfileResult);
+}
+
+exports.getUserInfo=async function(req,res){
+    const userId=req.params.userId;
+    const userIdFromJWT=req.verifiedToken.userId;
+    console.log("여기까진 왔을까? 궁금해");
+   
+    if (userIdFromJWT != userId)  res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    
+    const userInfoResult=await userProvider.getUserInfo(userId);
+    
+    return res.send(userInfoResult);
+}
 
 
 

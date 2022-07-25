@@ -104,9 +104,10 @@ exports.getProfileDataSTEP2 = async function (userId,userStatus) {
     // 4. 2번과 3번에서 불러온 jobName과 career를 통해 default self_introduction을 생성한다.
     const userName=await userDao.getUserNameUsingUserId(connection,userId);
     console.log(userName);
-    const profileObject=await getProfileIdAndCareerUsingUserId(userId);
+    const profileObject=await getProfileInfoUsingUserId(userId);
     const profileId=profileObject.profileId;
     const career=profileObject.career;
+    
     console.log("ProfileObject:",profileObject);
     const jobName=await jobProvider.getJobNameUsingProfileId(profileId);
     const totalData={};
@@ -146,16 +147,16 @@ exports.getProfileDataSTEP2 = async function (userId,userStatus) {
   
 };
 
-getProfileIdAndCareerUsingUserId=async function(userId){
+exports.getProfileInfoUsingUserId=async function(userId){
   const connection = await pool.getConnection(async (conn) => conn);
   console.log("getProfileId Service Run");
   try{
-    const profileId=await userDao.getProfileIdAndCareerUsingUserId(connection,userId);
+    const profileId=await userDao.getProfileInfoUsingUserId(connection,userId);
     return profileId[0];
   }catch(err){
 
     logger.error(`App - GET ProfileData ACTIVE Service error\n: ${err.message}`);
-    return res.send(errResponse(baseResponse.DB_ERROR));
+    return errResponse(baseResponse.DB_ERROR);
   }finally{
     connection.release();
   }
@@ -169,6 +170,23 @@ exports.getProfileDataACTIVE = async function (userId) {
     const resumeInfo = await userDao.getDefaultResumeInfo(connection, userId);
     
     return resumeInfo[0];
+  }catch(err){
+        logger.error(`App - GET ProfileData ACTIVE Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+  }finally{
+    connection.release();
+  }
+  
+};
+
+exports.getUserInfo = async function (userId) {
+  const connection = await pool.getConnection(async (conn) => conn);
+  console.log("getProfileData ACTIVE Service Run");
+  
+  try{
+    const userInfo = await userDao.getUserInfo(connection, userId);
+    
+    return userInfo;
   }catch(err){
         logger.error(`App - GET ProfileData ACTIVE Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
