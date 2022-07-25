@@ -143,6 +143,15 @@ exports.getArticlePosts = async function (filter) {
 
             return response(baseResponse.SUCCESS,AllArticlePosts);
         }
+        else if(filter=='최신등록순') {
+            const getArticlePostsByCurrent = await postDao.getArticlePostsByCurrent(connection)
+
+            const AllArticlePosts = {}
+            AllArticlePosts.ArticlePostTags =getArticlePostTags
+            AllArticlePosts.ArticlePostsByCurrent =getArticlePostsByCurrent
+            return response(baseResponse.SUCCESS,AllArticlePosts);
+            connection.release();
+        }
 
 
     }

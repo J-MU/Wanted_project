@@ -95,7 +95,7 @@ async function getArticlePosts(connection) {
     const num =5
 
     const getArticlePostsQuery=`
-    select postId, postThumbnailUrl, title
+    select postId, postThumbnailUrl,  postImgUrl, title
     from articlePosts
     order by rand() limit ?;
     `;
@@ -112,7 +112,7 @@ async function getArticlePosts(connection) {
     for (var i=0; i<5; i++) {
         var articlePostId = articlePostsRow[i].postId;
         const getArticlePostTagsQuery=`
-        select concat("#",name) as name, articlePostId
+        select concat("#",name) as name, postTags.tagId
         from postTags
         inner join articleTagsMapping as aTM on postTags.tagId = aTM.tagId
         where aTM.articlePostId=?;
@@ -201,7 +201,7 @@ async function getArticlePostsByDate (connection) {
     for (var i=0; i<num; i++) {
         var articlePostId = getPostsByTagIdRow[0][i].postId;
         const getArticlePostTagsQuery=`
-        select concat("#",name) as name, articlePostId
+        select concat("#",name) as name, postTags.tagId
         from postTags
         inner join articleTagsMapping as aTM on postTags.tagId = aTM.tagId
         where aTM.articlePostId=?;
@@ -282,7 +282,7 @@ async function getArticlePostsByTagId (connection, tagId) {
         select postId, postThumbnailUrl, postImgUrl, title
         from articlePosts
                  inner join articleTagsMapping aTM on articlePosts.postId = aTM.articlePostId
-        where tagId=?;
+        where tagId=? and (startDate is null) and (dueDate is null);
     `;
     const getArticlePostsByTagIdRow = await connection.query(getArticlePostsByTagIdQuery,tagId);
 
@@ -309,6 +309,64 @@ async function getArticlePostsByTagId (connection, tagId) {
     return resultRow
 }
 
+
+//최신 순으로 전체 조회 가져오기
+async function getArticlePostsByCurrent(connection) {
+    const  getArticlePostsByCurrentQuery=`
+        select postId, postThumbnailUrl, postImgUrl, title,
+               concat(
+                       (date_format(startDate, '%Y.%m.%d ')),
+                       case DAYOFWEEK(startDate)
+                           when '1' then '(일)'
+                           when '2' then '(월)'
+                           when '3' then '(화)'
+                           when '4' then '(수)'
+                           when '5' then '(목)'
+                           when '6' then '(금)'
+                           when '7' then '(토)'
+                           end
+                   ,' ~ '
+                   ,(date_format(dueDate, '%Y.%m.%d ')),
+                       case DAYOFWEEK(dueDate)
+                           when '1' then '(일)'
+                           when '2' then '(월)'
+                           when '3' then '(화)'
+                           when '4' then '(수)'
+                           when '5' then '(목)'
+                           when '6' then '(금)'
+                           when '7' then '(토)'
+                           end
+                   ) as startAndDueDate
+        from articlePosts
+        order by publishedDate desc
+    `;
+    const  getArticlePostsByCurrentRow = await connection.query( getArticlePostsByCurrentQuery);
+
+    for (var i=0; i<getArticlePostsByCurrentRow[0].length; i++) {
+        if(getArticlePostsByCurrentRow[0][i].startAndDueDate==null)
+        getArticlePostsByCurrentRow[0][i].startAndDueDate = '상시'
+    }
+
+    var resultRow = [];
+    for (var i=0; i<getArticlePostsByCurrentRow[0].length; i++) {
+        var articlePostId = getArticlePostsByCurrentRow[0][i].postId;
+        const getArticlePostTagsQuery=`
+        select concat("#",name) as name, articlePostId
+        from postTags
+        inner join articleTagsMapping as aTM on postTags.tagId = aTM.tagId
+        where aTM.articlePostId=?;
+    `;
+
+        const articleTagsRow = await connection.query(getArticlePostTagsQuery,articlePostId)
+        getArticlePostsByCurrentRow[0][i].postTags = articleTagsRow[0];
+        resultRow.push(getArticlePostsByCurrentRow[0][i]);
+    }
+    //console.log(util.inspect(resultRow, {showHidden: false, depth: null,  colors: true}));
+    return resultRow
+
+
+}
+
 module.exports = {
     getCarousel,
     getInsitePostTags,
@@ -320,5 +378,6 @@ module.exports = {
     getArticlePostsByDate,
     getArticlePostsByTagIdAndDate,
     getArticlePostsByTagId,
+    getArticlePostsByCurrent
 
 };
