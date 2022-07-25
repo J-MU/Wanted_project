@@ -510,7 +510,36 @@ exports.getUserInfo=async function(req,res){
     return res.send(userInfoResult);
 }
 
+exports.postApplication=async function(req,res){
+    const userIdFromJWT=req.verifiedToken.userId;
+    const userId=req.body.userId;
+    const resumeId=req.body.resumeId;
+    const employmentId=req.body.employmentId;
 
+    if(!req.body)   res.send(errResponse(baseResponse.BODY_EMPTY));
+    if(!req.body.resumeId)  res.send(errResponse(baseResponse.RESUMEID_EMPTY));
+    if(!req.body.employmentId)  res.send(errResponse(baseResponse.EMPLOYMENT_ID_EMPTY));
+    if (userIdFromJWT != userId)  res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+
+    const suggestApplicationResult=await userService.postApplication(resumeId,employmentId);
+
+    return res.send(suggestApplicationResult);
+}
+
+exports.cancleApplication=async function(req,res){
+    // TODO verifiedToken req.verified가 존재하는가? 구현
+    const userIdFromJWT=req.verifiedToken.userId;
+    const userId=req.body.userId;
+    const applicationId=req.body.applicationId;
+
+    if(!req.body)   res.send(errResponse(baseResponse.BODY_EMPTY));
+    // ApplicationId NULL check
+    if (userIdFromJWT != userId)  res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+
+    const suggestApplicationResult=await userService.cancleApplication(applicationId);
+
+    return res.send(suggestApplicationResult);
+}
 
 /** JWT 토큰 검증 API
  * [GET] /app/auto-login

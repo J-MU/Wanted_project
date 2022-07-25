@@ -37,7 +37,7 @@ async function getAnalysisEntrantEmployees (connection,date,companyId) {    //�
 async function getAnalysisRetireeEmployees (connection,date,companyId) {    //입사자와 퇴사자를 고려한 전체 인원수 분석.
     const  getAnalysisEmployeeQuery = `
             select count(employeeId) AS 'count' from Employees
-            where firedAt=${date} AND companyId=${companyId};
+            where firedAt="${date}" AND companyId=${companyId};
     `;
 
     console.log("Query: ",getAnalysisEmployeeQuery);

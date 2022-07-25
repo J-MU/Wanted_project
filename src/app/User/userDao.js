@@ -449,6 +449,30 @@ async function getUserInfo(connection,userId){
   return userInfos[0];
 }
 
+async function suggestApplication(connection,resumeId,employmentId){
+  const getUserInfoQuery=`
+    INSERT INTO Applications(resumeId,employmentId)
+    VALUES(${resumeId},${employmentId});
+  `;
+
+  console.log(getUserInfoQuery);
+  const userInfos=await connection.query(getUserInfoQuery);
+
+  return userInfos[0];
+}
+
+async function cancleApplication(connection,applicationId){
+  const cancleApplicationQuery=`
+    UPDATE Applications
+    SET status="CANCLE"
+    WHERE applicationId=${applicationId};
+  `;
+
+  console.log(cancleApplicationQuery);
+  const cancleApplicationResult=await connection.query(cancleApplicationQuery);
+
+  return cancleApplicationResult[0];
+}
 
 module.exports = {
   selectUser,
@@ -484,4 +508,6 @@ module.exports = {
   deleteSkills,
   newPostSkills,
   getUserInfo,
+  suggestApplication,
+  cancleApplication,
 };

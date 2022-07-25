@@ -494,3 +494,33 @@ exports.updateProfileSpecInfo=async function(params){
         connection.release();
     }
 }
+
+exports.postApplication=async function(resumeId,employmentId){
+    const connection = await pool.getConnection(async (conn) => conn);
+    try{
+        console.log("Query1");
+        const suggestApplicationResult=await userDao.suggestApplication(connection,resumeId,employmentId);
+
+        return response(baseResponse.SUCCESS);
+    }catch(err){
+        logger.error(`App - SUGGEST Applicaton Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }finally{
+        connection.release();
+    }
+}
+
+exports.cancleApplication=async function(applicationId){
+    const connection = await pool.getConnection(async (conn) => conn);
+    try{
+        console.log("Query1");
+        const suggestApplicationResult=await userDao.cancleApplication(connection,applicationId);
+
+        return response(baseResponse.SUCCESS);
+    }catch(err){
+        logger.error(`App - SUGGEST Applicaton Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }finally{
+        connection.release();
+    }
+}

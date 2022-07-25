@@ -62,6 +62,11 @@ module.exports = function(app){
     // 15. user Profile spec 수정 API
     app.put('/app/users/:userId/profile/spec',jwtMiddleware,user.patchProfileSpec);
 
+    // 16. 회사에 이력서 지원.
+    app.post('/app/application',jwtMiddleware,user.postApplication);
+
+    // 17. 이력서 지원 취소
+    app.patch('/app/application/status',jwtMiddleware,user.cancleApplication);
   };
 
 
