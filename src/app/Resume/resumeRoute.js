@@ -27,7 +27,7 @@ module.exports = function(app) {
 
 
     //이력서 생성
-    app.post('/app/newResume',  jwtMiddleware, resume.postResumes);
+    app.post('/app/resumes',  jwtMiddleware, resume.postResumes);
 
 
 

@@ -38,9 +38,7 @@ exports.postResumes = async function(userId) {
         connection.release();
         const num = postResumesResult.length
         const resumeId = {'resumeId' : postResumesResult[num-1].resumeId }
-
-
-
+        
 
         return response(baseResponse.SUCCESS,resumeId);
 
