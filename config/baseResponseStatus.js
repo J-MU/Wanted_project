@@ -78,6 +78,18 @@ module.exports = {
     SIGNUP_REDUNDANT_EMAIL : { "isSuccess": false, "code": 3001, "message":"중복된 이메일입니다." },
     SIGNUP_REDUNDANT_NICKNAME : { "isSuccess": false, "code": 3002, "message":"중복된 닉네임입니다." },
 
+    // 3200 :post 오류
+
+    POSTID_NOTEXIST :{ "isSuccess": false, "code": 3200, "message": "postId가 존재하지 않습니다." },
+
+
+    //3400: resume 오류
+    TAGID_NOTEXIST : { "isSuccess": false, "code": 3400, "message": "tagId가 존재하지 않습니다." },
+    CAREERID_NOTEXIST : { "isSuccess": false, "code": 3401, "message": "careerId가 존재하지 않습니다." },
+    EDUCATIONID_NOTEXIST : { "isSuccess": false, "code": 3402, "message": "educationId가 존재하지 않습니다." },
+    AWARDSID_NOTEXIST : { "isSuccess": false, "code": 3403, "message": "awardsId가 존재하지 않습니다." },
+
+
     SIGNIN_EMAIL_WRONG : { "isSuccess": false, "code": 3003, "message": "아이디가 잘못 되었습니다." },
     SIGNIN_PASSWORD_WRONG : { "isSuccess": false, "code": 3004, "message": "비밀번호가 잘못 되었습니다." },
     SIGNIN_INACTIVE_ACCOUNT : { "isSuccess": false, "code": 3005, "message": "비활성화 된 계정입니다. 고객센터에 문의해주세요." },

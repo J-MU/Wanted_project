@@ -93,31 +93,32 @@ async function getInsitePosts(connection, tagId) {
 // article 불러오기
 async function getArticlePosts(connection, params) {
 
-
+    console.log(params)
     const getArticlePostsQuery=`
     select postId, postThumbnailUrl,  postImgUrl, title
     from articlePosts
     inner join articleTagsMapping aTM on articlePosts.postId = aTM.articlePostId
-    where tagId =${params[1]}
+    where tagId =${params[1]} and startDate is null
     order by rand() limit ${params[0]};
     `;
     const [articlePostsRow] = await connection.query(getArticlePostsQuery,params);
+
     console.log(articlePostsRow)
     var resultRow = [];
     for (var i=0; i<params[0]; i++) {
         var articlePostId = articlePostsRow[i].postId;
-        console.log(articlePostId)
         const getArticlePostTagsQuery=`
         select concat("#",name) as name, postTags.tagId
         from postTags
         inner join articleTagsMapping as aTM on postTags.tagId = aTM.tagId
-        where aTM.articlePostId=?;
+        where (aTM.articlePostId=${articlePostId}) ;
     `;
 
         const articleTagsRow = await connection.query(getArticlePostTagsQuery,articlePostId)
         articlePostsRow[i].postTags = articleTagsRow[0];
         resultRow.push(articlePostsRow[i]);
     }
+    console.log(resultRow)
     //console.log(util.inspect(resultRow, {showHidden: false, depth: null,  colors: true}));
     return resultRow
 
@@ -428,9 +429,31 @@ async function getVodPostsByTags (connection,vodTagId) {
     return getVodPostsByTagsRow[0]
 }
 
+//postId 체크
 
+async function postIdCheck (connection, postId) {
+    const postIdCheckQuery= `
+        select postId
+        from articlePosts
+        where postId=? 
+    `
+    const  postIdCheckRow = await connection.query(postIdCheckQuery,postId);
+    console.log(postIdCheckRow[0])
+    return postIdCheckRow[0]
+}
 
+//vodTag 체그
 
+async function vodTagCheck (connection, tagId) {
+    const vodTagCheckQuery= `
+        select tagId
+        from postTags
+        where tagId=? 
+    `
+    const vodTagCheckRow = await connection.query(vodTagCheckQuery,tagId);
+    console.log(vodTagCheckRow[0])
+    return vodTagCheckRow[0]
+}
 
 module.exports = {
     getCarousel,
@@ -448,7 +471,9 @@ module.exports = {
     getArticlePostImg,
     getArticleTag,
     getTopTenContents,
-    getVodPostsByTags
+    getVodPostsByTags,
+    postIdCheck,
+    vodTagCheck
 
 };
 

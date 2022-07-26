@@ -186,3 +186,30 @@ exports.awardsCheck = async function(resumeId) {
     connection.release();
     return awardsCheck;
 }
+
+
+//이력서 외국어 get
+
+exports.getResumeforeignLanguage = async function() {
+    try {
+        const foreignLanguageList = {}
+        const connection = await pool.getConnection(async (conn) => conn);
+        let value = 'True'
+        let getResumeforeignLanguage = await resumeDao.getResumeforeignLanguage(connection,value);
+        console.log(getResumeforeignLanguage)
+        foreignLanguageList.major = getResumeforeignLanguage
+
+        value = 'False'
+        getResumeforeignLanguage = await resumeDao.getResumeforeignLanguage(connection,value);
+        console.log(getResumeforeignLanguage)
+        foreignLanguageList.etc = getResumeforeignLanguage
+        connection.release();
+
+        return response(baseResponse.SUCCESS, foreignLanguageList);
+    }
+    catch(err) {
+        logger.error(`App - createUser Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+
+}

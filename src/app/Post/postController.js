@@ -60,6 +60,7 @@ exports.getPostsByTagId = async function (req, res) {
  */
 
 exports.getArticlePosts = async function (req, res) {
+
     // const userId=req.verifiedToken.userId
     const filter = req.body.filter;
 

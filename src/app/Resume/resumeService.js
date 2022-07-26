@@ -74,9 +74,10 @@ exports.postResumeCareer = async function(postResumeCareerParams){
 
         const connection = await pool.getConnection(async (conn) => conn);
         const postResumeCareerResult = await resumeDao.postResumeCareer(connection,postResumeCareerParams);
-        connection.release();
 
-        return response(baseResponse.SUCCESS);
+        const num = postResumeCareerResult.length
+        connection.release();
+        return response(baseResponse.SUCCESS,postResumeCareerResult[num-1]);
 
     }
     catch(err) {
@@ -108,9 +109,10 @@ exports.postEducationSchool = async function(postEducationSchoolParams ){
 
         const connection = await pool.getConnection(async (conn) => conn);
         const postEducationSchoolResult = await resumeDao.postEducationSchool(connection,postEducationSchoolParams );
-        connection.release();
 
-        return response(baseResponse.SUCCESS);
+        const num = postEducationSchoolResult.length
+        connection.release();
+        return response(baseResponse.SUCCESS,postEducationSchoolResult[num-1]);
 
     }
     catch(err) {
@@ -122,13 +124,21 @@ exports.postEducationSchool = async function(postEducationSchoolParams ){
 //이력서 경력 수정
 exports.patchResumeCareer = async function (params) {
     try {
-        console.log(params)
         const connection = await pool.getConnection(async (conn) => conn);
-        const patchResumeCareerResult = await resumeDao.patchResumeCareer(connection,params);
+        //careerId validation
+        const careerIdCheck = await resumeDao.careerIdCheck(connection, params[0])
         connection.release();
+        if (careerIdCheck.length == 0) {
 
-        return response(baseResponse.SUCCESS);
+            return response(baseResponse.CAREERID_NOTEXIST);
+        } else {
+            const patchResumeCareerResult = await resumeDao.patchResumeCareer(connection, params);
 
+
+            return response(baseResponse.SUCCESS);
+
+        }
+        connection.release();
     }
     catch(err) {
         logger.error(`App - createUser Service error\n: ${err.message}`);
@@ -178,9 +188,11 @@ exports.postResumeAwards = async function(postResumeAwardsParams){
 
         const connection = await pool.getConnection(async (conn) => conn);
         const postResumeAwardsResult = await resumeDao.postResumeAwards(connection,postResumeAwardsParams);
-        connection.release();
 
-        return response(baseResponse.SUCCESS);
+
+        const num = postResumeAwardsResult.length
+        connection.release();
+        return response(baseResponse.SUCCESS,postResumeAwardsResult[num-1]);
 
     }
     catch(err) {
@@ -193,12 +205,21 @@ exports.postResumeAwards = async function(postResumeAwardsParams){
 
 exports.patchResumeAwards = async function(params) {
     try {
-        console.log(params)
         const connection = await pool.getConnection(async (conn) => conn);
-        const patchResumeAwardsResult = await resumeDao.patchResumeAwards(connection,params);
-        connection.release();
 
-        return response(baseResponse.SUCCESS);
+        const awardsIdCheck = await resumeDao.awardsIdCheck(connection, params[0]);
+
+        if(awardsIdCheck.length==0) {
+            connection.release();
+            return response(baseResponse.AWARDSID_NOTEXIST);
+        }
+        else {
+            const patchResumeAwardsResult = await resumeDao.patchResumeAwards(connection, params);
+
+            connection.release();
+            return response(baseResponse.SUCCESS);
+        }
+
 
     }
     catch(err) {
@@ -373,6 +394,40 @@ exports.patchResumeUserInfo = async function(params) {
 
         return response(baseResponse.SUCCESS);
 
+    }
+    catch(err) {
+        logger.error(`App - createUser Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}
+
+//이력서 외국어 추가
+
+exports.postResumeForeignLanguage = async function(params) {
+    try {
+        const connection = await pool.getConnection(async (conn) => conn);
+        const postResumeForeignLanguageResult = await resumeDao.postResumeForeignLanguage(connection,params);
+
+        const num = postResumeForeignLanguageResult.length
+        connection.release();
+        const foreignLanguageId = {foreignLanguageId : postResumeForeignLanguageResult[num-1]}
+        return response(baseResponse.SUCCESS,foreignLanguageId);
+    }
+    catch(err) {
+        logger.error(`App - createUser Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}
+
+//이력서 외국어 삭제
+
+exports.deleteResumeForeignLanguage= async function (params) {
+    try {
+        const connection = await pool.getConnection(async (conn) => conn);
+        const deleteResumeForeignLanguageResult = await resumeDao.deleteResumeForeignLanguage(connection,params);
+
+        connection.release();
+        return response(baseResponse.SUCCESS);
     }
     catch(err) {
         logger.error(`App - createUser Service error\n: ${err.message}`);

@@ -5,6 +5,16 @@ module.exports = function(app) {
     const resume = require('./resumeController');
     const jwtMiddleware = require('../../../config/jwtMiddleware');
 
+
+    //이력서 외국어 get
+    app.get('/app/resumes/foreignLanguage', resume.getResumeforeignLanguage);
+
+    //이력서 외국어 생성
+    app.post('/app/resumes/:resumeId/foreignLanguage',jwtMiddleware, resume.postResumeForeignLanguage);
+
+    //이력서 외국어 수정
+    app.patch('/app/resumes/:resumeId/foreignLanguage/deleted',jwtMiddleware, resume.deleteResumeForeignLanguage);
+
     //이력서 유저 스킬 추가
     app.post('/app/resumes/:resumeId/userSkills', jwtMiddleware, resume.postResumeUserSkills);
 
@@ -75,4 +85,8 @@ module.exports = function(app) {
 
     //이력서 Info 수정
     app.patch('/app/resumes/:resumeId/userInfo', jwtMiddleware, resume.patchResumeUserInfo);
+
+
+
 };
+

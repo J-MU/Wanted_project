@@ -157,7 +157,7 @@ exports.getPostsByTagId = async function (tagId){
 //아티클 포스트 전체보기 (디폴트 = "마감임박순")
 exports.getArticlePosts = async function (filter) {
     try {
-        console.log(filter)
+
         const connection = await pool.getConnection(async (conn) => conn);
 
 
@@ -165,9 +165,9 @@ exports.getArticlePosts = async function (filter) {
             const getArticlePostsByDate = await postDao.getArticlePostsByDate(connection)
 
             connection.release();
-
-            const getArticlePosts = await postDao.getArticlePosts(connection)
-
+            const params = [10, 'tagId']
+            const getArticlePosts = await postDao.getArticlePosts(connection, params)
+            console.log('B')
             const AllArticlePosts = {}
             AllArticlePosts.ArticlePostTags =getArticlePostTags
             AllArticlePosts.articlePostsByDate=getArticlePostsByDate
@@ -229,13 +229,25 @@ exports.getArticlePostDetails = async function (postId) {
 
 
     try {
-        const num = 4
 
         const connection = await pool.getConnection(async (conn) => conn);
+        //validaiton postId 있는지 확인
+
+        const postIdCheck = await postDao.postIdCheck(connection,postId);
+        connection.release();
+        if(postIdCheck.length==0) {
+            return response(baseResponse.POSTID_NOTEXIST);
+        }
+
+
+        const num = 4
+
         const getArticlePostDetails = await postDao.getArticlePostDetails(connection,postId)
+
         const getArticlePostImg = await postDao.getArticlePostImg(connection,postId)
-        const getArticleTag = await postDao.getArticleTag(connection,postId);
-        console.log('tagId는 말이죵',getArticleTag )
+
+        const getArticleTag = await postDao.getArticleTag(connection,postId)
+
         const  articleTagId= getArticleTag
         const  params = [num,articleTagId]
         const getArticlePostsResult = await postDao.getArticlePosts(connection,params);
@@ -245,6 +257,7 @@ exports.getArticlePostDetails = async function (postId) {
         articlePostDetails.articlePostDetails = getArticlePostDetails
         articlePostDetails.articlePostImg = getArticlePostImg
         articlePostDetails.recommendArticlePosts = getArticlePostsResult
+        connection.release();
         return response(baseResponse.SUCCESS,articlePostDetails);
 
     }
@@ -257,6 +270,7 @@ exports.getArticlePostDetails = async function (postId) {
 
 exports.getVodPosts = async function (tagId) {
     try {
+
         if(!tagId) {
             //TODO 탑텐 숫자 구현
             //tag부터 불러오기
@@ -274,14 +288,26 @@ exports.getVodPosts = async function (tagId) {
                 vodPostsByTags[vodName] = getVodPostsByTags;
 
             }
-
+            connection.release();
             return response(baseResponse.SUCCESS, vodPostsByTags);
         }
         else {
             const connection = await pool.getConnection(async (conn) => conn);
-            var getVodPostsByTags = await postDao.getVodPostsByTags(connection, tagId)
+            //tagId validation
 
-            return response(baseResponse.SUCCESS,getVodPostsByTags);
+            const vodTagCheck = await postDao.vodTagCheck(connection, tagId)
+
+            if(vodTagCheck.length==0) {
+
+                return response(baseResponse.TAGID_NOTEXIST);
+
+            }
+            else {
+
+                var getVodPostsByTags = await postDao.getVodPostsByTags(connection, tagId)
+                connection.release();
+                return response(baseResponse.SUCCESS, getVodPostsByTags);
+            }
         }
 
     }
