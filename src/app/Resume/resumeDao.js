@@ -68,10 +68,11 @@ async function postResumes(connection, userId){
         select Users.userId,
                concat(name,
                       (select count(userId+1) FROM Resumes
-                       where (status = '작성 중' or status = '작성 완료') and userId = ?)
+                       where (status = '작성 중' or status = '작성 완료') and userId = ${userId})
                    ) as resumeName,name, email, phoneNumber
         from Users
-        where userId=?
+        where userId=${userId}
+       
         limit 1;
     `;
     const postResumesRows = await connection.query(postResumesQuery, userId);

@@ -47,6 +47,7 @@ exports.deleteResumes = async function (req, res) {
  * [POST] /app/resumes
  */
 exports.postResumes = async function(req, res) {
+
     const userId = req.verifiedToken.userId
 
     const postResumesResponse = await resumeService.postResumes(userId);
