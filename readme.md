@@ -113,3 +113,8 @@
 - API 4개 구현
 - Application 테이블 수정
 - 이전 API 버그 수정
+
+## 2022.07.26 - Ayaan
+- API 30개 완성
+- API 명세서 1차 완성
+- Challenge API (SENS로 문자보내기, 받은 문자에 적혀있는 숫자로 API호출을 하면 성공 Response보내기)
