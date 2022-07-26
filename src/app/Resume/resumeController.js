@@ -252,6 +252,7 @@ exports.deleteResumeEducation = async function (req, res) {
 
 exports.getPopularSkills =  async function (req, res) {
 
+
     const getPopularSkillsResponse = await resumeProvider.getPopularSkills();
 
     return res.send(getPopularSkillsResponse);
@@ -404,4 +405,53 @@ exports.patchResumeUserInfo = async function(req, res) {
     const patchResumeUserInfoResponse = await resumeService.patchResumeUserInfo(params);
 
     return res.send(patchResumeUserInfoResponse);
+}
+
+/**
+ * 이력서 언어 검색
+ *
+ */
+
+exports.getResumeforeignLanguage = async function(req, res) {
+
+    const getResumeforeignLanguageResponse = await resumeProvider.getResumeforeignLanguage();
+
+    return res.send(getResumeforeignLanguageResponse);
+
+}
+
+/**
+ * 이력서 외국어 생성
+ *
+ */
+
+exports.postResumeForeignLanguage = async function(req,res) {
+    const resumeId = parseInt(req.params.resumeId)
+    const foreignLanguage = req.body.foreignLanguage
+    const level = req.body.level
+
+    const params = [resumeId, foreignLanguage,level]
+
+    console.log(params)
+
+    const postResumeForeignLanguageResponse = await resumeService.postResumeForeignLanguage(params);
+
+    return res.send(postResumeForeignLanguageResponse);
+
+}
+
+/**dl
+ *이력서 외국어 삭제
+ *
+ */
+
+exports.deleteResumeForeignLanguage = async function(req, res) {
+    const resumeId= parseInt(req.params.resumeId);
+    const foreignLanguageId = parseInt(req.body.foreignLanguageId);
+
+    const params = [resumeId, foreignLanguageId]
+
+    const deleteResumeForeignLanguageResponse = await resumeService.deleteResumeForeignLanguage(params);
+
+    return res.send(deleteResumeForeignLanguageResponse);
 }

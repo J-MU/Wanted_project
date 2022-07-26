@@ -224,7 +224,15 @@ async function postResumeCareer(connection, postResumeCareerParams) {
 
     const  postResumeCareerRows = await connection.query(postResumeCareerQuery,postResumeCareerParams);
 
-    return  postResumeCareerRows[0]
+    const careerIdQuery= `
+    select careerId
+    from Careers
+    where resumeId=${postResumeCareerParams[0]};
+    `
+
+    const careerIdRows = await connection.query(careerIdQuery, postResumeCareerParams);
+
+    return careerIdRows[0]
 }
 
 //이력서 경력 삭제
@@ -261,7 +269,15 @@ async function postEducationSchool(connection, postEducationSchoolParams) {
 
     const  postEducationSchoolRows = await connection.query(postEducationSchoolQuery,postEducationSchoolParams);
 
-    return  postEducationSchoolRows[0]
+    const educationIdQuery= `
+    select educationId
+    from Education
+    where resumeId=${postEducationSchoolParams[0]};
+    `
+
+    const educationIdRows = await connection.query(educationIdQuery, postEducationSchoolParams);
+
+    return educationIdRows[0]
 }
 
 //이력서 경력 수정
@@ -335,6 +351,18 @@ async function postResumeAwards (connection, postResumeAwardsParams) {
     `;
 
     const  postResumeAwardsRows = await connection.query(postResumeAwardsQuery, postResumeAwardsParams);
+
+    const awardsIdQuery= `
+    select awardsId
+    from awards
+    where resumeId=${postResumeAwardsParams[0]};
+    `
+
+    const awardsIdRows = await connection.query(awardsIdQuery,postResumeAwardsParams);
+
+    return awardsIdRows[0]
+
+
     return  postResumeAwardsRows[0]
 
 }
@@ -477,7 +505,80 @@ async function patchResumeUserInfo (connection, params) {
 
     return  patchResumeUserInfoRows[0]
 }
- module.exports = {
+
+//이력서 외국어 get
+async function getResumeforeignLanguage(connection, value) {
+    console.log(value)
+    const getResumeforeignLanguage = `
+        select foreignLanguageId , foreignLanguage
+        from foreignLanguageData
+        where type=${value}
+    `;
+
+    const  getResumeforeignLanguageRows = await connection.query(getResumeforeignLanguage,value);
+
+    return  getResumeforeignLanguageRows[0]
+}
+
+//이력서 외국어 post
+
+async function postResumeForeignLanguage(connection, params) {
+    const postResumeForeignLanguageQuery = `
+            INSERT INTO foreignLanguages(resumeId,foreignLanguage,level)
+            VALUES (${params[0]},'${params[1]}','${params[2]}');
+                  `;
+    const postResumeForeignLanguageResult = await connection.query(postResumeForeignLanguageQuery, params);
+
+    const foreignLanguageIdQuery= `
+    select foreignLanguageId
+    from foreignLanguages
+    where resumeId=${params[0]};
+    `
+
+    const foreignLanguageIdRows = await connection.query(foreignLanguageIdQuery, params);
+
+    return foreignLanguageIdRows[0]
+}
+
+//이력서 외국어 삭제
+async function deleteResumeForeignLanguage (connection, params) {
+    console.log(params)
+    const  deleteResumeForeignLanguageQuery = `
+    UPDATE foreignLanguages
+    SET status = 'DELETED'
+    WHERE resumeId=${params[0]} and foreignLanguageId=${params[1]};
+    `;
+
+    const deleteResumeSkillsRows = await connection.query(deleteResumeForeignLanguageQuery, params);
+
+    return  deleteResumeSkillsRows
+
+}
+
+//careerId vali
+
+async function careerIdCheck(connection, careerId ) {
+    const careerIdCheckQuery= `
+        select careerId
+        from Careers
+        where careerId=? 
+    `
+    const careerIdCheckRow = await connection.query(careerIdCheckQuery,careerId);
+    return careerIdCheckRow[0]
+}
+
+
+async function awardsIdCheck (connection, awardsId ) {
+    const awardsIdCheckQuery= `
+        select awardsId
+        from awards
+        where awardsId=? 
+    `
+    const awardsIdCheckRow = await connection.query(awardsIdCheckQuery,awardsId);
+    return awardsIdCheckRow[0]
+}
+
+module.exports = {
     postResumeInfo,
     postResumeCareerInfo,
     postResumeEducationInfo,
@@ -515,5 +616,10 @@ async function patchResumeUserInfo (connection, params) {
      patchResumeCareer,
      patchResumeEducation,
      patchResumeAwards,
-     patchResumeUserInfo
+     patchResumeUserInfo,
+     getResumeforeignLanguage,
+     postResumeForeignLanguage,
+     deleteResumeForeignLanguage,
+     careerIdCheck,
+     awardsIdCheck
 };
