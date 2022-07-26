@@ -38,11 +38,15 @@ exports.postUsers = async function (req, res) {
         return res.send(response(baseResponse.SIGNUP_PHONENUMBER_EMPTY));
     console.log("password:",password);
 
+    console.log("phoneNumber:");
+    console.log(phoneNumber);
     // phoneNumber 정규 표현식
-    //if (!/^01([0|1|6|7|8|9])?([0-9]{3,4})?([0-9]{4})$/.test(phoneNumber))
-    //    console.log(phoneNumber)
-    //    return res.send(response(baseResponse.SIGNUP_PHONENUMBER_ERROR_TYPE));
-
+    if (!(/^01([0|1|6])([0-9]{3,4})([0-9]{4})$/.test(phoneNumber)))
+    {
+        console.log("phoneNumber2:");
+        console.log(phoneNumber)
+        return res.send(response(baseResponse.SIGNUP_PHONENUMBER_ERROR_TYPE));
+    }
     // 빈 값 체크
     // if (!email)
     //     return res.send(response(baseResponse.SIGNUP_EMAIL_EMPTY));

@@ -1,4 +1,5 @@
 const response = ({isSuccess, code, message}, result) => {
+  console.log(isSuccess,code,message);
    return {
         isSuccess: isSuccess,
         code: code,
