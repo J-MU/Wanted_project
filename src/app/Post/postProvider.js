@@ -71,68 +71,70 @@ var vodTags = [
 //홈 화면 불러오기
 
 exports.getPosts = async function (token) {
+    try {
 
-    const connection = await pool.getConnection(async (conn) => conn);
-    const getCarouselResult = await postDao.getCarousel(connection);
-    var num = 5
-    var tagId='tagId'
-    var params = [num,tagId]
+        const connection = await pool.getConnection(async (conn) => conn);
+        const getCarouselResult = await postDao.getCarousel(connection);
+        var num = 5
+        var tagId = 'tagId'
+        var params = [num, tagId]
 
-    if(token==null) {
-
-
-        const getInsitePostTagsResult = await postDao.getInsitePostTags(connection);
-
-        const tagId = 3
+        if (token == null) {
 
 
-        const getInsitePostsResult = await postDao.getInsitePosts(connection, tagId);
-        console.log(getInsitePostsResult);
+            const getInsitePostTagsResult = await postDao.getInsitePostTags(connection);
 
-        const getArticlePostsResult = await postDao.getArticlePosts(connection,params);
-
-
-        const getVodPostsResult = await postDao.getVodPosts(connection,params);
+            const tagId = 3
 
 
+            const getInsitePostsResult = await postDao.getInsitePosts(connection, tagId);
+            console.log(getInsitePostsResult);
 
-        const resultResponse = {}
-        const carousels = getCarouselResult;
-        resultResponse.carousels = carousels;
-        resultResponse.insitePostTags = getInsitePostTagsResult;
-        resultResponse.insitePosts = getInsitePostsResult;
-        resultResponse.articlePosts = getArticlePostsResult;
-        resultResponse.vodPosts = getVodPostsResult;
+            const getArticlePostsResult = await postDao.getArticlePosts(connection, params);
 
 
-        connection.release();
-        return resultResponse;
+            const getVodPostsResult = await postDao.getVodPosts(connection, params);
+
+
+            const resultResponse = {}
+            const carousels = getCarouselResult;
+            resultResponse.carousels = carousels;
+            resultResponse.insitePostTags = getInsitePostTagsResult;
+            resultResponse.insitePosts = getInsitePostsResult;
+            resultResponse.articlePosts = getArticlePostsResult;
+            resultResponse.vodPosts = getVodPostsResult;
+
+
+            connection.release();
+            return resultResponse;
+        } else {
+            console.log("token is not null");
+            const getInsitePostTagsResult = await postDao.getInsitePostInterestedTags(connection, token);
+
+            const tagId = getInsitePostTagsResult[0].tagId
+
+            const getInsitePostsResult = await postDao.getInsitePosts(connection, tagId);
+
+            const getArticlePostsResult = await postDao.getArticlePosts(connection, params);
+
+            const getVodPostsResult = await postDao.getVodPosts(connection, params);
+
+
+            const resultResponse = {}
+            const carousels = getCarouselResult;
+            resultResponse.carousels = carousels;
+            resultResponse.insitePostTags = getInsitePostTagsResult;
+            resultResponse.insitePosts = getInsitePostsResult;
+            resultResponse.articlePosts = getArticlePostsResult;
+            resultResponse.vodPosts = getVodPostsResult;
+
+            connection.release();
+            return resultResponse;
+        }
     }
-
-    else {
-        console.log("token is not null");
-        const getInsitePostTagsResult = await postDao.getInsitePostInterestedTags(connection,token);
-
-        const tagId = getInsitePostTagsResult[0].tagId
-
-        const getInsitePostsResult = await postDao.getInsitePosts(connection, tagId);
-
-        const getArticlePostsResult = await postDao.getArticlePosts(connection ,params);
-
-        const getVodPostsResult = await postDao.getVodPosts(connection,params);
-
-
-
-        const resultResponse = {}
-        const carousels = getCarouselResult;
-        resultResponse.carousels = carousels;
-        resultResponse.insitePostTags = getInsitePostTagsResult;
-        resultResponse.insitePosts = getInsitePostsResult;
-        resultResponse.articlePosts = getArticlePostsResult;
-        resultResponse.vodPosts = getVodPostsResult;
-
-        connection.release();
-        return resultResponse;
+    catch(err){
+        logger.error(`App - Get PostTags Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
     }
 
 }

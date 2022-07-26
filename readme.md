@@ -118,3 +118,9 @@
 - API 30개 완성
 - API 명세서 1차 완성
 - Challenge API (SENS로 문자보내기, 받은 문자에 적혀있는 숫자로 API호출을 하면 성공 Response보내기)
+
+## 2022.07.27 - jeje
+- API 구축 완료 (총 33개)
+- 챌린지 API 완성
+- 명세서 작성 중
+- validation 처리 보완 중
