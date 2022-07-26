@@ -3,6 +3,7 @@ module.exports = function(app) {
     const request = require('request');
 
     app.get('/sms/:phone', (req, res) => {
+        console.log('hello');
         const paramObj = req.params;
         send_message(paramObj.phone);
         res.send("complete!");
@@ -46,7 +47,7 @@ module.exports = function(app) {
                     type: "SMS",
                     countryCode: "82",
                     from: "01082039157",//"발신번호기입",
-                    content: "Hi I'm Jeje 나 찌누양",//문자내용 기입,
+                    content: "Hi I'm Jeje",//문자내용 기입,
                     messages: [
                         {to: `${user_phone_number}`,},]
                 },

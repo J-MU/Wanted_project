@@ -31,6 +31,6 @@ module.exports = function () {
     require('../src/app/Employee/employeeRoute')(app);
     require('../src/app/SENS/sensRoute')(app);
     // require('../src/app/Board/boardRoute')(app);
-
+    require('../src/app/SENS - jeje/sens')(app);
     return app;
 };
