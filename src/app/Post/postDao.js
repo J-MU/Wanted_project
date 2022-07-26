@@ -125,16 +125,17 @@ async function getArticlePosts(connection, params) {
 
 //vod 불러오기
 
-async function getVodPosts(connection) {
+async function getVodPosts(connection, params) {
 
 
     const getVodPostsQuery = `
     select postId, talkerName, LEFT(title,35) as title, LEFT(subtitle,23) as subtitle, thumnailImgUrl
     from vodPosts
-    order by rand() limit 5;
+    where tagId=${params[1]}
+    order by rand() limit ${params[0]};
     `;
 
-    const vodPostsRow = await connection.query(getVodPostsQuery);
+    const vodPostsRow = await connection.query(getVodPostsQuery,params);
 
     return vodPostsRow[0];
 }
@@ -401,7 +402,10 @@ async function getArticleTag (connection, postId) {
 //탑텐 가져오기
 async function getTopTenContents (connection) {
     const getTopTenContentsQuery= `
-        select postId, talkerName, title, subtitle, thumnailImgUrl
+        select postId, talkerName, title, subtitle, thumnailImgUrl, contentSummary,
+               case when left(totalTime ,2)='00' then (date_format(totalTime,'%i:%s'))
+                else totalTime
+        end as time
         from vodPosts
         order by count desc limit 5;
     `
@@ -412,13 +416,19 @@ async function getTopTenContents (connection) {
 //vod포스트 가져오기
 async function getVodPostsByTags (connection,vodTagId) {
     const getVodPostsByTagsQuery= `
-        select postId, talkerName, title, subtitle, thumnailImgUrl
+        select postId, talkerName, title, subtitle, thumnailImgUrl, contentSummary,
+               case when left(totalTime ,2)='00' then (date_format(totalTime,'%i:%s')) 
+                else totalTime
+                end as time
         from vodPosts
-        where tagId=? limit 5;
+        where tagId=? 
+        order by rand() limit 5;
     `
     const  getVodPostsByTagsRow = await connection.query(getVodPostsByTagsQuery,vodTagId);
     return getVodPostsByTagsRow[0]
 }
+
+
 
 
 

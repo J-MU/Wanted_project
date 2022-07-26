@@ -105,8 +105,23 @@ exports.getArticlePostDetails = async function (req, res) {
  */
 
 exports.getVodPosts = async function (req, res) {
-    const getVodPostsResponse = await postProvider.getVodPosts();
+    const tagId = req.query.tagId
+    const getVodPostsResponse = await postProvider.getVodPosts(tagId);
+
 
     return res.send(getVodPostsResponse);
 
+}
+
+/**
+ *
+ *
+ */
+
+exports.getVodPostByTags = async function (req,res) {
+    const tagId = req.query.tagId
+    const getVodPostsResponse = await postProvider.getVodPostByTags(tagId);
+
+
+    return res.send(getVodPostsResponse);
 }

@@ -75,8 +75,8 @@ exports.getPosts = async function (token) {
     const connection = await pool.getConnection(async (conn) => conn);
     const getCarouselResult = await postDao.getCarousel(connection);
     var num = 5
-    var articleTagId='tagId'
-    var params = [num,articleTagId]
+    var tagId='tagId'
+    var params = [num,tagId]
 
     if(token==null) {
 
@@ -92,7 +92,7 @@ exports.getPosts = async function (token) {
         const getArticlePostsResult = await postDao.getArticlePosts(connection,params);
 
 
-        const getVodPostsResult = await postDao.getVodPosts(connection);
+        const getVodPostsResult = await postDao.getVodPosts(connection,params);
 
 
 
@@ -119,7 +119,7 @@ exports.getPosts = async function (token) {
 
         const getArticlePostsResult = await postDao.getArticlePosts(connection ,params);
 
-        const getVodPostsResult = await postDao.getVodPosts(connection);
+        const getVodPostsResult = await postDao.getVodPosts(connection,params);
 
 
 
@@ -255,25 +255,34 @@ exports.getArticlePostDetails = async function (postId) {
 }
 
 
-exports.getVodPosts = async function () {
+exports.getVodPosts = async function (tagId) {
     try {
-        //tag부터 불러오기
-        const connection = await pool.getConnection(async (conn) => conn);
-        const getTopTenContents = await postDao.getTopTenContents(connection)
+        if(!tagId) {
+            //TODO 탑텐 숫자 구현
+            //tag부터 불러오기
+            const connection = await pool.getConnection(async (conn) => conn);
+            const getTopTenContents = await postDao.getTopTenContents(connection)
 
-        var vodPostsByTags = {}
-        vodPostsByTags.topTenContents = getTopTenContents
-        for(var i=0; i<vodTags.length ; i++) {
-            var vodTagId = vodTags[i].tagId
-            var vodName = vodTags[i].name
+            var vodPostsByTags = {}
+            vodPostsByTags.topTenContents = getTopTenContents
+            for (var i = 0; i < vodTags.length; i++) {
+                var vodTagId = vodTags[i].tagId
+                var vodName = vodTags[i].name
 
-            var getVodPostsByTags = await postDao.getVodPostsByTags(connection,vodTagId)
+                var getVodPostsByTags = await postDao.getVodPostsByTags(connection, vodTagId)
 
-            vodPostsByTags[vodName] = getVodPostsByTags;
+                vodPostsByTags[vodName] = getVodPostsByTags;
 
+            }
+
+            return response(baseResponse.SUCCESS, vodPostsByTags);
         }
+        else {
+            const connection = await pool.getConnection(async (conn) => conn);
+            var getVodPostsByTags = await postDao.getVodPostsByTags(connection, tagId)
 
-        return response(baseResponse.SUCCESS,vodPostsByTags);
+            return response(baseResponse.SUCCESS,getVodPostsByTags);
+        }
 
     }
 

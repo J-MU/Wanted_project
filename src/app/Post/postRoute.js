@@ -21,7 +21,7 @@ module.exports = function(app){
     app.get('/app/posts/articlePost/details', post.getArticlePostDetails)
 
     //vod post 전체보기
-    app.get('/app/posts/vod', post.getVodPosts);
+    app.get('/app/posts/vod', post.getVodPosts); // /app/posts/vod?tagId=
 
 };
 
