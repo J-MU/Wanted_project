@@ -71,6 +71,7 @@ async function postResumes(connection, userId){
                        where (status = '작성 중' or status = '작성 완료') and userId = ?)
                    ) as resumeName,name, email, phoneNumber
         from Users
+        where userId=?
         limit 1;
     `;
     const postResumesRows = await connection.query(postResumesQuery, userId);
