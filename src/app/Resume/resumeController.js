@@ -15,6 +15,7 @@ const postProvider = require("../Post/postProvider");
 exports.getResumes = async function (req, res) {
     //TODO userId validation
     const userId = req.verifiedToken.userId
+    console.log(userId);
 
 
     const getResumesResponse = await resumeProvider.getResumes(userId);
