@@ -119,6 +119,41 @@ exports.postEducationSchool = async function(postEducationSchoolParams ){
     }
 }
 
+//이력서 경력 수정
+exports.patchResumeCareer = async function (params) {
+    try {
+        console.log(params)
+        const connection = await pool.getConnection(async (conn) => conn);
+        const patchResumeCareerResult = await resumeDao.patchResumeCareer(connection,params);
+        connection.release();
+
+        return response(baseResponse.SUCCESS);
+
+    }
+    catch(err) {
+        logger.error(`App - createUser Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}
+
+
+//이력서 학교 수정
+exports.patchResumeEducation = async function(params) {
+    try {
+        console.log(params)
+        const connection = await pool.getConnection(async (conn) => conn);
+        const patchResumeEducationResult = await resumeDao.patchResumeEducation(connection,params);
+        connection.release();
+
+        return response(baseResponse.SUCCESS);
+
+    }
+    catch(err) {
+        logger.error(`App - createUser Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}
+
 //이력서 학교 삭제
 exports.deleteResumeEducation = async function (educationId) {
     try {
@@ -154,7 +189,23 @@ exports.postResumeAwards = async function(postResumeAwardsParams){
     }
 }
 
+//이력서 수상 수정
 
+exports.patchResumeAwards = async function(params) {
+    try {
+        console.log(params)
+        const connection = await pool.getConnection(async (conn) => conn);
+        const patchResumeAwardsResult = await resumeDao.patchResumeAwards(connection,params);
+        connection.release();
+
+        return response(baseResponse.SUCCESS);
+
+    }
+    catch(err) {
+        logger.error(`App - createUser Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}
 //이력서 수상 삭제
 
 exports.deleteResumeAwards = async function(awardsId) {
@@ -306,6 +357,24 @@ exports.deleteResumeSkills = async function(deleteResumeSkillsParams){
     }
 
     catch (err) {
+        logger.error(`App - createUser Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}
+
+//이력서 userInfo 수정
+
+exports.patchResumeUserInfo = async function(params) {
+    try {
+        console.log(params)
+        const connection = await pool.getConnection(async (conn) => conn);
+        const patchResumeUserInfoResult = await resumeDao.patchResumeUserInfo(connection,params);
+        connection.release();
+
+        return response(baseResponse.SUCCESS);
+
+    }
+    catch(err) {
         logger.error(`App - createUser Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
     }

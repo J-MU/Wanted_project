@@ -39,15 +39,47 @@ var getArticlePostTags = [{
         "tagId" : 1
     }]
 
+
+//vod tag
+var vodTags = [
+   {
+    "name" : "HR",
+    "tagId" : 18
+},
+    {
+        "name" : "개발",
+        "tagId" : 3
+    },
+
+    {
+        "name" : "디자인",
+        "tagId" : 7
+    },
+    {
+        "name" : "기타",
+        "tagId" : 27
+    },
+    {
+        "name" : "경영·비즈니스",
+        "tagId" : 19
+    },
+    {
+        "name" : "마케팅",
+        "tagId" : 25
+    }]
+
 //홈 화면 불러오기
 
 exports.getPosts = async function (token) {
 
     const connection = await pool.getConnection(async (conn) => conn);
     const getCarouselResult = await postDao.getCarousel(connection);
-
+    var num = 5
+    var tagId='tagId'
+    var params = [num,tagId]
 
     if(token==null) {
+
 
         const getInsitePostTagsResult = await postDao.getInsitePostTags(connection);
 
@@ -57,10 +89,10 @@ exports.getPosts = async function (token) {
         const getInsitePostsResult = await postDao.getInsitePosts(connection, tagId);
         console.log(getInsitePostsResult);
 
-        const getArticlePostsResult = await postDao.getArticlePosts(connection);
+        const getArticlePostsResult = await postDao.getArticlePosts(connection,params);
 
 
-        const getVodPostsResult = await postDao.getVodPosts(connection);
+        const getVodPostsResult = await postDao.getVodPosts(connection,params);
 
 
 
@@ -85,9 +117,9 @@ exports.getPosts = async function (token) {
 
         const getInsitePostsResult = await postDao.getInsitePosts(connection, tagId);
 
-        const getArticlePostsResult = await postDao.getArticlePosts(connection);
+        const getArticlePostsResult = await postDao.getArticlePosts(connection ,params);
 
-        const getVodPostsResult = await postDao.getVodPosts(connection);
+        const getVodPostsResult = await postDao.getVodPosts(connection,params);
 
 
 
@@ -182,6 +214,76 @@ exports.getArticlePostsByTagId = async function (tagId,filter) {
             return response(baseResponse.SUCCESS,getArticelPostsByTagIdResult);
 
         }
+    }
+
+    catch(err){
+        logger.error(`App - Get PostTags Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}
+
+
+//아티클 포스트 자세히 보기
+
+exports.getArticlePostDetails = async function (postId) {
+
+
+    try {
+        const num = 4
+
+        const connection = await pool.getConnection(async (conn) => conn);
+        const getArticlePostDetails = await postDao.getArticlePostDetails(connection,postId)
+        const getArticlePostImg = await postDao.getArticlePostImg(connection,postId)
+        const getArticleTag = await postDao.getArticleTag(connection,postId);
+        console.log('tagId는 말이죵',getArticleTag )
+        const  articleTagId= getArticleTag
+        const  params = [num,articleTagId]
+        const getArticlePostsResult = await postDao.getArticlePosts(connection,params);
+
+
+        const articlePostDetails = {}
+        articlePostDetails.articlePostDetails = getArticlePostDetails
+        articlePostDetails.articlePostImg = getArticlePostImg
+        articlePostDetails.recommendArticlePosts = getArticlePostsResult
+        return response(baseResponse.SUCCESS,articlePostDetails);
+
+    }
+    catch(err){
+        logger.error(`App - Get PostTags Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}
+
+
+exports.getVodPosts = async function (tagId) {
+    try {
+        if(!tagId) {
+            //TODO 탑텐 숫자 구현
+            //tag부터 불러오기
+            const connection = await pool.getConnection(async (conn) => conn);
+            const getTopTenContents = await postDao.getTopTenContents(connection)
+
+            var vodPostsByTags = {}
+            vodPostsByTags.topTenContents = getTopTenContents
+            for (var i = 0; i < vodTags.length; i++) {
+                var vodTagId = vodTags[i].tagId
+                var vodName = vodTags[i].name
+
+                var getVodPostsByTags = await postDao.getVodPostsByTags(connection, vodTagId)
+
+                vodPostsByTags[vodName] = getVodPostsByTags;
+
+            }
+
+            return response(baseResponse.SUCCESS, vodPostsByTags);
+        }
+        else {
+            const connection = await pool.getConnection(async (conn) => conn);
+            var getVodPostsByTags = await postDao.getVodPostsByTags(connection, tagId)
+
+            return response(baseResponse.SUCCESS,getVodPostsByTags);
+        }
+
     }
 
     catch(err){

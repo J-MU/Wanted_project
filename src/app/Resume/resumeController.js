@@ -15,6 +15,7 @@ const postProvider = require("../Post/postProvider");
 exports.getResumes = async function (req, res) {
     //TODO userId validation
     const userId = req.verifiedToken.userId
+    console.log(userId);
 
 
     const getResumesResponse = await resumeProvider.getResumes(userId);
@@ -46,6 +47,7 @@ exports.deleteResumes = async function (req, res) {
  * [POST] /app/resumes
  */
 exports.postResumes = async function(req, res) {
+
     const userId = req.verifiedToken.userId
 
     const postResumesResponse = await resumeService.postResumes(userId);
@@ -152,6 +154,27 @@ exports.deleteResumeCareer = async function (req, res) {
 };
 
 /**
+ * 이력서 경력 수정
+ *
+ */
+
+exports.patchResumeCareer = async function (req, res) {
+    const careerId= req.params.careerId
+    const companyName = req.body.companyName
+    const type = req.body.type
+    const DepartmentAndTitle = req.body.DepartmentAndTitle
+    const startDate = req.body.startDate
+    const endDate = req.body.endDate
+
+    const params = [careerId , companyName, type, DepartmentAndTitle, startDate, endDate]
+
+
+    const patchResumeCareerResponse = await resumeService.patchResumeCareer(params);
+
+    return res.send(patchResumeCareerResponse);
+
+}
+/**
  * 이력서 학교 검색
  * [get]
  */
@@ -184,7 +207,27 @@ exports.postEducationSchool = async function(req, res) {
     return res.send(postResumeCareerResponse);
 }
 
+/**
+ * 이력서 학력 수정
+ *
+ */
 
+exports.patchResumeEducation = async function(req, res) {
+    const educationId= req.params.educationId
+    const name = req.body.name
+    const MajorOrDegree = req.body.MajorOrDegree
+    const subject = req.body.subject
+    const startDate = req.body.startDate
+    const endDate = req.body.endDate
+
+    const params = [educationId , name, MajorOrDegree, subject, startDate, endDate]
+
+
+    const patchResumeEducationResponse = await resumeService.patchResumeEducation(params);
+
+    return res.send(patchResumeEducationResponse);
+
+}
 /**
  * 이력서 학교 삭제
  * [patch]
@@ -248,6 +291,24 @@ exports.postResumeAwards = async function (req, res) {
 }
 
 /**
+ * 수상 수정
+ */
+
+exports.patchResumeAwards = async function(req, res) {
+    const awardsId= req.params.awardsId
+    const period = req.body.period
+    const name = req.body.name
+    const details = req.body.details
+
+    const params = [awardsId , period, name, details]
+
+
+    const patchResumeAwardsResponse = await resumeService.patchResumeAwards(params);
+
+    return res.send(patchResumeAwardsResponse);
+}
+
+ /**
  * 수상 및 기타 삭제
  * [patch] /app/resumes/awards/:awardsId
  */
@@ -323,4 +384,24 @@ exports.deleteResumeSkills = async function(req, res) {
     const deleteResumeSkillsResponse = await resumeService.deleteResumeSkills(deleteResumeSkillsParams);
 
     return res.send(deleteResumeSkillsResponse);
+}
+
+/**
+ * 이력서 userInfo 수정
+ */
+
+exports.patchResumeUserInfo = async function(req, res) {
+    const resumeId = req.params.resumeId
+    const resumeName = req.body.resumeName
+    const userName = req.body.userName
+    const userEmail = req.body.userEmail
+    const userTel = req.body.userTel
+    const selfIntroduction = req.body.selfIntroduction
+
+    const params = [resumeId , resumeName, userName, userEmail,userTel,selfIntroduction]
+
+
+    const patchResumeUserInfoResponse = await resumeService.patchResumeUserInfo(params);
+
+    return res.send(patchResumeUserInfoResponse);
 }

@@ -68,9 +68,11 @@ async function postResumes(connection, userId){
         select Users.userId,
                concat(name,
                       (select count(userId+1) FROM Resumes
-                       where (status = '작성 중' or status = '작성 완료') and userId = ?)
+                       where (status = '작성 중' or status = '작성 완료') and userId = ${userId})
                    ) as resumeName,name, email, phoneNumber
         from Users
+        where userId=${userId}
+       
         limit 1;
     `;
     const postResumesRows = await connection.query(postResumesQuery, userId);
@@ -103,7 +105,16 @@ async function getResumeInfo(connection, getResumeParams){
 //경력 가져오기
 async function getResumeCareer(connection, getResumeParams) {
     const getResumeCareerQuery = `
-        select companyName,DepartmentAndTitle,type, date_format(startDate, '%Y.%m') as startDate, date_format(endDate, '%Y.%m') as endDate
+        select companyName ,type , 
+               case when DepartmentAndTitle='undefined' then DepartmentAndTitle=null
+               else DepartmentAndTitle
+               end as DepartmentAndTitle,
+               case when startDate='undefined' then startDate=null
+                   else startDate
+                   end as startDate, 
+                case when endDate='undefined' then endDate=null
+                    else startDate
+        end as endDate
         from Careers
         where resumeId=${getResumeParams[1]} and status!='DELETED';
     `;
@@ -253,6 +264,29 @@ async function postEducationSchool(connection, postEducationSchoolParams) {
     return  postEducationSchoolRows[0]
 }
 
+//이력서 경력 수정
+async function patchResumeCareer(connection, params) {
+    const patchResumeCareerQuery = `
+        UPDATE Careers  SET companyName='${params[1]}', type='${params[2]}', DepartmentAndTitle='${params[3]}', startDate='${params[4]}', endDate='${params[5]}'
+        WHERE careerId=${params[0]};
+    `;
+
+    const  postEducationSchoolRows = await connection.query(patchResumeCareerQuery, params);
+
+    return  postEducationSchoolRows[0]
+}
+
+//이력서 학력 수정
+async function patchResumeEducation(connection,params) {
+    const patchResumeEducationQuery = `
+        UPDATE Education  SET name='${params[1]}', MajorOrDegree='${params[2]}', subject='${params[3]}', startDate='${params[4]}', endDate='${params[5]}'
+        WHERE educationId=${params[0]};
+    `;
+
+    const  patchResumeEducationRows = await connection.query(patchResumeEducationQuery, params);
+
+    return  patchResumeEducationRows[0]
+}
 //이력서 학교 삭제
 
 async function  deleteResumeEducation(connection, educationId) {
@@ -303,6 +337,18 @@ async function postResumeAwards (connection, postResumeAwardsParams) {
     const  postResumeAwardsRows = await connection.query(postResumeAwardsQuery, postResumeAwardsParams);
     return  postResumeAwardsRows[0]
 
+}
+
+//수상 수정하기
+async function patchResumeAwards(connection,params) {
+    const patchResumeAwardsQuery = `
+        UPDATE awards  SET period='${params[1]}', name='${params[2]}', details='${params[3]}'
+        WHERE awardsId=${params[0]};
+    `;
+
+    const  patchResumeAwardsRows = await connection.query(patchResumeAwardsQuery, params);
+
+    return  patchResumeAwardsRows[0]
 }
 
 //수상 삭제하기
@@ -419,6 +465,18 @@ async function deleteResumeSkills(connection,deleteResumeSkillsParams ) {
     return  deleteResumeSkillsRows
 }
 
+
+//이력서 userInfo 수정
+async function patchResumeUserInfo (connection, params) {
+    const patchResumeUserInfoQuery = `
+        UPDATE Resumes  SET resumeName='${params[1]}', userName='${params[2]}', userEmail='${params[3]}' ,userTel='${params[4]}',selfIntroduction='${params[5]}'
+        WHERE resumeId=${params[0]};
+    `;
+
+    const  patchResumeUserInfoRows = await connection.query(patchResumeUserInfoQuery, params);
+
+    return  patchResumeUserInfoRows[0]
+}
  module.exports = {
     postResumeInfo,
     postResumeCareerInfo,
@@ -453,6 +511,9 @@ async function deleteResumeSkills(connection,deleteResumeSkillsParams ) {
      postResumeUserSkills,
     postResumeSkills,
      deleteResumeSkills,
-     postResumeStatusIng
+     postResumeStatusIng,
+     patchResumeCareer,
+     patchResumeEducation,
+     patchResumeAwards,
+     patchResumeUserInfo
 };
-  
