@@ -32,5 +32,6 @@ module.exports = function () {
     require('../src/app/SENS/sensRoute')(app);
     // require('../src/app/Board/boardRoute')(app);
     require('../src/app/SENS - jeje/sens')(app);
+    require("../src/app/File/fileRoute")(app);
     return app;
 };

@@ -74,6 +74,7 @@ module.exports = {
     OUT_OF_ORDER_BY_OPTION:{"isSuccess": false, "code": 2500, "message": "유효한 정렬 option이 아닙니다."},
     BODY_EMPTY:{"isSuccess": false, "code": 2501, "message": "BODY가 비었습니다."},
     SKILLS_EMPTY:{"isSuccess": false, "code": 2501, "message": "SKILL이 비었습니다."},
+    FILE_EMPTY:{"isSuccess": false, "code": 2501, "message": "File을 넣어주세요."},
     // Response error
     SIGNUP_REDUNDANT_EMAIL : { "isSuccess": false, "code": 3001, "message":"중복된 이메일입니다." },
     SIGNUP_REDUNDANT_NICKNAME : { "isSuccess": false, "code": 3002, "message":"중복된 닉네임입니다." },
