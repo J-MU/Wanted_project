@@ -74,6 +74,8 @@ async function getJobNameUsingProfileId(connection,profileId){
       WHERE Profiles.profileId=${profileId};
   `;
 
+  console.log(getJobNameUsingProfileIdQuery);
+
   const jobName=await connection.query(getJobNameUsingProfileIdQuery);
   return jobName[0];
 }
