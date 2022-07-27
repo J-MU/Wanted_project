@@ -28,7 +28,9 @@ exports.postUsers = async function (req, res) {
      * Body: name, phoneNumber, email, password, IsAcceptedPrivacyTerm, IsAcceptedMarketingTerm
      */
     const { name, phoneNumber, email, password, IsAcceptedPrivacyTerm, IsAcceptedMarketingTerm } = req.body;
-    console.log(req.body);
+
+    console.log("email:" , email);
+
     
     // name 빈 값 체크
     if (!name)
@@ -36,15 +38,11 @@ exports.postUsers = async function (req, res) {
     // phoneNumber 빈 값 체크
     if (!phoneNumber)
         return res.send(response(baseResponse.SIGNUP_PHONENUMBER_EMPTY));
-    console.log("password:",password);
 
-    console.log("phoneNumber:");
-    console.log(phoneNumber);
     // phoneNumber 정규 표현식
     if (!(/^01([0|1|6])([0-9]{3,4})([0-9]{4})$/.test(phoneNumber)))
     {
-        console.log("phoneNumber2:");
-        console.log(phoneNumber)
+
         return res.send(response(baseResponse.SIGNUP_PHONENUMBER_ERROR_TYPE));
     }
     // 빈 값 체크

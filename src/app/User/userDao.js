@@ -1,4 +1,6 @@
 const { USER_NAME_EMPTY } = require("../../../config/baseResponseStatus");
+const {errResponse} = require("../../../config/response");
+const baseResponse = require("../../../config/baseResponseStatus");
 
 // 모든 유저 조회
 async function selectUser(connection) {
@@ -13,14 +15,18 @@ async function selectUser(connection) {
 
 // 이메일로 회원 조회
 async function selectUserEmail(connection, email) {
-  console.log(email);
-  const selectUserEmailQuery = `
-                SELECT email
-                FROM Users
-                WHERE email = "${email}";
-                `;
-  const emailRows = await connection.query(selectUserEmailQuery);
-  return emailRows[0];
+  try {
+      const selectUserEmailQuery = `
+        SELECT email
+        FROM Users
+        WHERE email = '${email}';
+      `;
+    const emailRows = await connection.query(selectUserEmailQuery, email);
+  }
+  catch (err){
+
+  }
+    return emailRows[0];
 }
 
 // userId 회원 조회
@@ -474,6 +480,19 @@ async function cancleApplication(connection,applicationId){
   return cancleApplicationResult[0];
 }
 
+async function phoneNumberCheck(connection, phoneNumber) {
+  const phoneNumberCheckQuery=`
+    select userId
+    from Users
+    WHERE phoneNumber = ?;
+  `;
+
+  const phoneNumberCheckResult=await connection.query(phoneNumberCheckQuery, phoneNumber);
+
+  return phoneNumberCheckResult[0];
+
+}
+
 module.exports = {
   selectUser,
   insertJobGroupCategoryInfo,
@@ -510,4 +529,5 @@ module.exports = {
   getUserInfo,
   suggestApplication,
   cancleApplication,
+  phoneNumberCheck
 };

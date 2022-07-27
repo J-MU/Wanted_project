@@ -81,7 +81,7 @@ module.exports = {
     // Response error
     SIGNUP_REDUNDANT_EMAIL : { "isSuccess": false, "code": 3001, "message":"중복된 이메일입니다." },
     SIGNUP_REDUNDANT_NICKNAME : { "isSuccess": false, "code": 3002, "message":"중복된 닉네임입니다." },
-
+    SIGNUP_REDUNDANT_PHONENUMBER: { "isSuccess": false, "code": 3003, "message":"중복된 휴대전화입니다." },
     // 3200 :post 오류
 
     POSTID_NOTEXIST :{ "isSuccess": false, "code": 3200, "message": "postId가 존재하지 않습니다." },

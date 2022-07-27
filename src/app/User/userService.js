@@ -36,6 +36,12 @@ exports.createUser = async function (name, phoneNumber, email, password, IsAccep
 
         //휴대전화 중복 확인
 
+        const phoneNumberCheck = await userDao.phoneNumberCheck(connection, phoneNumber);
+
+        if(phoneNumberCheck.length > 0) {
+            return errResponse(baseResponse.SIGNUP_REDUNDANT_PHONENUMBER);
+        }
+
         // 비밀번호 암호화
         const hashedPassword = await crypto
             .createHash("sha512")
@@ -45,15 +51,13 @@ exports.createUser = async function (name, phoneNumber, email, password, IsAccep
 
         const insertUserInfoParams = [name, phoneNumber, email, hashedPassword, IsAcceptedPrivacyTerm, IsAcceptedMarketingTerm];
 
-        
-        console.log('test1');
+
         await connection.beginTransaction();
 
         const userIdResult = await userDao.insertUserInfo(connection, insertUserInfoParams);
         const userId=userIdResult[0].insertId;
         //console.log(`추가된 회원 : ${userId}`)
         const getJobGroupRows=await userDao.getJobGroupCategories(connection)
-        console.log(getJobGroupRows);
         const result={};
         result.userId=userId;
         result.jobGroup=getJobGroupRows;
