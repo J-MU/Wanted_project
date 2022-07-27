@@ -153,7 +153,7 @@ exports.postDefaultResume=async function(req,res){
     if(!jobId)
         return res.send(errResponse(baseResponse.JOB_EMPTY));
     
-    if(!career)
+    if(!career && career!=0)
         return res.send(errResponse(baseResponse.CAREER_EMPTY));
     
     if(!userId)

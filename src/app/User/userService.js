@@ -203,14 +203,14 @@ exports.postDefaultResume=async function(userId,userName,email,telephone,jobId,c
 
         // jobId로 jobName 뽑아내기
         const jobNametemp=await jobDao.getJobNameByJobId(connection,jobId);
-        const jobName=jobNametemp.name;
+        const jobName=jobNametemp[0].name;
 
         let self_introduction;
         if(career==0)
         {
-            self_introduction="안녕하세요. 신입 "+jobName+"입니다.";    
+            self_introduction="안녕하세요. 신입 "+ jobName+"입니다.";
         }else{
-            self_introduction="안녕하세요. "+career+"년차"+jobName+"입니다.";
+            self_introduction="안녕하세요. "+career+"년차 "+jobName+"입니다.";
         }
         let resumeName=`${userName}`+"1";
         console.log(resumeName);
