@@ -18,7 +18,7 @@ exports.getCompanies = async function (req, res) {
 
     const getCompaniesResponse = await companyProvider.getCompanies();
 
-    return res.send(getCompaniesResponse);
+    return res.send(response(baseResponse.SUCCESS,getCompaniesResponse))
 }
 
 /**

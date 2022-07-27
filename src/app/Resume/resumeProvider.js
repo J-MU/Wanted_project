@@ -26,8 +26,16 @@ exports.getResumes = async function(userId) {
 //이력서 조회
 
 exports.getResume = async function(getResumeParams) {
+    const connection = await pool.getConnection(async (conn) => conn);
     try{
-        const connection = await pool.getConnection(async (conn) => conn);
+
+        //이력서 validation
+
+        const resumeIdCheck = await resumeDao.resumeIdCheck(connection,getResumeParams[1]);
+
+        if(resumeIdCheck.length==0){
+            return errResponse(baseResponse.RESUMEID_NOT_EXIST);
+        }
         let getResumeResult = await resumeDao.getResumeInfo(connection,getResumeParams);
 
         if(getResumeResult.length==0){
@@ -82,14 +90,23 @@ exports.getResume = async function(getResumeParams) {
         return response(baseResponse.SUCCESS,resultResponse);
     }
     catch (err) {
+        if(err=="resumeIdCheck Query err") return errResponse({"isSuccess":false, "code":4110, "message":"resumeIdCheck Query err"});
         logger.error(`App - createUser Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
     }
 }
 //이력서 제목 조회
 exports.getResumeTitle = async function (getResumeParams) {
+    const connection = await pool.getConnection(async (conn) => conn);
     try{
-        const connection = await pool.getConnection(async (conn) => conn);
+        //이력서 validation
+
+        const resumeIdCheck = await resumeDao.resumeIdCheck(connection,getResumeParams[1]);
+
+        if(resumeIdCheck.length==0){
+            return errResponse(baseResponse.RESUMEID_NOT_EXIST);
+        }
+
         const getResumeTitleResult = await resumeDao.getResumeTitle(connection,getResumeParams);
         connection.release();
 
@@ -97,6 +114,7 @@ exports.getResumeTitle = async function (getResumeParams) {
 
     }
     catch(err) {
+        if(err=="resumeIdCheck Query err") return errResponse({"isSuccess":false, "code":4110, "message":"resumeIdCheck Query err"});
         logger.error(`App - createUser Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
     }

@@ -607,6 +607,109 @@ async function awardsIdCheck (connection, awardsId ) {
     return awardsIdCheckRow[0]
 }
 
+async function deleteResumeCheck(connection, resumeId) {
+    let  deleteResumeCheckRow
+    try {
+        const deleteResumeCheckQuery = `
+            select status
+            from Resumes
+            where resumeId = ?
+        `
+       deleteResumeCheckRow = await connection.query(deleteResumeCheckQuery, resumeId);
+    }
+    catch(err) {
+        throw "deleteResumeCheck Query err"
+    }
+    return deleteResumeCheckRow[0]
+}
+
+async function careerDeletedCheck(connection, careerId) {
+
+    let  careerDeletedCheckRow
+    try {
+        const careerDeletedCheckQuery = `
+            select status
+            from Careers
+            where careerId = ?
+        `
+        careerDeletedCheckRow = await connection.query(careerDeletedCheckQuery, careerId);
+    }
+    catch(err) {
+        throw "careerDeletedCheck Query err"
+    }
+    return careerDeletedCheckRow[0]
+}
+
+async function resumeIdCheck(connection,resumeId) {
+    let  resumeIdCheckRow
+    try {
+        const resumeIdCheckQuery = `
+            select resumeId
+            from Resumes
+            where resumeId = ?
+        `;
+        resumeIdCheckRow = await connection.query(resumeIdCheckQuery, resumeId);
+    }
+    catch(err) {
+        throw "resumeIdCheck Query err"
+    }
+    return resumeIdCheckRow[0]
+}
+
+async function resumeUserCheck(connection,resumeUserCheckParams ) {
+    let  resumeUserCheckRow
+    try {
+        const resumeUserCheckQuery = `
+            select resumeId
+            from Resumes
+            where resumeId = ${resumeUserCheckParams[0]} and userId=${resumeUserCheckParams[1]};
+        `;
+        resumeUserCheckRow = await connection.query(resumeUserCheckQuery, resumeUserCheckParams);
+    }
+    catch(err) {
+        throw "resumeUserCheck Query err"
+    }
+    return resumeUserCheckRow[0]
+}
+
+async function educationIdCheck(connection, educationId) {
+    let  educationIdCheckRow
+    try {
+        const educationIdCheckQuery = `
+            select educationId
+            from Education
+            where educationId = ?;
+        `;
+        educationIdCheckRow = await connection.query(educationIdCheckQuery, educationId);
+    }
+    catch(err) {
+        throw "educationIdCheck Query err"
+    }
+    return educationIdCheckRow[0]
+}
+
+async function educationDeletedCheck(connection, educationId) {
+
+    const educationDeletedCheckQuery = `
+            select status
+            from Education
+            where educationId = ?;
+        `;
+    const educationDeletedCheckRow = await connection.query(educationDeletedCheckQuery, educationId);
+
+    return educationDeletedCheckRow[0]
+}
+
+async function skillIdCheck(connection, skillId) {
+    const skillIdCheckQuery = `
+            select skillId
+            from Skills
+            where skillId = ?;
+        `;
+    const skillIdCheckRow = await connection.query(skillIdCheckQuery, skillId);
+
+    return skillIdCheckRow[0]
+}
 module.exports = {
     postResumeInfo,
     postResumeCareerInfo,
@@ -650,5 +753,12 @@ module.exports = {
      postResumeForeignLanguage,
      deleteResumeForeignLanguage,
      careerIdCheck,
-     awardsIdCheck
+     awardsIdCheck,
+    deleteResumeCheck,
+    resumeIdCheck,
+    resumeUserCheck,
+    careerDeletedCheck,
+    educationIdCheck,
+    educationDeletedCheck,
+    skillIdCheck
 };

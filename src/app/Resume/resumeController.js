@@ -22,7 +22,7 @@ exports.getResumes = async function (req, res) {
     }
 
     if(userId_login!=userId) {
-            return res.send(response(baseResponse.USER_ID_NOT_MATCH));
+            return res.send(response(baseResponse.TOKEN_AND_USERID_VERIFICATION_FAILURE));
 
     }
 
@@ -57,6 +57,11 @@ exports.deleteResumes = async function (req, res) {
 exports.postResumes = async function(req, res) {
 
     const userId = req.verifiedToken.userId
+    const userId_path = req.params.userId
+
+    if (userId!=userId_path) {
+        return res.send(response(baseResponse.TOKEN_AND_USERID_VERIFICATION_FAILURE));
+    }
 
     const postResumesResponse = await resumeService.postResumes(userId);
 
@@ -71,7 +76,6 @@ exports.postResumes = async function(req, res) {
  */
 
 exports.getResume = async function(req, res) {
-    console.log("사ㅅ바사바 분신사바");
     const userId = req.verifiedToken.userId
 
     const resumeId = parseInt(req.params.resumeId)
@@ -86,7 +90,7 @@ exports.getResume = async function(req, res) {
 }
 
 /**
- * 이력서 조회
+ * 이력서 이름
  * [GET] /app/resumes/:resumeId/title
  */
 //이력서 이름 가져오기
@@ -110,12 +114,23 @@ exports.getResumeTitle = async function(req, res) {
 
 exports.patchResumeTitle = async function(req, res) {
     const userId = req.verifiedToken.userId
+    const userId_body = req.body.userId
 
     const resumeId = parseInt(req.params.resumeId)
 
     const resumeName = req.body.resumeName
 
     const getResumeParams = [userId, resumeId,resumeName]
+
+    if(!userId_body){
+        return res.send(response(baseResponse.RESUME_USERID_EMPTY));
+    }
+
+    if(userId!=userId_body) {
+        return res.send(response(baseResponse.TOKEN_AND_USERID_VERIFICATION_FAILURE));
+    }
+
+
     if (!resumeId)  return res.send(response(baseResponse.RESUMEID_EMPTY));
 
     const patchResumeTitleResponse = await resumeService.patchResumeTitle(getResumeParams);
@@ -134,10 +149,16 @@ exports.postResumeCareer = async function(req, res) {
     const resumeId = parseInt(req.params.resumeId)
     const companyName = req.body.companyName;
     const type = req.body.type;
+    const userId = parseInt(req.verifiedToken.userId)
+
+    const postResumeCareerParams = [ resumeId, companyName, type , userId ]
+
+
+    if(!resumeId) return res.send(response(baseResponse.RESUMEID_EMPTY));
 
     if(!companyName) return res.send(response(baseResponse.COMPANYNAME_EMPTY));
 
-    const postResumeCareerParams = [resumeId, companyName, type]
+    if(!type) return res.send(response(baseResponse.CAREERTYPE_EMPTY));
 
     const postResumeCareerResponse = await resumeService.postResumeCareer(postResumeCareerParams);
 
@@ -150,10 +171,19 @@ exports.postResumeCareer = async function(req, res) {
  */
 
 exports.deleteResumeCareer = async function (req, res) {
-
     const careerId = parseInt(req.params.careerId)
-    console.log(careerId);
-    // if (!resumeId)  return res.send(response(baseResponse.RESUMEID_EMPTY));
+    const userId = parseInt(req.verifiedToken.userId)
+    const userId_body= req.body.userId
+
+    if (!careerId)  return res.send(response(baseResponse.CAREERID_EMPTY));
+
+    if(!userId_body){
+        return res.send(response(baseResponse.RESUME_USERID_EMPTY));
+    }
+
+    if(userId!=userId_body) {
+        return res.send(response(baseResponse.TOKEN_AND_USERID_VERIFICATION_FAILURE));
+    }
 
     const deleteResumeCareerResponse = await resumeService.deleteResumeCareer(careerId);
 
@@ -203,12 +233,24 @@ exports.getEducationSchool =  async function (req, res) {
  */
 
 exports.postEducationSchool = async function(req, res) {
+    const userId = parseInt(req.verifiedToken.userId)
+    const userId_body= req.body.userId
     const resumeId = parseInt(req.params.resumeId)
     const schoolName = req.body.schoolName;
 
+    if(!resumeId) return res.send(response(baseResponse.RESUMEID_EMPTY));
+
     if(!schoolName) return res.send(response(baseResponse.SCHOOLNAME_EMPTY));
 
-    const postEducationSchoolParams = [resumeId,schoolName]
+    if(!userId_body){
+        return res.send(response(baseResponse.RESUME_USERID_EMPTY));
+    }
+
+    if(userId!=userId_body) {
+        return res.send(response(baseResponse.TOKEN_AND_USERID_VERIFICATION_FAILURE));
+    }
+
+    const postEducationSchoolParams = [resumeId,schoolName,userId]
 
     const postResumeCareerResponse = await resumeService.postEducationSchool(postEducationSchoolParams );
 
@@ -243,8 +285,23 @@ exports.patchResumeEducation = async function(req, res) {
 
 exports.deleteResumeEducation = async function (req, res) {
 
+    const userId = parseInt(req.verifiedToken.userId)
+    const userId_body= req.body.userId
+
     const educationId = parseInt(req.params.educationId)
-    console.log(educationId);
+
+    if(!userId_body){
+        return res.send(response(baseResponse.RESUME_USERID_EMPTY));
+    }
+
+    if(userId!=userId_body) {
+        return res.send(response(baseResponse.TOKEN_AND_USERID_VERIFICATION_FAILURE));
+    }
+
+    if(!educationId) {
+        return res.send(response(baseResponse.EDUCATIONID_EMPTY));
+    }
+
     // if (!resumeId)  return res.send(response(baseResponse.RESUMEID_EMPTY));
 
     const deleteResumeEducationResponse = await resumeService.deleteResumeEducation(educationId);
@@ -259,7 +316,6 @@ exports.deleteResumeEducation = async function (req, res) {
  */
 
 exports.getPopularSkills =  async function (req, res) {
-
 
     const getPopularSkillsResponse = await resumeProvider.getPopularSkills();
 
@@ -291,8 +347,23 @@ exports.postResumeAwards = async function (req, res) {
     const name = req.body.name
     const details = req.body.details
 
-    const postResumeAwardsParams = [resumeId, period, name, details]
+    const userId = parseInt(req.verifiedToken.userId)
+    const userId_body= req.body.userId
+
+    if(!userId_body){
+        return res.send(response(baseResponse.RESUME_USERID_EMPTY));
+    }
+
+    if(userId!=userId_body) {
+        return res.send(response(baseResponse.TOKEN_AND_USERID_VERIFICATION_FAILURE));
+    }
+
+    if(!resumeId) return res.send(response(baseResponse.RESUMEID_EMPTY));
+
     if(!name) return res.send(response(baseResponse.AWARDSNAME_EMPTY));
+
+    const postResumeAwardsParams = [resumeId, period, name, details]
+
     const postResumeAwardsResponse = await resumeService.postResumeAwards(postResumeAwardsParams);
 
     return res.send(postResumeAwardsResponse);
@@ -311,6 +382,7 @@ exports.patchResumeAwards = async function(req, res) {
 
     const params = [awardsId , period, name, details]
 
+    if(!awardsId) return res.send(response(baseResponse.AWARDSID_EMPTY));
 
     const patchResumeAwardsResponse = await resumeService.patchResumeAwards(params);
 
@@ -340,6 +412,8 @@ exports.patchResumeStatus = async function (req, res) {
     const resumeId= parseInt(req.params.resumeId);
     const status = req.body.status;
 
+    if(!resumeId) return res.send(response(baseResponse.RESUMEID_EMPTY));
+    if(!status) return res.send(response(baseResponse.RESUMESTATUS_EMPTY));
     const checkResumeResponse = await resumeService.patchResumeStatus(resumeId,status);
     // const patchResumeStatusResponse
 
@@ -353,8 +427,20 @@ exports.patchResumeStatus = async function (req, res) {
  *
  */
 exports.postResumeUserSkills = async function(req, res) {
-    const resumeId= parseInt(req.params.resumeId);
-    const userId = req.verifiedToken.userId
+    const resumeId = parseInt(req.params.resumeId);
+    const userId = req.verifiedToken.userId ;
+
+    const userId_body= req.body.userId
+
+    if(!userId_body){
+        return res.send(response(baseResponse.RESUME_USERID_EMPTY));
+    }
+
+    if(userId!=userId_body) {
+        return res.send(response(baseResponse.TOKEN_AND_USERID_VERIFICATION_FAILURE));
+    }
+
+    if(!resumeId) return res.send(response(baseResponse.RESUMEID_EMPTY));
 
     const postResumeUserSkillsResponse = await resumeService.postResumeUserSkills(resumeId,userId);
 
@@ -369,6 +455,21 @@ exports.postResumeUserSkills = async function(req, res) {
 exports.postResumeSkills =  async function(req, res) {
     const resumeId= parseInt(req.params.resumeId);
     const skillId = parseInt(req.body.skillId);
+
+    const userId = parseInt(req.verifiedToken.userId)
+    const userId_body= req.body.userId
+
+    if(!userId_body){
+        return res.send(response(baseResponse.RESUME_USERID_EMPTY));
+    }
+
+    if(userId!=userId_body) {
+        return res.send(response(baseResponse.TOKEN_AND_USERID_VERIFICATION_FAILURE));
+    }
+
+    if(!resumeId) return res.send(response(baseResponse.RESUMEID_EMPTY));
+    if(!skillId) return res.send(response(baseResponse.SKILLID_EMPTY));
+
 
     const postResumeSkillsResponse = await resumeService.postResumeSkills(resumeId,skillId);
 

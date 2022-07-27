@@ -16,5 +16,5 @@ exports.getSchools =  async function (req, res) {
 
     const getSchoolsResponse = await schoolProvider.getSchools();
 
-    return res.send(getSchoolsResponse);
+    return res.send(response(baseResponse.SUCCESS,getSchoolsResponse));
 }

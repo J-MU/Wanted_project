@@ -13,10 +13,17 @@ const crypto = require("crypto");
 const {connect} = require("http2");
 
 exports.deleteResumes = async function (userId, resumeId) {
+    const connection = await pool.getConnection(async (conn) => conn);
+
     try {
         //TODO deleted확인
+
+        const deleteResumeCheck = await resumeDao.deleteResumeCheck(connection, resumeId);
+
+        if(deleteResumeCheck[0].status=='DELETED') {
+            return response(baseResponse.RESUMEID_ALREADY_DELETED);
+        }
         const deleteResumesParams = [userId, resumeId]
-        const connection = await pool.getConnection(async (conn) => conn);
         const deleteResumesResult = await resumeDao.deleteResumes(connection,deleteResumesParams);
         connection.release();
 
@@ -24,6 +31,7 @@ exports.deleteResumes = async function (userId, resumeId) {
     }
 
     catch (err) {
+            if(err=="deleteResumeCheck Query err") return errResponse({"isSuccess":false, "code":4109, "message":"deleteResumeCheck Query err"});
             logger.error(`App - createUser Service error\n: ${err.message}`);
             return errResponse(baseResponse.DB_ERROR);
         }
@@ -55,6 +63,13 @@ exports.patchResumeTitle = async function(getResumeParams) {
     try {
 
         const connection = await pool.getConnection(async (conn) => conn);
+        const resumeIdCheck = await resumeDao.resumeIdCheck(connection,getResumeParams[1]);
+
+        if(resumeIdCheck.length==0){
+            return errResponse(baseResponse.RESUMEID_NOT_EXIST);
+        }
+
+
         const patchResumeTitleResult = await resumeDao.patchResumeTitle(connection,getResumeParams);
         connection.release();
 
@@ -62,6 +77,7 @@ exports.patchResumeTitle = async function(getResumeParams) {
 
     }
     catch(err) {
+        if(err=="resumeIdCheck Query err") return errResponse({"isSuccess":false, "code":4110, "message":"resumeIdCheck Query err"});
         logger.error(`App - createUser Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
     }
@@ -70,9 +86,24 @@ exports.patchResumeTitle = async function(getResumeParams) {
 //이력서 경력 추가
 
 exports.postResumeCareer = async function(postResumeCareerParams){
+    const connection = await pool.getConnection(async (conn) => conn);
     try {
+        //resumeId 존재여부 확인
 
-        const connection = await pool.getConnection(async (conn) => conn);
+        const resumeIdCheck = await resumeDao.resumeIdCheck(connection,postResumeCareerParams[0]);
+
+        if(resumeIdCheck.length==0){
+            return errResponse(baseResponse.RESUMEID_NOT_EXIST);
+        }
+
+        //resumeId랑 토큰 Id가 같은 사람인지 확인
+        const resumeUserCheckParams = [ postResumeCareerParams[0],postResumeCareerParams[3]]
+        const resumeUserCheck = await resumeDao.resumeUserCheck(connection,resumeUserCheckParams);
+        if(resumeUserCheck==0) {
+            return errResponse(baseResponse.NOT_USER_RESUME);
+        }
+
+
         const postResumeCareerResult = await resumeDao.postResumeCareer(connection,postResumeCareerParams);
 
         const num = postResumeCareerResult.length
@@ -81,15 +112,30 @@ exports.postResumeCareer = async function(postResumeCareerParams){
 
     }
     catch(err) {
+        if(err=="resumeIdCheck Query err") return errResponse({"isSuccess":false, "code":4110, "message":"resumeIdCheck Query err"});
+        if(err=="resumeUserCheck Query err") return errResponse({"isSuccess":false, "code":4111, "message":"resumeUserCheck Query err"});
         logger.error(`App - createUser Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
     }
 }
 
 exports.deleteResumeCareer = async function (careerId) {
+    const connection = await pool.getConnection(async (conn) => conn);
     try {
-        //TODO deleted확인
-        const connection = await pool.getConnection(async (conn) => conn);
+        //career가 존재하는지
+        const careerIdCheck = await resumeDao.careerIdCheck(connection, careerId);
+
+        if(careerIdCheck.length==0) {
+            return errResponse(baseResponse.CAREER_NOT_EXIST);
+        }
+        //career 삭제 되어 있는지 확인
+
+        const careerDeletedCheck = await resumeDao.careerDeletedCheck(connection,careerId);
+
+        if(careerDeletedCheck[0].status=='DELETED'){
+            return errResponse(baseResponse.CAREER_ALREADY_DELETED);
+        }
+
         const deleteResumeCareerResult = await resumeDao.deleteResumeCareer(connection,careerId);
         connection.release();
 
@@ -97,6 +143,7 @@ exports.deleteResumeCareer = async function (careerId) {
     }
 
     catch (err) {
+        if(err="careerDeletedCheck Query err") return errResponse({"isSuccess":false, "code":4112, "message":"careerDeletedCheck Query err"});
         logger.error(`App - createUser Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
     }
@@ -105,9 +152,24 @@ exports.deleteResumeCareer = async function (careerId) {
 
 //이력서 학교 추가
 exports.postEducationSchool = async function(postEducationSchoolParams ){
-    try {
 
-        const connection = await pool.getConnection(async (conn) => conn);
+    const connection = await pool.getConnection(async (conn) => conn);
+
+    try {
+        //이력서 Id 존재하는지 체크
+        const resumeIdCheck = await resumeDao.resumeIdCheck(connection,postEducationSchoolParams[0]);
+
+        if(resumeIdCheck.length==0){
+            return errResponse(baseResponse.RESUMEID_NOT_EXIST);
+        }
+
+        //resumeId랑 토큰 Id가 같은 사람인지 확인
+        const resumeUserCheckParams = [ postEducationSchoolParams[0],postEducationSchoolParams[2]]
+        const resumeUserCheck = await resumeDao.resumeUserCheck(connection,resumeUserCheckParams);
+        if(resumeUserCheck==0) {
+            return errResponse(baseResponse.NOT_USER_RESUME);
+        }
+
         const postEducationSchoolResult = await resumeDao.postEducationSchool(connection,postEducationSchoolParams );
 
         const num = postEducationSchoolResult.length
@@ -166,9 +228,25 @@ exports.patchResumeEducation = async function(params) {
 
 //이력서 학교 삭제
 exports.deleteResumeEducation = async function (educationId) {
+    const connection = await pool.getConnection(async (conn) => conn);
     try {
-        //TODO deleted확인
-        const connection = await pool.getConnection(async (conn) => conn);
+
+        //educationId 존재하는 지 확인
+
+        const educationIdCheck = await resumeDao.educationIdCheck(connection, educationId)
+
+        if(educationIdCheck.length==0) {
+            return errResponse(baseResponse.EDUCATION_NOT_EXIST);
+        }
+
+        //educationId 삭제되었는 지 확인
+
+        const educationDeletedCheck = await resumeDao.educationDeletedCheck(connection, educationId)
+
+        if(educationDeletedCheck[0].status=='DELETED') {
+            return errResponse(baseResponse.EDUCATION_ALREADY_DELETED);
+        }
+
         const deleteResumeEducationResult = await resumeDao.deleteResumeEducation(connection,educationId);
         connection.release();
 
@@ -184,9 +262,9 @@ exports.deleteResumeEducation = async function (educationId) {
 
 //이력서 수상 추가
 exports.postResumeAwards = async function(postResumeAwardsParams){
+    const connection = await pool.getConnection(async (conn) => conn);
     try {
 
-        const connection = await pool.getConnection(async (conn) => conn);
         const postResumeAwardsResult = await resumeDao.postResumeAwards(connection,postResumeAwardsParams);
 
 
@@ -249,9 +327,16 @@ exports.deleteResumeAwards = async function(awardsId) {
 //이력서 상태 수정
 
 exports.patchResumeStatus = async function(resumeId,status) {
+    const connection = await pool.getConnection(async (conn) => conn);
     try {
         if(status=='작성 완료') {
 
+            // resumeId validation
+            const resumeIdCheck = await resumeDao.resumeIdCheck(connection, resumeId);
+
+            if(resumeIdCheck.length==0) {
+                return errResponse(baseResponse.RESUMEID_NOT_EXIST);
+            }
 
             // 간단 소개글 글자 수 확인하기
             const selfIntroductionRows = await resumeProvider.selfIntroductionCheck(resumeId);
@@ -355,12 +440,34 @@ exports.postResumeUserSkills = async function(resumeId,userId) {
 
 //이력서 스킬 추가
 exports.postResumeSkills = async function(resumeId,skillId) {
-    const postResumeSkillsParams = [resumeId,skillId]
     const connection = await pool.getConnection(async (conn) => conn);
-    const postResumeSkillsResult = await resumeDao.postResumeSkills(connection,postResumeSkillsParams);
+    try {
+        const postResumeSkillsParams = [resumeId, skillId]
 
-    connection.release();
-    return response(baseResponse.SUCCESS);
+        //resumeId validation
+
+        const resumeIdCheck = await resumeDao.resumeIdCheck(connection,postResumeSkillsParams[0]);
+
+        if(resumeIdCheck.length==0){
+            return errResponse(baseResponse.RESUMEID_NOT_EXIST);
+        }
+
+        //skillId validation
+        const skillIdCheck = await resumeDao.skillIdCheck(connection,postResumeSkillsParams[1]);
+
+        if(skillIdCheck.length==0){
+            return errResponse(baseResponse.SKILLID_NOTEXIST);
+        }
+
+        const postResumeSkillsResult = await resumeDao.postResumeSkills(connection, postResumeSkillsParams);
+
+        connection.release();
+        return response(baseResponse.SUCCESS);
+    }
+    catch (err) {
+        logger.error(`App - createUser Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
 
 
 }

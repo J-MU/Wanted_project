@@ -9,7 +9,7 @@ module.exports = {
     TOKEN_EMPTY : { "isSuccess": false, "code": 2000, "message":"JWT 토큰을 입력해주세요." },
     TOKEN_VERIFICATION_FAILURE : { "isSuccess": false, "code": 3000, "message":"JWT 토큰 검증 실패" },
     TOKEN_VERIFICATION_SUCCESS : { "isSuccess": true, "code": 1001, "message":"JWT 토큰 검증 성공" }, // ?
-
+    TOKEN_AND_USERID_VERIFICATION_FAILURE : { "isSuccess": false, "code":2014, "message":"JWT 토큰 검증 실패 : 유저의 토큰이 아닙니다." },
     //Request error
     //로그인 : 2000
     SIGNUP_NAME_EMPTY :  { "isSuccess": false, "code": 2001, "message":"이름을 입력해주세요" },
@@ -61,7 +61,7 @@ module.exports = {
     NOT_INHERITANCE_CATEGORIES:{"isSuccess": false, "code": 2301, "message": "jobGroup과 job이 상속관계가 아닙니다. 다시 확인해주세요"},
     UNVALIDABLE_JOB_GROUP_ID:{"isSuccess": false, "code": 2302, "message": "유효하지 않은 JobGroupId입니다. "},
     //resume : 2400
-    RESUMEID_EMPTY : {"isSuccess": false, "code": 2400, "message": "이력서ID를 입력해주세요"},
+    RESUMEID_EMPTY : {"isSuccess": false, "code": 2400, "message": "이력서Id를 입력해주세요"},
     SCHOOLNAME_EMPTY  : {"isSuccess": false, "code": 2401, "message": "학교이름을 입력해주세요"},
     SELFINTRODUCTIONNUM_ERROR : {"isSuccess": false, "code": 2402, "message": "글자수 400자 미만은 이력서 작성을 완료할 수 없습니다."},
     INPUTDATE_ERROR :  {"isSuccess": false, "code": 2403, "message": "경력의 기간을 작성해주세요"},
@@ -69,6 +69,21 @@ module.exports = {
     FAILED_ERROR : {"isSuccess": false, "code": 2405, "message": "작성완료를 하려면 빈 칸을 채워주세요."},
     AWARDSNAME_EMPTY : {"isSuccess": false, "code": 2406, "message": "활동명을 입력해주세요."},
     RESUME_USERID_EMPTY : {"isSuccess": false, "code": 2407, "message": "userId를 입력해주세요."},
+    RESUMEID_ALREADY_DELETED : {"isSuccess": false, "code": 2408, "message": "이미 이력서가 삭제되었습니다."},
+    RESUMEID_NOT_EXIST : {"isSuccess": false, "code": 2409, "message": "이력서가 존재하지 않습니다."},
+    CAREERTYPE_EMPTY : {"isSuccess": false, "code": 2410, "message": "경력 유형을 선택해주세요."},
+    NOT_USER_RESUME : {"isSuccess": false, "code": 2411, "message": "유저의 이력서가 아닙니다."},
+    CAREERID_EMPTY : {"isSuccess": false, "code": 2412, "message": "careerId를 입력해주세요."},
+    CAREER_ALREADY_DELETED :  {"isSuccess": false, "code": 2413, "message": "이미 경력이 삭제되었습니다."},
+    CAREER_NOT_EXIST :  {"isSuccess": false, "code": 2414, "message": "해당 경력이 존재하지 않습니다."},
+    EDUCATIONID_EMPTY : {"isSuccess": false, "code": 2415, "message": "educationId를 입력해주세요."},
+    EDUCATION_NOT_EXIST : {"isSuccess": false, "code": 2416, "message": "해당 학력이 존재하지 않습니다."},
+    EDUCATION_ALREADY_DELETED :  {"isSuccess": false, "code": 2417, "message": "이미 학력이 삭제되었습니다."},
+    AWARDSID_EMPTY : {"isSuccess": false, "code": 2418, "message": "awardsId를 입력해주세요."},
+    RESUMESTATUS_EMPTY : {"isSuccess": false, "code": 2418, "message": "작성완료 혹은 임시 저장을 입력해주세요."},
+    SKILLID_EMPTY : {"isSuccess": false, "code": 2419, "message": "skillId를 입력해주세요."},
+    
+
     //company : 2150
     COMPANYNAME_EMPTY : {"isSuccess": false, "code": 2150, "message": "회사이름을 입력해주세요"},
     COMPANY_TAG_TOO_MANY: {"isSuccess": false, "code": 2151, "message": "company tag는 3개까지 선택 가능합니다."},
@@ -98,6 +113,7 @@ module.exports = {
     CAREERID_NOTEXIST : { "isSuccess": false, "code": 3401, "message": "careerId가 존재하지 않습니다." },
     EDUCATIONID_NOTEXIST : { "isSuccess": false, "code": 3402, "message": "educationId가 존재하지 않습니다." },
     AWARDSID_NOTEXIST : { "isSuccess": false, "code": 3403, "message": "awardsId가 존재하지 않습니다." },
+    SKILLID_NOTEXIST : { "isSuccess": false, "code": 3404, "message": "skillId가 존재하지 않습니다." },
 
 
     SIGNIN_EMAIL_WRONG : { "isSuccess": false, "code": 3003, "message": "아이디가 잘못 되었습니다." },

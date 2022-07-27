@@ -147,7 +147,7 @@ exports.postDefaultResume=async function(req,res){
     if(!email)  return res.send(errResponse(baseResponse.SIGNUP_EMAIL_EMPTY));
     if(!telephone)  return res.send(errResponse(baseResponse.SIGNUP_PHONENUMBER_EMPTY));
     if(!jobId)  return res.send(errResponse(baseResponse.JOB_EMPTY));
-    if(!career) return res.send(errResponse(baseResponse.CAREER_EMPTY));
+    if(!career && career!=0) return res.send(errResponse(baseResponse.CAREER_EMPTY));
     if(!userId) return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
     if(!userName)   return res.send(errResponse(baseResponse.USER_NAME_EMPTY));
     if((!companyId && companyName) || (companyId && !companyName) ) return res.send(errResponse(baseResponse.CANT_SEND_ONE_OF_COMPANYID_OR_COMPANYNAME));
@@ -159,9 +159,9 @@ exports.postDefaultResume=async function(req,res){
         postSchoolAndCompanyResponse = await userService.postDefaultResume(
             userId,userName,email,telephone,jobId,career,companyId,companyName,schoolName,skills
         );
-        
+
     }
-    
+
 
     return res.send(postSchoolAndCompanyResponse);
 }
@@ -285,8 +285,7 @@ exports.postHeart = async function (req, res) {
 
     const userId = req.body.userId;
     const employmentId=req.body.employmentId;
-    console.log("userId:");
-    console.log(userIdFromJWT,userId);
+   
 
     if (userIdFromJWT != userId) {
         res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
