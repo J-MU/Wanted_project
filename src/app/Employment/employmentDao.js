@@ -236,9 +236,11 @@ async function getEmploymentDetails(connection,employmentId,userId) {
     try{
         EmploymentDetailsData = await connection.query(getEmploymentDetailQuery);
     }catch(err){
+        
         throw "getEmploymentDetailFail";
     }
-    
+    console.log("여기다!!!!");
+    console.log(getEmploymentDetailQuery);
     return EmploymentDetailsData[0][0];
 }
 async function getRandomEmployments(connection,userId){
@@ -419,7 +421,7 @@ async function getEmployments(connection,params) {
     return employmentsRows[0];
 }
 
-async function getCompanyDetails(connection,companyId,userId) {getCompanyDetailsFail
+async function getCompanyDetails(connection,companyId,userId) {
     let companyDetailsData;
     const getCompanyDetailsQuery = `
             SELECT 
@@ -484,7 +486,6 @@ async function getSkills(connection,employmentId) {
 }
 
 async function getEmploymentImgs(connection,employmentId) {
-    console.log("Query3 시작")
     let ImgUrls;
     const getEmploymentImgsQuery = `
             SELECT EmploymentImgs.ImgUrl FROM EmploymentImgs

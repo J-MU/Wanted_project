@@ -175,14 +175,21 @@ exports.getEmploymentPostData= async function (employmentId,userId) {
         const connection = await pool.getConnection(async (conn) => conn);
 
         const totalData={};
-
+        console.log("Query1");
         totalData.employmentDetails=await employmentDao.getEmploymentDetails(connection,employmentId,userId);
+        console.log("Query2");
         totalData.employmentDetails.ImgUrls=await employmentDao.getEmploymentImgs(connection,employmentId);
+        console.log("Query3");
         const companyId=totalData.employmentDetails.companyId;
+        console.log("Query4");
         totalData.companyData=await employmentDao.getCompanyDetails(connection,companyId,userId);
+        console.log("Query5");
         totalData.companyData.companyTag=await employmentDao.getCompanyTag(connection,companyId);
+        console.log("Query6");
         totalData.randomEmployments=await employmentDao.getRandomEmployments(connection,userId);
+        console.log("Query7");
         totalData.employmentDetails.skills=await employmentDao.getSkills(connection,employmentId);
+        console.log("Query8");
         console.log(totalData);
 
         connection.release();
