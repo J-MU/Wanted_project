@@ -52,6 +52,8 @@ exports.getCompanyDetails = async function (req, res) {
         userId = req.verifiedToken.userId;
     }
     const companyId=req.params.companyId;
+    if(!companyId) return res.send(errResponse(baseResponse.COMPANY_EMPTY));
+    
     const getCompanyDetails = await companyProvider.getCompanyDetails(userId,companyId);
 
     return res.send(getCompanyDetails);

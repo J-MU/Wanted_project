@@ -51,13 +51,15 @@ exports.createUser = async function (name, phoneNumber, email, password, IsAccep
 
         const insertUserInfoParams = [name, phoneNumber, email, hashedPassword, IsAcceptedPrivacyTerm, IsAcceptedMarketingTerm];
 
-
+        
+        console.log('test1');
         await connection.beginTransaction();
 
         const userIdResult = await userDao.insertUserInfo(connection, insertUserInfoParams);
         const userId=userIdResult[0].insertId;
         //console.log(`추가된 회원 : ${userId}`)
         const getJobGroupRows=await userDao.getJobGroupCategories(connection)
+        console.log(getJobGroupRows);
         const result={};
         result.userId=userId;
         result.jobGroup=getJobGroupRows;
@@ -69,8 +71,7 @@ exports.createUser = async function (name, phoneNumber, email, password, IsAccep
 
 
     } catch (err) {
-        if(err=="EmailCheck err")  return errResponse({"isSuccess":false, "code":4100, "message":"fail emailCheck Query"});
-        if(err=="phoneNumberCheck Query Err")  return errResponse({"isSuccess":false, "code":4101, "message":"phoneNumberCheck Query Err"});
+
         connection.rollback();
         logger.error(`App - createUser Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
@@ -131,7 +132,7 @@ exports. postSignIn = async function (email, password) {
     } catch (err) {
         if(err=="emailCheckFail") return errResponse({"isSuccess":false, "code":4001, "message":"fail emailCheck Query"});
         if(err=="passwordCheckFail") return errResponse({"isSuccess":false, "code":4002, "message":"fail epasswordCheck Query"});
-        if(err=="accountCheckFail") return errResponse({"isSuccess":false, "code":4002, "message":"fail accountCheck Query"});
+        if(err=="accountCheckFail") return errResponse({"isSuccess":false, "code":4003, "message":"fail accountCheck Query"});
         
         logger.error(`App - postSignIn Service error\n: ${err.message} \n${JSON.stringify(err)}`);
         return errResponse(baseResponse.DB_ERROR);
@@ -303,6 +304,9 @@ exports.postBookMark=async function(userId,employmentId){
         await connection.commit();
         return response(baseResponse.SUCCESS);
     } catch(err){
+        if(err=="getJobCategoriesFail") return errResponse({"isSuccess":false, "code":4001, "message":"fail getJobCategories Query"});
+        if(err=="getBookMarkCountFail") return errResponse({"isSuccess":false, "code":4002, "message":"fail getBookMarkCount Query"});
+        if(err=="updateBookMarkFail") return errResponse({"isSuccess":false, "code":4003, "message":"fail updateBookMark Query"});
         logger.error(`App - Post Tag Service error\n: ${err.message}`);
         await connection.rollback() // 롤백
         return errResponse(baseResponse.DB_ERROR);
@@ -329,6 +333,9 @@ exports.postHeart=async function(userId,employmentId){
         await connection.commit();
         return response(baseResponse.SUCCESS);
     } catch(err){
+        if(err=="postHeartFail") return errResponse({"isSuccess":false,"code":4001,"message":"fail postHeart Query "});
+        if(err=="getHeartCountFail") return errResponse({"isSuccess":false,"code":4002,"message":"fail getHeartCount Query "});
+        if(err=="updateHeartCountFail") return errResponse({"isSuccess":false,"code":4003,"message":"fail updateHeartCountFail Query "});
         logger.error(`App - Post Heart Service error\n: ${err.message}`);
         await connection.rollback() // 롤백
         return errResponse(baseResponse.DB_ERROR);
@@ -348,12 +355,17 @@ exports.postFollow=async function(userId,companyId){
         const postFollowResult=await userDao.postFollow(connection,userId,companyId);
         console.log("1번 함수 호출성공")
         const followCount=await companyDao.getFollowCount(connection,companyId);
+        //TODO followCount <0
+        if(followCount<=0) return errResponse(baseResponse.FOLLOW_MINUS_ERROR);
         console.log("2번 함수 호출성공");
         console.log(followCount);
         const postFollowCountResult=await companyDao.updateFollowCount(connection,companyId,followCount);
         await connection.commit();
         return response(baseResponse.SUCCESS);
     } catch(err){
+        if(err=="postFollowFail")   return errResponse({"isSuccess":false,"code":4001,"message":"fail postFollow Query"});
+        if(err=="getFollowCountFail")   return errResponse({"isSuccess":false,"code":4001,"message":"fail getFollowCount Query"});
+        if(err=="updateFollowCountFail")   return errResponse({"isSuccess":false,"code":4001,"message":"fail updateFollowCount Query"});
         logger.error(`App - Post Heart Service error\n: ${err.message}`);
         await connection.rollback() // 롤백
         return errResponse(baseResponse.DB_ERROR);
@@ -378,13 +390,19 @@ exports.deleteBookMark=async function(userId,employmentId){
         console.log("1번 함수 호출성공")
         let BookMarkCount=await employmentDao.getBookMarkCount(connection,employmentId);
         BookMarkCount=BookMarkCount-1;
-        // TODO BookMarkCount가 0이하일때 error response;
+        
+        if(BookMarkCount<=0){
+            return errResponse(baseResponse.BOOKMARK_MINUS_ERROR);
+        }
         console.log("2번 함수 호출성공");
         console.log(BookMarkCount);
         const plusBookMarkCount=await employmentDao.updateBookMarkCount(connection,employmentId,BookMarkCount);
         await connection.commit();
         return response(baseResponse.SUCCESS);
     } catch(err){
+        if(err=="deleteBookMarkFail") return errResponse({"isSuccess": false,"code":4001,"message":"fail deleteBookMark Query"});
+        if(err=="getBookMarkCountFail") return errResponse({"isSuccess": false,"code":4002,"message":"fail getBookMarkCount Query"});
+        if(err=="updateBookMarkFail") return errResponse({"isSuccess": false,"code":4003,"message":"fail updateBookMark Query"});
         logger.error(`App - Delete BookMark Service error\n: ${err.message}`);
         await connection.rollback() // 롤백
         return errResponse(baseResponse.DB_ERROR);
@@ -415,6 +433,9 @@ exports.deleteHeart=async function(userId,employmentId){
         await connection.commit();
         return response(baseResponse.SUCCESS);
     } catch(err){
+        if(err=="deleteHeartFail") return errResponse({"isSuccess":false,"code":4001,"message":"fail deleteHeartFail Query"});
+        if(err=="getHeartCountFail") return errResponse({"isSuccess":false,"code":4002,"message":"fail getHeartCount Query"});
+        if(err=="updateHeartCountFail") return errResponse({"isSuccess":false,"code":4003,"message":"fail updateHeartCount Query"});
         logger.error(`App - Delete Heart Service error\n: ${err.message}`);
         await connection.rollback() // 롤백
         return errResponse(baseResponse.DB_ERROR);
@@ -442,6 +463,9 @@ exports.deleteFollow=async function(userId,companyId){
         await connection.commit();
         return response(baseResponse.SUCCESS);
     } catch(err){
+        if(err=="deleteFollowFail") return errResponse({"isSuccess":false,"code":4001,"message":"fail deleteFollow Query"});
+        if(err=="getFollowCountFail") return errResponse({"isSuccess":false,"code":4002,"message":"fail getFollowCount Query"});
+        if(err=="updateFollowCountFail") return errResponse({"isSuccess":false,"code":4003,"message":"fail updateFollowCount Query"});
         logger.error(`App - delete Follow Service error\n: ${err.message}`);
         await connection.rollback() // 롤백
         return errResponse(baseResponse.DB_ERROR);

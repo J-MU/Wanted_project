@@ -188,6 +188,12 @@ exports.getEmploymentPostData= async function (employmentId,userId) {
         connection.release();
         return totalData;
     }catch(err){
+        if(err="getEmploymentDetailFail") return errResponse({"isSuccess":false,"code":4001,"message":"fail getEmploymentDetail Query"});
+        if(err="getEmploymentImgsFail") return errResponse({"isSuccess":false,"code":4002,"message":"fail getEmploymentImgs Query"});
+        if(err="getCompanyDetailsFail") return errResponse({"isSuccess":false,"code":4003,"message":"fail getCompanyDetails Query"});
+        if(err="getCompanyTagFail") return errResponse({"isSuccess":false,"code":4004,"message":"fail getCompanyTagi Query"});
+        if(err="getRandomEmploymentsFail") return errResponse({"isSuccess":false,"code":4005,"message":"fail getRandomEmployments Query"});
+        if(err="getSkillsFail") return errResponse({"isSuccess":false,"code":4006,"message":"fail getSkills Query"});
         logger.error(`App - Get Filtering Employments Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
     }

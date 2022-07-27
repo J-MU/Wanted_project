@@ -60,6 +60,7 @@ exports.getCompanyDetails = async function (userId,companyId) {
     try {
         const totalData={};
         const connection = await pool.getConnection(async (conn) => conn);
+
         totalData.CompanyDetails = await companyDao.getCompanyDetails(connection,userId,companyId);
         const companyImgs=await companyDao.getCompanyImgs(connection,companyId);
         
@@ -86,6 +87,12 @@ exports.getCompanyDetails = async function (userId,companyId) {
 
     }
     catch(err) {
+        if(err=="getCompanyDetailsFail") return errResponse({"isSuccess":false,"code":4001,"message":"fail getCompanyDetails Query"});
+        if(err=="getCompanyImgsFail") return errResponse({"isSuccess":false,"code":4002,"message":"fail getCompanyImgs Query"});
+        if(err=="getCompaniesTagFail") return errResponse({"isSuccess":false,"code":4003,"message":"fail getCompaniesTag Query"});
+        if(err=="getEmploymentsOfCompanyFail") return errResponse({"isSuccess":false,"code":4004,"message":"fail getEmploymentsOfCompany Query"});
+        if(err=="getCompanyNewsFail") return errResponse({"isSuccess":false,"code":4005,"message":"fail getCompanyNews Query"});
+        if(err=="getAnalysisEmployeeFail") return errResponse({"isSuccess":false,"code":4006,"message":"fail getAnalysisEmployee Query"});
         logger.error(`App - GET Company Details Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
     }

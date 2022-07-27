@@ -82,6 +82,8 @@ module.exports = {
     SKILLS_MUST_SEND_ARRAY:{"isSuccess": false, "code": 2504, "message": "SKILL을 배열로 보내주세요"},
     FILE_EMPTY:{"isSuccess": false, "code": 2505, "message": "File을 넣어주세요."},
     CANT_SEND_ONE_OF_COMPANYID_OR_COMPANYNAME:{"isSuccess": false, "code": 2506, "message": "companyId, companyName둘중 하나만보낼수는 없습니다."},
+    BOOKMARK_MINUS_ERROR:{"isSuccess": false, "code": 2507, "message": "BookMark는 minus가 될 수 없습니다."},
+    FOLLOW_MINUS_ERROR:{"isSuccess": false, "code": 2508, "message": "Follow는 minus가 될 수 없습니다."},
     // Response error
     SIGNUP_REDUNDANT_EMAIL : { "isSuccess": false, "code": 3001, "message":"중복된 이메일입니다." },
     SIGNUP_REDUNDANT_NICKNAME : { "isSuccess": false, "code": 3002, "message":"중복된 닉네임입니다." },

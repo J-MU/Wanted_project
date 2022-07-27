@@ -305,9 +305,10 @@ exports.postFollow = async function (req, res) {
     const userId = req.body.userId;
     const companyId=req.body.companyId;
    
-
+    if(!userId) return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+    if(!companyId) return res.send(errResponse(baseResponse.COMPANY_EMPTY));
     if (userIdFromJWT != userId) {
-        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+        return res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
     } else {
 
         const postFollowResult = await userService.postFollow(userId,companyId);
@@ -324,9 +325,10 @@ exports.deleteBookMark = async function (req, res) {
     const userId = req.params.userId;
     const employmentId=req.params.employmentId;
    
+    if(!userId) return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
 
     if (userIdFromJWT != userId) {
-        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+        return res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
     } else {
 
         const deleteBookMarkResult = await userService.deleteBookMark(userId,employmentId);
@@ -362,10 +364,11 @@ exports.deleteFollow = async function (req, res) {
 
     const userId = req.params.userId;
     const companyId=req.params.companyId;
-   
+   if(!userId)      return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+   if(!companyId)   return res.send(errResponse(baseResponse.COMPANY_EMPTY));
 
     if (userIdFromJWT != userId) {
-        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+        return res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
     } else {
 
         const deleteFollowResult = await userService.deleteFollow(userId,companyId);

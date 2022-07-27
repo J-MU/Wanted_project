@@ -1,5 +1,5 @@
 async function getFollowCount(connection,companyId){
-  
+    let getFollowCountResult;
     const getFollowCountQuery = `
 
         SELECT followCount
@@ -8,20 +8,28 @@ async function getFollowCount(connection,companyId){
     `;
 
     console.log(getFollowCountQuery);
-    const getFollowCountResult = await connection.query(getFollowCountQuery);
+    try{
+        getFollowCountResult = await connection.query(getFollowCountQuery);
+    }catch(err){
+        throw "getFollowCountFail";
+    }
     const FollowCount=getFollowCountResult[0][0].followCount;
     return FollowCount;
   
 }
 
 async function updateFollowCount(connection,companyId,followCount) {
-    
+    let updateFollowCountResult;
     const updateFollowCountQuery = `
             UPDATE WANTED.Companies
             SET Companies.followCount=${followCount}
             WHERE Companies.companyId=${companyId};
          `;
-    const updateFollowCountResult = await connection.query(updateFollowCountQuery);
+    try{
+        updateFollowCountResult = await connection.query(updateFollowCountQuery);
+    }catch(err){
+        throw "updateFollowCountFail";
+    }
     
     return updateFollowCountResult[0];
 }
@@ -61,6 +69,8 @@ async function getCompaniesUsingTag (connection,tagId,userId) {
 
 
 async function getCompaniesTag (connection,companyId) {
+    let companyTagsRows;
+
     const  getCompaniesTagQuery = `
         SELECT CompanyTags.tagId,name FROM Companies
         LEFT JOIN CompanyTagsMapping ON Companies.CompanyId=CompanyTagsMapping.companyId
@@ -68,7 +78,11 @@ async function getCompaniesTag (connection,companyId) {
         WHERE Companies.CompanyId=${companyId};
     `;
 
-    const  companyTagsRows = await connection.query(getCompaniesTagQuery);
+    try{
+        companyTagsRows = await connection.query(getCompaniesTagQuery);
+    }catch(err){
+        throw "getCompaniesTagFail";
+    }
 
     return  companyTagsRows[0];
 }
@@ -102,6 +116,7 @@ async function getRandomTags (connection,tagId) {
     return  randomTags[0];
 }
 async function getCompanyDetails(connection,userId,companyId){
+    let companyDetails;
     const  getCompanyDetailsQuery = `
         SELECT 
             companyName,
@@ -116,7 +131,11 @@ async function getCompanyDetails(connection,userId,companyId){
         WHERE Companies.CompanyId=${companyId};  
     `;
 
-    const  companyDetails = await connection.query(getCompanyDetailsQuery);
+    try{
+        companyDetails = await connection.query(getCompanyDetailsQuery);
+    }catch(err){
+        throw "getCompanyDetailsFail";
+    }
 
     console.log("companyDetails: ");
     console.log(companyDetails[0]);
@@ -126,6 +145,7 @@ async function getCompanyDetails(connection,userId,companyId){
 
 
 async function getCompanyImgs(connection,companyId){
+    let companyImgs;
     const  getCompanyImgsQuery = `
         SELECT
             imgUrl
@@ -133,7 +153,11 @@ async function getCompanyImgs(connection,companyId){
         WHERE companyId=${companyId}; 
     `;
 
-    const  companyImgs = await connection.query(getCompanyImgsQuery);
+    try{
+        companyImgs = await connection.query(getCompanyImgsQuery);
+    }catch(err){
+        throw "getCompanyImgsFail";
+    }
 
     console.log("companyImgs: ");
     console.log(companyImgs[0]);
@@ -143,6 +167,7 @@ async function getCompanyImgs(connection,companyId){
 
 
 async function getEmploymentsOfCompany(connection,userId,companyId){
+    let employmentsOfCompany;
     const  getEmploymentsOfCompanyQuery = `
             SELECT
                 Employments.employmentId,
@@ -161,7 +186,11 @@ async function getEmploymentsOfCompany(connection,userId,companyId){
             LIMIT 4;
     `;
 
-    const  employmentsOfCompany = await connection.query(getEmploymentsOfCompanyQuery);
+    try{
+        employmentsOfCompany = await connection.query(getEmploymentsOfCompanyQuery);
+    }catch(err){
+        throw "getEmploymentsOfCompanyFail";
+    }
 
     console.log("employmentsOfCompany: ");
     console.log(employmentsOfCompany[0]);
