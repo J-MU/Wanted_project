@@ -68,62 +68,81 @@ async function insertUserInfo(connection, insertUserInfoParams) {
 
 // JobCategory설정 funtion1
 async function insertJobGroupCategoryInfo(connection,profileId,categoryId) {
+  let insertJobCategoryInfoRow;
   console.log('insertJobCategoryInfo 함수 호출 완료.');
   const insertJobCategoryInfoQuery = `
         INSERT INTO profileJobGroupMapping(profileId,categoryId)
         VALUES (${profileId},${categoryId});
     `;
-  const insertJobCategoryInfoRow = await connection.query(
-    insertJobCategoryInfoQuery,
-    profileId,
-    categoryId
-  );
+  try{
+    insertJobCategoryInfoRow = await connection.query(
+      insertJobCategoryInfoQuery,
+      profileId,
+      categoryId
+    );
+  }catch(err){
+    throw "insertJobGroupCategoryFail";
+  }
+  
 
   return insertJobCategoryInfoRow;
 }
 
 async function insertJobCategoryInfo(connection,profileId,categoryId) {
+  let insertJobCategoryInfoRow;
   console.log('insertJobCategoryInfo 함수 호출 완료.');
   const insertJobCategoryInfoQuery = `
         INSERT INTO profileJobMapping(profileId,categoryId)
         VALUES (${profileId},${categoryId});
     `;
-  const insertJobCategoryInfoRow = await connection.query(
-    insertJobCategoryInfoQuery,
-    profileId,
-    categoryId
-  );
-
+  try{
+    insertJobCategoryInfoRow = await connection.query(
+      insertJobCategoryInfoQuery,
+      profileId,
+      categoryId
+    );
+    
+  }catch(err){
+    throw "insertJobCategoryFail"
+  }
   return insertJobCategoryInfoRow;
 }
 
 async function insertUserSkills(connection,userId,skillId) {
+  let insertUserSkillResult;
   console.log('insertUserSkills 함수 호출 완료.');
   const insertUserSkillsQuery = `
         INSERT INTO userSkills(userId,skillId)
         VALUES (${userId},${skillId});
     `;
-  const insertUserSkillResult = await connection.query(
-    insertUserSkillsQuery,
-    userId,
-    skillId
-  );
+  try{
+    insertUserSkillResult = await connection.query(
+      insertUserSkillsQuery,
+      userId,
+      skillId
+    );
+  }catch(err){
+    throw "insertUserSkillResult";
+  }
 
   return insertUserSkillResult;
 }
 
 async function insertProfileInfo(connection,userId,career) {
-    const insertProfileInfoQuery = `
+  let insertProfileInfoResult;  
+  const insertProfileInfoQuery = `
       INSERT INTO Profiles(userId,career)
       VALUES (${userId},${career});
     `;
-
-    const insertProfileInfoResult = await connection.query(
-      insertProfileInfoQuery,
-      userId,
-      career
-    );
-
+  try{
+      insertProfileInfoResult = await connection.query(
+        insertProfileInfoQuery,
+        userId,
+        career
+      );
+    }catch(err){
+      throw "insertProfileFail";
+    }
     return insertProfileInfoResult;
 }
 
@@ -273,7 +292,7 @@ async function deleteFollow(connection,userId,companyId){
 }
 
 async function updateUserState(connection,userId,stepLevel){
-
+  let updateResult;
   const updateUserStateQuery=`
     UPDATE Users
     SET status="${stepLevel}"
@@ -281,8 +300,11 @@ async function updateUserState(connection,userId,stepLevel){
   `
 
   console.log(updateUserStateQuery);
-  const updateResult=await connection.query(updateUserStateQuery);
-
+  try{
+    updateResult=await connection.query(updateUserStateQuery);
+  }catch(err){
+    throw "updateUserStateFail"
+  }
 
 
   return updateResult;
