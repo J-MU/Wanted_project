@@ -173,6 +173,11 @@ exports.postJobCatgory=async function(userId,jobGroupId,jobId,career,skills){
         return response(baseResponse.SUCCESS);
     }catch(err){
         connection.rollback();
+        if(err=="insertProfileFail")  return errResponse({"isSuccess":false, "code":4001, "message":"fail insertProfile Query"});
+        if(err=="insertJobGroupCategoryFail") return errResponse({"isSuccess":false, "code":4002, "message":"fail insertJobGroupCategory Query"});
+        if(err=="insertJobCategoryFail") return errResponse({"isSuccess":false, "code":4003, "message":"fail insertJobCategory Query"});
+        if(err=="updateUserStateFail") return errResponse({"isSuccess":false, "code":4004, "message":"fail updateUserStateFail Query"});
+        if(err=="insertUserSkillResult") return errResponse({"isSuccess":false, "code":4005, "message":"fail insertUserSkillResult Query"});
         logger.error(`App - Post postJobCatgory Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
     }finally{
