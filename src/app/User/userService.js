@@ -69,7 +69,8 @@ exports.createUser = async function (name, phoneNumber, email, password, IsAccep
 
 
     } catch (err) {
-
+        if(err=="EmailCheck err")  return errResponse({"isSuccess":false, "code":4100, "message":"fail emailCheck Query"});
+        if(err=="phoneNumberCheck Query Err")  return errResponse({"isSuccess":false, "code":4101, "message":"phoneNumberCheck Query Err"});
         connection.rollback();
         logger.error(`App - createUser Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);

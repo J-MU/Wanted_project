@@ -9,11 +9,18 @@ const userDao = require("../User/userDao");
 
 //이력서 전체 조회
 exports.getResumes = async function(userId) {
-    const connection = await pool.getConnection(async (conn) => conn);
-    const getResumesResult = await resumeDao.getResumes(connection,userId);
-    connection.release();
+    try {
+        const connection = await pool.getConnection(async (conn) => conn);
+        const getResumesResult = await resumeDao.getResumes(connection, userId);
+        connection.release();
 
-    return response(baseResponse.SUCCESS,getResumesResult);
+        return response(baseResponse.SUCCESS, getResumesResult);
+    }
+    catch(err) {
+        if(err=="getResumes Query err") return errResponse({"isSuccess":false, "code":4108, "message":"getResumes Query err"});
+        logger.error(`App - createUser Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
 };
 
 //이력서 조회

@@ -15,16 +15,17 @@ async function selectUser(connection) {
 
 // 이메일로 회원 조회
 async function selectUserEmail(connection, email) {
+  var emailRows
   try {
       const selectUserEmailQuery = `
         SELECT email
         FROM Users
         WHERE email = '${email}';
       `;
-    const emailRows = await connection.query(selectUserEmailQuery, email);
+    emailRows = await connection.query(selectUserEmailQuery, email);
   }
   catch (err){
-
+    throw "EmailCheck err"
   }
     return emailRows[0];
 }
@@ -503,14 +504,19 @@ async function cancleApplication(connection,applicationId){
 }
 
 async function phoneNumberCheck(connection, phoneNumber) {
-  const phoneNumberCheckQuery=`
-    select userId
-    from Users
-    WHERE phoneNumber = ?;
-  `;
+  var phoneNumberCheckResult
+  try {
+    const phoneNumberCheckQuery = `
+      select userId
+      from Users
+      WHERE phoneNumber = ?;
+    `;
 
-  const phoneNumberCheckResult=await connection.query(phoneNumberCheckQuery, phoneNumber);
-
+     phoneNumberCheckResult = await connection.query(phoneNumberCheckQuery, phoneNumber);
+  }
+  catch(err) {
+    throw "phoneNumberCheck Query Err"
+  }
   return phoneNumberCheckResult[0];
 
 }

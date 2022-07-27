@@ -13,7 +13,7 @@ const {emit} = require("nodemon");
  */
 
 exports.getPosts = async function (req, res) {
-    console.log("Controller 들어옴.");
+
     // const userId=req.verifiedToken.userId
     let token = req.verifiedToken;
     if(!token) {
@@ -28,9 +28,9 @@ exports.getPosts = async function (req, res) {
     // else {
     //     console.log('False')
     // }
-    console.log("Provider 호출");
+
     const getPostsResponse = await postProvider.getPosts(token);
-    console.log("Provider호출 완료");
+
     return res.send(getPostsResponse);
 
 };

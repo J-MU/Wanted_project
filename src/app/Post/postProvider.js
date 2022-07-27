@@ -133,6 +133,12 @@ exports.getPosts = async function (token) {
         }
     }
     catch(err){
+        if(err=="carousel Query err") return errResponse({"isSuccess":false, "code":4102, "message":"carousel Query err"});
+        if(err="insitePostTags Query err") return errResponse({"isSuccess":false, "code":4103, "message":"insitePostTags Query err"});
+        if(err=="insitePosts Query err") return errResponse({"isSuccess":false, "code":4104, "message":"insitePosts Query err"});
+        if(err=="articlePosts Query err") return errResponse({"isSuccess":false, "code":4105, "message":"articlePosts Query err"});
+        if(err=="articlePostTags Query err") return errResponse({"isSuccess":false, "code":4106, "message":"articlePostTags Query err"});
+        if(err=="vodPosts Query err") return errResponse({"isSuccess":false, "code":4107, "message":"vodPosts Query err"});
         logger.error(`App - Get PostTags Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
     }

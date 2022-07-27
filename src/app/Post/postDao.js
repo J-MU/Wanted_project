@@ -1,34 +1,42 @@
 const util = require('util')
+const {errResponse} = require("../../../config/response");
 
 //배너 사진 가져오기 3개 가져오기 랜덤으로 배열에 담음
 async function getCarousel(connection) {
-    console.log("getCarousel에서 죽음?");
+    var carouselRow
+    try {
+        const getCarouselQuery = `
+            select imgUrl, title as carouseTitle, content, link
+            from Carousel
+            where page = 'MAIN_PAGE'
+            order by rand() limit 6;
+        `;
 
-    const getCarouselQuery = `
-    select imgUrl, title as carouseTitle, content, link
-    from Carousel
-    where page='MAIN_PAGE'
-    order by rand() limit 6;    
-    `;
-
-    const carouselRow = await connection.query(getCarouselQuery);
-    console.log("getCarousel끝나기 직전");
+       carouselRow = await connection.query(getCarouselQuery);
+    }
+    catch(err) {
+        throw "carousel Query err"
+    }
     return carouselRow[0]
 }
 
 //postTags 가져오기
 async function getInsitePostTags(connection) {
-
-
+    var PostTagsRow
+try {
     const getPostTagsQuery = `
-        select tagId,name 
+        select tagId, name
         from postTags
-        where tagId<19
+        where tagId < 19
         order by rand() limit 9;
     `;
-    const PostTagsRow = await connection.query(getPostTagsQuery);
-    return PostTagsRow[0];
+    PostTagsRow = await connection.query(getPostTagsQuery);
+}
+catch(err) {
+    throw "insitePostTags Query err"
+}
 
+    return PostTagsRow[0];
 }
 
 //interestedTags 가져오기
@@ -72,53 +80,63 @@ async function getInsitePostInterestedTags(connection, userId) {
 
 //태그 가져오기 9개. 거기서 첫번째 태그 포스트 9개 넣기.
 async function getInsitePosts(connection, tagId) {
-
-
-    console.log("tagId:",tagId);
+var getInsitePostsRow
+try {
+    console.log("tagId:", tagId);
     const getInsitePostsQuery = `
-    select postThumbnailUrl, postName, postContent, writer, pf.platformImgUrl
-    from insitePosts
-    inner join platforms as pf on insitePosts.platformId = pf.platformId
-    where tagId=?
-    limit 4;
+        select postThumbnailUrl, postName, postContent, writer, pf.platformImgUrl
+        from insitePosts
+                 inner join platforms as pf on insitePosts.platformId = pf.platformId
+        where tagId = ? limit 4;
     `;
 
-    
 
-    const  getInsitePostsRow = await connection.query(getInsitePostsQuery,tagId);
+    getInsitePostsRow = await connection.query(getInsitePostsQuery, tagId);
+}
+catch(err) {
+    throw "insitePosts Query err"
+}
+
     return getInsitePostsRow[0];
 }
 
 
 // article 불러오기
 async function getArticlePosts(connection, params) {
-
-    console.log(params)
-    const getArticlePostsQuery=`
-    select postId, postThumbnailUrl,  postImgUrl, title
-    from articlePosts
-    inner join articleTagsMapping aTM on articlePosts.postId = aTM.articlePostId
-    where tagId =${params[1]} and startDate is null
-    order by rand() limit ${params[0]};
-    `;
-    const [articlePostsRow] = await connection.query(getArticlePostsQuery,params);
-
-    console.log(articlePostsRow)
-    var resultRow = [];
-    for (var i=0; i<params[0]; i++) {
-        var articlePostId = articlePostsRow[i].postId;
-        const getArticlePostTagsQuery=`
-        select concat("#",name) as name, postTags.tagId
-        from postTags
-        inner join articleTagsMapping as aTM on postTags.tagId = aTM.tagId
-        where (aTM.articlePostId=${articlePostId}) ;
-    `;
-
-        const articleTagsRow = await connection.query(getArticlePostTagsQuery,articlePostId)
-        articlePostsRow[i].postTags = articleTagsRow[0];
-        resultRow.push(articlePostsRow[i]);
+    let articlePostsRow
+    let resultRow = [];
+    let articleTagsRow
+    try {
+        const getArticlePostsQuery = `
+            select postId, postThumbnailUrl, postImgUrl, title
+            from articlePosts
+                     inner join articleTagsMapping aTM on articlePosts.postId = aTM.articlePostId
+            where tagId = ${params[1]}
+              and startDate is null
+            order by rand() limit ${params[0]};
+        `;
+        [articlePostsRow] = await connection.query(getArticlePostsQuery, params);
     }
-    console.log(resultRow)
+catch(err) {
+        throw "articlePosts Query err"
+} try {
+        for (let i = 0; i < params[0]; i++) {
+            let articlePostId = articlePostsRow[i].postId;
+            const getArticlePostTagsQuery = `
+                select concat("#", name) as name, postTags.tagId
+                from postTags
+                         inner join articleTagsMapping as aTM on postTags.tagId = aTM.tagId
+                where (aTM.articlePostId = ${articlePostId});
+            `;
+
+            articleTagsRow = await connection.query(getArticlePostTagsQuery, articlePostId)
+            articlePostsRow[i].postTags = articleTagsRow[0];
+            resultRow.push(articlePostsRow[i]);
+        }
+    }
+    catch(err) {
+        throw "articlePostTags Query err"
+    }
     //console.log(util.inspect(resultRow, {showHidden: false, depth: null,  colors: true}));
     return resultRow
 
@@ -127,17 +145,20 @@ async function getArticlePosts(connection, params) {
 //vod 불러오기
 
 async function getVodPosts(connection, params) {
-
-
+let vodPostsRow
+try {
     const getVodPostsQuery = `
-    select postId, talkerName, LEFT(title,35) as title, LEFT(subtitle,23) as subtitle, thumnailImgUrl
-    from vodPosts
-    where tagId=${params[1]}
-    order by rand() limit ${params[0]};
+        select postId, talkerName, LEFT (title, 35) as title, LEFT (subtitle, 23) as subtitle, thumnailImgUrl
+        from vodPosts
+        where tagId=${params[1]}
+        order by rand() limit ${params[0]};
     `;
 
-    const vodPostsRow = await connection.query(getVodPostsQuery,params);
-
+    vodPostsRow = await connection.query(getVodPostsQuery, params);
+}
+catch(err){
+    throw "vodPosts Query err"
+}
     return vodPostsRow[0];
 }
 

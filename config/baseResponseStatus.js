@@ -66,6 +66,7 @@ module.exports = {
     INPUTMAJOR_ERROR :  {"isSuccess": false, "code": 2404, "message": "전공 및 학위를 작성해주세요"},
     FAILED_ERROR : {"isSuccess": false, "code": 2405, "message": "작성완료를 하려면 빈 칸을 채워주세요."},
     AWARDSNAME_EMPTY : {"isSuccess": false, "code": 2406, "message": "활동명을 입력해주세요."},
+    RESUME_USERID_EMPTY : {"isSuccess": false, "code": 2407, "message": "userId를 입력해주세요."},
     //company : 2150
     COMPANYNAME_EMPTY : {"isSuccess": false, "code": 2150, "message": "회사이름을 입력해주세요"},
     COMPANY_TAG_TOO_MANY: {"isSuccess": false, "code": 2151, "message": "company tag는 3개까지 선택 가능합니다."},
