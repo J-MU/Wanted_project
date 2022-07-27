@@ -355,6 +355,8 @@ exports.postFollow=async function(userId,companyId){
         const postFollowResult=await userDao.postFollow(connection,userId,companyId);
         console.log("1번 함수 호출성공")
         const followCount=await companyDao.getFollowCount(connection,companyId);
+        followCount+=1;
+        
         //TODO followCount <0
         if(followCount<=0) return errResponse(baseResponse.FOLLOW_MINUS_ERROR);
         console.log("2번 함수 호출성공");
