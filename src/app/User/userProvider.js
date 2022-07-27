@@ -124,10 +124,12 @@ exports.getProfileDataSTEP2 = async function (userId,userStatus) {
     const userName=await userDao.getUserNameUsingUserId(connection,userId);
     console.log(userName);
     const profileObject=await userDao.getProfileInfoUsingUserId(connection,userId);
-    const profileId=profileObject.profileId;
-    const career=profileObject.career;
+    const profileId=profileObject[0].profileId;
+    const career=profileObject[0].career;
     
     console.log("ProfileObject:",profileObject);
+    console.log("profileId: ",profileId);
+    console.log("career: ",career);
     const jobName=await jobProvider.getJobNameUsingProfileId(profileId);
     const totalData={};
 
