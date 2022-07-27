@@ -15,7 +15,7 @@ const ENTRANT=2; //입사자 수
 const RETIREE=3; // 퇴사자 수
 
 
-exports.getAnalysisEmployee=async function(period,analysisType,companyId){getAnalysisEmployeeFail
+exports.getAnalysisEmployee=async function(period,analysisType,companyId){
     
     console.log(period,analysisType);
     let periodArray=[];
