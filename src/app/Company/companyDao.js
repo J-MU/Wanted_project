@@ -46,6 +46,7 @@ async function getCompanies (connection) {
 }
 
 async function getCompaniesUsingTag (connection,tagId,userId) {
+    let companyRows;
     const  getCompaniesUsingTagQuery = `
         SELECT 
             Companies.companyId,
@@ -61,8 +62,11 @@ async function getCompaniesUsingTag (connection,tagId,userId) {
         LEFT JOIN CompanyTags CT on CTM.tagId = CT.tagId
         WHERE CT.tagId=${tagId};
     `;
-
-    const  companyRows = await connection.query(getCompaniesUsingTagQuery);
+    try{
+        companyRows = await connection.query(getCompaniesUsingTagQuery); 
+    }catch(err){
+        throw "getCompaniesUsingTagFail";
+    }
 
     return  companyRows[0];
 }
@@ -89,18 +93,26 @@ async function getCompaniesTag (connection,companyId) {
 
 
 async function getTagInfo (connection,tagId) {
+    let tagInfo;
     const  getTagInfoQuery = `
         select tagId,name from CompanyTags
         where tagId=${tagId};
     `;
 
-    const  tagInfo = await connection.query(getTagInfoQuery);
+    try{
+        tagInfo = await connection.query(getTagInfoQuery);
+
+    }catch(err){
+        throw "getTagInfoFail";
+    }
 
     return  tagInfo[0][0];
 }
 
 
 async function getRandomTags (connection,tagId) {
+    let randomTags;
+
     const  getRandomTagsQuery = `
         select tagId,name from CompanyTags
         WHERE tagId!=${tagId}
@@ -108,7 +120,11 @@ async function getRandomTags (connection,tagId) {
         LIMIT 4;
     `;
 
-    const  randomTags = await connection.query(getRandomTagsQuery);
+    try{
+        randomTags = await connection.query(getRandomTagsQuery);
+    }catch(err){
+        throw "getRandomTagsFail";
+    }
 
    console.log("RandomTags: ");
    console.log(randomTags[0]);
@@ -200,6 +216,8 @@ async function getEmploymentsOfCompany(connection,userId,companyId){
 
 
 async function getCompanyNews(connection,companyId){
+    let companyNews;
+
     const  getCompanyNewsQuery = `
         select newsName,newsFullUrl,newsUrl,uploadDate from CompanyNews
         LEFT JOIN Companies C on CompanyNews.companyId = C.CompanyId
@@ -207,7 +225,11 @@ async function getCompanyNews(connection,companyId){
         LIMIT 4;
     `;
 
-    const  companyNews = await connection.query(getCompanyNewsQuery);
+    try{
+        companyNews = await connection.query(getCompanyNewsQuery);
+    }catch(err){
+        throw "getCompanyNewsFail";
+    }
 
     console.log("companyNews: ");
     console.log(companyNews[0]);

@@ -123,7 +123,7 @@ exports.getProfileDataSTEP2 = async function (userId,userStatus) {
     // 4. 2번과 3번에서 불러온 jobName과 career를 통해 default self_introduction을 생성한다.
     const userName=await userDao.getUserNameUsingUserId(connection,userId);
     console.log(userName);
-    const profileObject=await getProfileInfoUsingUserId(userId);
+    const profileObject=await userDao.getProfileInfoUsingUserId(userId);
     const profileId=profileObject.profileId;
     const career=profileObject.career;
     
