@@ -136,9 +136,9 @@ exports.getProfileDataSTEP2 = async function (userId,userStatus) {
     let self_introduction;
     if(career==0)
     {
-        self_introduction="안녕하세요. 신입 "+jobName+"입니다.";    
+        self_introduction="안녕하세요. 신입 "+jobName[0]+"입니다.";    
     }else{
-        self_introduction="안녕하세요. "+career+"년차 "+jobName+"입니다.";
+        self_introduction="안녕하세요. "+career+"년차 "+jobName[0]+"입니다.";
     }
     let resumeName=`${userName}`+" 1";
 
