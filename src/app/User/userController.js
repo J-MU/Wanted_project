@@ -98,19 +98,16 @@ exports.postJobCatgory=async function(req,res){
     console.log(typeof userId);
     console.log(typeof JobGroupId);
     console.log(Array.isArray(skills));
-    
-    //NULL 체크
-    if(!userId)
-         return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
 
-    if(!JobGroupId)
-        return res.send(errResponse(baseResponse.JOB_GROUP_EMPTY));
-
-    if(!JobId)
-         return res.send(errResponse(baseResponse.JOB_EMPTY));
-
-    if(!career)
-        return res.send(errResponse(baseResponse.CAREER_EMPTY));
+    // NULL 체크
+    if(!req.body)   return res.send(errResponse(baseResponse.BODY_EMPTY));
+    if(!userId)     return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+    if(!JobGroupId) return res.send(errResponse(baseResponse.JOB_GROUP_EMPTY));
+    if(!JobId)      return res.send(errResponse(baseResponse.JOB_EMPTY));
+    if(!career)     return res.send(errResponse(baseResponse.CAREER_EMPTY));
+    if(!skills)     return res.send(errResponse(baseResponse.SKILLS_NOT_EXIST));
+    if(!Array.isArray(skills))   return res.send(errResponse(baseResponse.SKILLS_MUST_SEND_ARRAY));
+    if(skills.length<=0)    return res.send(errResponse(baseResponse.SKILLS_EMPTY));
 
     console.log(req.body);
 
