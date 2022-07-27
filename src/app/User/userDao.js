@@ -240,7 +240,7 @@ async function postBookMark(connection,userId,employmentId){
   return postBookMarkResult;
 }
 
-async function postHeart(connection,userId,employmentId){postHeartFail
+async function postHeart(connection,userId,employmentId){
   let postHeartResult;
   const postHeartQuery=`
     INSERT INTO Heart(userId, employmentId)

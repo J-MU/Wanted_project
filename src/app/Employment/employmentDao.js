@@ -162,6 +162,7 @@ async function getHeartCount(connection,employmentId) {
             WHERE employmentId=${employmentId}
          `;
     try{
+        console.log(getHeartCountQuery);
         heartCountResult = await connection.query(getHeartCountQuery);
     }catch(err){
         throw "getHeartCountFail";
