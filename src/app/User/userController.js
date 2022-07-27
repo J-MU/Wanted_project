@@ -132,6 +132,8 @@ exports.postJobCatgory=async function(req,res){
 exports.postDefaultResume=async function(req,res){
     console.log("test1");
     console.log("이게 맞긴 해..?");
+    const userIdFromJWT = req.verifiedToken.userId;
+    let postSchoolAndCompanyResponse;
     //school->education
     //company->profiles
     /* email, 휴대폰 번호, self_introduction, 경력(회사명, 기간, 현재 재직 유무),학교,
@@ -143,30 +145,25 @@ exports.postDefaultResume=async function(req,res){
     
     // company,skills는 NULL가능
     //NULL 체크
-    if(!schoolName) //학교는 필수.
-        return res.send(errResponse(baseResponse.EDUCATION_NAME_EMPTY));
+    if(!schoolName) return res.send(errResponse(baseResponse.EDUCATION_NAME_EMPTY));
+    if(!email)  return res.send(errResponse(baseResponse.SIGNUP_EMAIL_EMPTY));
+    if(!telephone)  return res.send(errResponse(baseResponse.SIGNUP_PHONENUMBER_EMPTY));
+    if(!jobId)  return res.send(errResponse(baseResponse.JOB_EMPTY));
+    if(!career) return res.send(errResponse(baseResponse.CAREER_EMPTY));
+    if(!userId) return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+    if(!userName)   return res.send(errResponse(baseResponse.USER_NAME_EMPTY));
+    if((!companyId && companyName) || (companyId && !companyName) ) return res.send(errResponse(baseResponse.CANT_SEND_ONE_OF_COMPANYID_OR_COMPANYNAME));
+    
+    if (userIdFromJWT != userId) {
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } else {
 
-    if(!email)
-        return res.send(errResponse(baseResponse.SIGNUP_EMAIL_EMPTY));
+        postSchoolAndCompanyResponse = await userService.postDefaultResume(
+            userId,userName,email,telephone,jobId,career,companyId,companyName,schoolName,skills
+        );
+        
+    }
     
-    if(!telephone)
-        return res.send(errResponse(baseResponse.SIGNUP_PHONENUMBER_EMPTY));
-    
-    if(!jobId)
-        return res.send(errResponse(baseResponse.JOB_EMPTY));
-    
-    if(!career)
-        return res.send(errResponse(baseResponse.CAREER_EMPTY));
-    
-    if(!userId)
-        return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
-
-    if(!userName)
-        return res.send(errResponse(baseResponse.USER_NAME_EMPTY));
-
-    const postSchoolAndCompanyResponse = await userService.postDefaultResume(
-        userId,userName,email,telephone,jobId,career,companyId,companyName,schoolName,skills
-    );
 
     return res.send(postSchoolAndCompanyResponse);
 }
@@ -179,7 +176,7 @@ exports.postInterestedTags = async function (req, res) {
 
     if (!userId) return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
     if(!postTagList) return res.send(errResponse(baseResponse.POST_TAG_EMPTY));
-
+    if(postTagList.length==0)   return res.send(response(baseResponse.SUCCESS_HAVE_NOT_WORKING));
 
     const postInterestedTagsResult = await userService.postInterestedTags(userId,postTagList);
     return res.send(response(baseResponse.SUCCESS));

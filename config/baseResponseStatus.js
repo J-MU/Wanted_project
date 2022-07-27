@@ -4,6 +4,7 @@ module.exports = {
     SUCCESS : { "isSuccess": true, "code": 1000, "message":"성공" },
     NO_REDUCTION_USER:{"isSuccess":true,"code":1001,"message":"중복 유저 없음"},
     HAVE_REDUCTION_USER:{"isSuccess":true,"code":1002,"message":"이미 가입된 유저"},
+    SUCCESS_HAVE_NOT_WORKING:{"isSuccess": true, "code": 1003, "message":"Parameter로 준 값이 없어 바로 완료되었습니다."},
     // Common
     TOKEN_EMPTY : { "isSuccess": false, "code": 2000, "message":"JWT 토큰을 입력해주세요." },
     TOKEN_VERIFICATION_FAILURE : { "isSuccess": false, "code": 3000, "message":"JWT 토큰 검증 실패" },
@@ -57,7 +58,8 @@ module.exports = {
     JOB_EMPTY:{"isSuccess": false, "code": 2301, "message": "직무를 입력해주세요"},
     OUT_OF_JOBGROUP_RANGE:{"isSuccess": false, "code": 2301, "message": "직군을 입력해주세요"},
     OUT_OF_JOB_RANGE:{"isSuccess": false, "code": 2301, "message": "직무를 입력해주세요"},
-    NOT_INHERITANCE_CATEGORIES:{"isSuccess": false, "code": 2301, "message": "직무를 입력해주세요"},
+    NOT_INHERITANCE_CATEGORIES:{"isSuccess": false, "code": 2301, "message": "jobGroup과 job이 상속관계가 아닙니다. 다시 확인해주세요"},
+    UNVALIDABLE_JOB_GROUP_ID:{"isSuccess": false, "code": 2302, "message": "유효하지 않은 JobGroupId입니다. "},
     //resume : 2400
     RESUMEID_EMPTY : {"isSuccess": false, "code": 2400, "message": "이력서ID를 입력해주세요"},
     SCHOOLNAME_EMPTY  : {"isSuccess": false, "code": 2401, "message": "학교이름을 입력해주세요"},
@@ -78,6 +80,7 @@ module.exports = {
     SKILLS_NOT_EXIST:{"isSuccess": false, "code": 2503, "message": "SKILL배열을 보내주세요"},
     SKILLS_MUST_SEND_ARRAY:{"isSuccess": false, "code": 2504, "message": "SKILL을 배열로 보내주세요"},
     FILE_EMPTY:{"isSuccess": false, "code": 2505, "message": "File을 넣어주세요."},
+    CANT_SEND_ONE_OF_COMPANYID_OR_COMPANYNAME:{"isSuccess": false, "code": 2506, "message": "companyId, companyName둘중 하나만보낼수는 없습니다."},
     // Response error
     SIGNUP_REDUNDANT_EMAIL : { "isSuccess": false, "code": 3001, "message":"중복된 이메일입니다." },
     SIGNUP_REDUNDANT_NICKNAME : { "isSuccess": false, "code": 3002, "message":"중복된 닉네임입니다." },

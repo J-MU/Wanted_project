@@ -200,12 +200,18 @@ async function getJobGroupCategories(connection){
 }
 
 async function postInterestedTags(connection,userId,postTagId){
+  let postInterestedTagsResult;
+
   const postInterestedTagsQuery=`
     INSERT INTO UserPostTagMapping(userId, postTagId)
     VALUES  (${userId},${postTagId});
   `
   console.log(postInterestedTagsQuery);
-  const postInterestedTagsResult=await connection.query(postInterestedTagsQuery);
+  try{
+    postInterestedTagsResult=await connection.query(postInterestedTagsQuery);
+  }catch(err){
+    throw "postInterestedTagFail";
+  }
   return postInterestedTagsResult;
 }
 

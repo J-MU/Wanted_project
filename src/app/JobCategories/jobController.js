@@ -14,9 +14,11 @@ const {emit} = require("nodemon");
 exports.getJobCategories = async function (req, res) {
     const jobGroupId=req.params.jobgroupid; //TODO jobGroupId 가 유효한지 validation
 
-    const matchingJobCategories=await jobProvider.getJobCategories(
-        jobGroupId
-    );
+    const checkJobGroupIdValidable=await jobProvider.checkJobGroupIdValidable(jobGroupId);
+    if(checkJobGroupIdValidable.length<=0)
+        return res.send(errResponse(baseResponse.UNVALIDABLE_JOB_GROUP_ID));
+        
+    const matchingJobCategories=await jobProvider.getJobCategories(jobGroupId);
     
     return res.send(response(baseResponse.SUCCESS,matchingJobCategories))
 }

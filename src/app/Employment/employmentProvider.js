@@ -181,7 +181,7 @@ exports.getEmploymentPostData= async function (employmentId,userId) {
         const companyId=totalData.employmentDetails.companyId;
         totalData.companyData=await employmentDao.getCompanyDetails(connection,companyId,userId);
         totalData.companyData.companyTag=await employmentDao.getCompanyTag(connection,companyId);
-        
+        totalData.randomEmployments=await employmentDao.getRandomEmployments(connection,userId);
         totalData.employmentDetails.skills=await employmentDao.getSkills(connection,employmentId);
         console.log(totalData);
 

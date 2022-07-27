@@ -8,7 +8,7 @@ const userDao = require("./userDao");
 const resumeDao = require("../Resume/resumeDao");
 const employmentDao=require("../Employment/employmentDao.js");
 const companyDao=require("../Company/companyDao.js");
-
+const jobProvider=require("../JobCategories/jobProvider");
 const baseResponse = require("../../../config/baseResponseStatus");
 const {response} = require("../../../config/response");
 const {errResponse} = require("../../../config/response");
@@ -124,6 +124,10 @@ exports. postSignIn = async function (email, password) {
         return response(baseResponse.SUCCESS, {'userId': userInfoRows[0].userId, 'jwt': token});
 
     } catch (err) {
+        if(err=="emailCheckFail") return errResponse({"isSuccess":false, "code":4001, "message":"fail emailCheck Query"});
+        if(err=="passwordCheckFail") return errResponse({"isSuccess":false, "code":4002, "message":"fail epasswordCheck Query"});
+        if(err=="accountCheckFail") return errResponse({"isSuccess":false, "code":4002, "message":"fail accountCheck Query"});
+        
         logger.error(`App - postSignIn Service error\n: ${err.message} \n${JSON.stringify(err)}`);
         return errResponse(baseResponse.DB_ERROR);
     }
@@ -150,7 +154,10 @@ exports.postJobCatgory=async function(userId,jobGroupId,jobId,career,skills){
     
     // TODO : JobGroup 과 Job이 부모-자식 관계여야함. check 함수가 추가로 구현되어야함.
     const connection = await pool.getConnection(async (conn) => conn);
-
+    const isHeritance=await jobProvider.checkInheritanceJobandJobGroupCategory(jobGroupId,jobId);
+    console.log("isHeritance: ",isHeritance);
+    if(!isHeritance)
+        return errResponse(baseResponse.NOT_INHERITANCE_CATEGORIES);
     try{
         //,JobGroup,Job
         const getParam = await userDao.insertProfileInfo(connection,userId,career);
@@ -219,10 +226,11 @@ exports.postDefaultResume=async function(userId,userName,email,telephone,jobId,c
         console.log("Query3");
         const postEducationResult=await resumeDao.postResumeEducationInfo(connection,resumeId,schoolName);
         console.log("Query4");
-        for (let index = 0; index < skills.length; index++) {
-            const postResumeSkillResult=await resumeDao.postResumeSkillInfo(connection,resumeId,skills[index]);    
+        if(skills){
+            for (let index = 0; index < skills.length; index++) {
+                const postResumeSkillResult=await resumeDao.postResumeSkillInfo(connection,resumeId,skills[index]);    
+            }
         }
-
         const updateUserState=await userDao.updateUserState(connection,userId,"ACTIVE");
 
         await connection.commit() // 커밋
@@ -231,6 +239,13 @@ exports.postDefaultResume=async function(userId,userName,email,telephone,jobId,c
 
         return response(baseResponse.SUCCESS);
     } catch(err){
+        if(err="getJobNameFail") return errResponse({"isSuccess":false, "code":4001, "message":"fail getJobName Query"});
+        if(err="postResumeFail") return errResponse({"isSuccess":false, "code":4002, "message":"fail postResume Query"});
+        if(err="postResumeCareerFail") return errResponse({"isSuccess":false, "code":4003, "message":"fail postResumeCareer Query"});
+        if(err="postResumeEducationInfoFail") return errResponse({"isSuccess":false, "code":4004, "message":"fail postResumeEducationInfo Query"});
+        if(err="postResumeSkillInfoFail") return errResponse({"isSuccess":false, "code":4005, "message":"fail postResumeSkillInfo Query"});
+        if(err="updateUserStateFail") return errResponse({"isSuccess":false, "code":4006, "message":"fail updateUserState Query"});
+
         logger.error(`App - Post Job and JobGroup Service error\n: ${err.message}`);
         await connection.rollback() // 롤백
         return errResponse(baseResponse.DB_ERROR);
@@ -252,6 +267,8 @@ exports.postInterestedTags=async function(userId,postTagList){
         await connection.commit() // 커밋
         return response(baseResponse.SUCCESS);
     } catch(err){
+        if(err="postInterestedTagFail") return errResponse({"isSuccess":false, "code":4006, "message":"fail postInterestedTag Query"});
+        
         logger.error(`App - Post Tag Service error\n: ${err.message}`);
         await connection.rollback() // 롤백
         return errResponse(baseResponse.DB_ERROR);

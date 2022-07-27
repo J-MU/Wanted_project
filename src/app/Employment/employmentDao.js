@@ -220,7 +220,36 @@ async function getEmploymentDetails(connection,employmentId,userId) {
     
     return EmploymentDetailsData[0][0];
 }
+async function getRandomEmployments(connection,userId){
+    let randomEmployments;
+    const getRandomEmploymentsQuery=`
+            SELECT Employments.employmentId,
+            employmentImgUrl,
+            country,
+            jobName,
+            city,
+            (recommendedSigningBonus+Employments.recommenderSigningBonus) as SigningBonus,
+            IF(IsBookMark.userId,true,false) as isBookMark,
+            companyName
+        FROM Employments
+        LEFT JOIN Companies C on Employments.companyId = C.CompanyId
+        LEFT JOIN (
+                select * from WANTED.BookMark
+                where  status='ACTIVE'  AND userId=${userId}
+            )IsBookMark
+        on IsBookMark.employmentId=Employments.employmentId
+        ORDER BY RAND() LIMIT 8;
+    `
+    try{
+        randomEmployments=await connection.query(getRandomEmploymentsQuery);
+    }catch(err){
+        throw "getRandomEmploymentsFail";
+    }
+    
 
+    return randomEmployments[0];
+
+}
 async function getEmployments(connection,params) {
     console.log("Query 시작");
     console.log(params.userId);
@@ -539,6 +568,7 @@ async function getEmploymentsUsingCompanyId(connection,userId,companyId){
     getEmploymentsHavingHeart,
     getEmploymentsHavingBookMark,
     getEmploymentsUsingCompanyId,
+    getRandomEmployments,
 };
   
 

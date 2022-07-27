@@ -14,8 +14,9 @@ module.exports = function(app){
     app.post('/app/job',user.postJobCatgory);
 
     // 3. 회원가입(3페이지) Default Resume 생성.
-    app.post('/app/users/post-default-resume', user.postDefaultResume);
+    app.post('/app/users/post-default-resume',jwtMiddleware,user.postDefaultResume);  //바뀜
 
+    // 관심태그 설정 API
     app.post('/app/users/interestedTags',user.postInterestedTags);
    
     // 3. 특정 유저 조회 API
