@@ -13,15 +13,17 @@ const postProvider = require("../Post/postProvider");
  */
 
 exports.getResumes = async function (req, res) {
-    //TODO userId validation
 
     const userId = req.verifiedToken.userId;
-    const userId_login = req.body.userId_login;
+    const userId_login = req.params.userId;
 
-    console.log(userId)
-    console.log(userId_login)
+    if(!userId_login) {
+        return res.send(response(baseResponse.RESUME_USERID_EMPTY));
+    }
+
     if(userId_login!=userId) {
-        return response(baseResponse.USERTOKEN_VERIFICATION_FAILED);
+            return res.send(response(baseResponse.USER_ID_NOT_MATCH));
+
     }
 
     const getResumesResponse = await resumeProvider.getResumes(userId);
