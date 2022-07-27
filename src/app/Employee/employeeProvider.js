@@ -16,6 +16,7 @@ const RETIREE=3; // 퇴사자 수
 
 
 exports.getAnalysisEmployee=async function(period,analysisType,companyId){
+    
     console.log(period,analysisType);
     let periodArray=[];
     let periodFormatArray=[];
@@ -63,6 +64,9 @@ exports.getAnalysisEmployee=async function(period,analysisType,companyId){
 
     }
     catch(err) {
+        if(err=="getAnalysisTotalEmployeesFail") throw "getAnalysisTotalEmployeesFail";
+        if(err=="getAnalysisEntrantEmployeesFail") throw "getAnalysisEntrantEmployeesFail";
+        if(err=="getAnalysisRetireeEmployeesFail") throw "getAnalysisRetireeEmployeesFail";
         logger.error(`App - GET Company Details Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
     }

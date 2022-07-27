@@ -98,6 +98,7 @@ exports.getEmploymentPostData = async function (req, res) {    //TODO 로그인�
     if(req.verifiedToken){
         userId = req.verifiedToken.userId
     }
+    console.log("userId: ",userId);
     const employmentId=req.params.employmentId;
 
     

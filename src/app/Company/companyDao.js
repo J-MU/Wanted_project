@@ -1,5 +1,5 @@
 async function getFollowCount(connection,companyId){
-  
+    let getFollowCountResult;
     const getFollowCountQuery = `
 
         SELECT followCount
@@ -8,20 +8,28 @@ async function getFollowCount(connection,companyId){
     `;
 
     console.log(getFollowCountQuery);
-    const getFollowCountResult = await connection.query(getFollowCountQuery);
+    try{
+        getFollowCountResult = await connection.query(getFollowCountQuery);
+    }catch(err){
+        throw "getFollowCountFail";
+    }
     const FollowCount=getFollowCountResult[0][0].followCount;
     return FollowCount;
   
 }
 
 async function updateFollowCount(connection,companyId,followCount) {
-    
+    let updateFollowCountResult;
     const updateFollowCountQuery = `
             UPDATE WANTED.Companies
             SET Companies.followCount=${followCount}
             WHERE Companies.companyId=${companyId};
          `;
-    const updateFollowCountResult = await connection.query(updateFollowCountQuery);
+    try{
+        updateFollowCountResult = await connection.query(updateFollowCountQuery);
+    }catch(err){
+        throw "updateFollowCountFail";
+    }
     
     return updateFollowCountResult[0];
 }
@@ -38,6 +46,7 @@ async function getCompanies (connection) {
 }
 
 async function getCompaniesUsingTag (connection,tagId,userId) {
+    let companyRows;
     const  getCompaniesUsingTagQuery = `
         SELECT 
             Companies.companyId,
@@ -53,14 +62,19 @@ async function getCompaniesUsingTag (connection,tagId,userId) {
         LEFT JOIN CompanyTags CT on CTM.tagId = CT.tagId
         WHERE CT.tagId=${tagId};
     `;
-
-    const  companyRows = await connection.query(getCompaniesUsingTagQuery);
+    try{
+        companyRows = await connection.query(getCompaniesUsingTagQuery); 
+    }catch(err){
+        throw "getCompaniesUsingTagFail";
+    }
 
     return  companyRows[0];
 }
 
 
 async function getCompaniesTag (connection,companyId) {
+    let companyTagsRows;
+
     const  getCompaniesTagQuery = `
         SELECT CompanyTags.tagId,name FROM Companies
         LEFT JOIN CompanyTagsMapping ON Companies.CompanyId=CompanyTagsMapping.companyId
@@ -68,25 +82,37 @@ async function getCompaniesTag (connection,companyId) {
         WHERE Companies.CompanyId=${companyId};
     `;
 
-    const  companyTagsRows = await connection.query(getCompaniesTagQuery);
+    try{
+        companyTagsRows = await connection.query(getCompaniesTagQuery);
+    }catch(err){
+        throw "getCompaniesTagFail";
+    }
 
     return  companyTagsRows[0];
 }
 
 
 async function getTagInfo (connection,tagId) {
+    let tagInfo;
     const  getTagInfoQuery = `
         select tagId,name from CompanyTags
         where tagId=${tagId};
     `;
 
-    const  tagInfo = await connection.query(getTagInfoQuery);
+    try{
+        tagInfo = await connection.query(getTagInfoQuery);
+
+    }catch(err){
+        throw "getTagInfoFail";
+    }
 
     return  tagInfo[0][0];
 }
 
 
 async function getRandomTags (connection,tagId) {
+    let randomTags;
+
     const  getRandomTagsQuery = `
         select tagId,name from CompanyTags
         WHERE tagId!=${tagId}
@@ -94,7 +120,11 @@ async function getRandomTags (connection,tagId) {
         LIMIT 4;
     `;
 
-    const  randomTags = await connection.query(getRandomTagsQuery);
+    try{
+        randomTags = await connection.query(getRandomTagsQuery);
+    }catch(err){
+        throw "getRandomTagsFail";
+    }
 
    console.log("RandomTags: ");
    console.log(randomTags[0]);
@@ -102,6 +132,7 @@ async function getRandomTags (connection,tagId) {
     return  randomTags[0];
 }
 async function getCompanyDetails(connection,userId,companyId){
+    let companyDetails;
     const  getCompanyDetailsQuery = `
         SELECT 
             companyName,
@@ -116,7 +147,11 @@ async function getCompanyDetails(connection,userId,companyId){
         WHERE Companies.CompanyId=${companyId};  
     `;
 
-    const  companyDetails = await connection.query(getCompanyDetailsQuery);
+    try{
+        companyDetails = await connection.query(getCompanyDetailsQuery);
+    }catch(err){
+        throw "getCompanyDetailsFail";
+    }
 
     console.log("companyDetails: ");
     console.log(companyDetails[0]);
@@ -126,6 +161,7 @@ async function getCompanyDetails(connection,userId,companyId){
 
 
 async function getCompanyImgs(connection,companyId){
+    let companyImgs;
     const  getCompanyImgsQuery = `
         SELECT
             imgUrl
@@ -133,7 +169,11 @@ async function getCompanyImgs(connection,companyId){
         WHERE companyId=${companyId}; 
     `;
 
-    const  companyImgs = await connection.query(getCompanyImgsQuery);
+    try{
+        companyImgs = await connection.query(getCompanyImgsQuery);
+    }catch(err){
+        throw "getCompanyImgsFail";
+    }
 
     console.log("companyImgs: ");
     console.log(companyImgs[0]);
@@ -143,6 +183,7 @@ async function getCompanyImgs(connection,companyId){
 
 
 async function getEmploymentsOfCompany(connection,userId,companyId){
+    let employmentsOfCompany;
     const  getEmploymentsOfCompanyQuery = `
             SELECT
                 Employments.employmentId,
@@ -161,7 +202,11 @@ async function getEmploymentsOfCompany(connection,userId,companyId){
             LIMIT 4;
     `;
 
-    const  employmentsOfCompany = await connection.query(getEmploymentsOfCompanyQuery);
+    try{
+        employmentsOfCompany = await connection.query(getEmploymentsOfCompanyQuery);
+    }catch(err){
+        throw "getEmploymentsOfCompanyFail";
+    }
 
     console.log("employmentsOfCompany: ");
     console.log(employmentsOfCompany[0]);
@@ -171,6 +216,8 @@ async function getEmploymentsOfCompany(connection,userId,companyId){
 
 
 async function getCompanyNews(connection,companyId){
+    let companyNews;
+
     const  getCompanyNewsQuery = `
         select newsName,newsFullUrl,newsUrl,uploadDate from CompanyNews
         LEFT JOIN Companies C on CompanyNews.companyId = C.CompanyId
@@ -178,7 +225,11 @@ async function getCompanyNews(connection,companyId){
         LIMIT 4;
     `;
 
-    const  companyNews = await connection.query(getCompanyNewsQuery);
+    try{
+        companyNews = await connection.query(getCompanyNewsQuery);
+    }catch(err){
+        throw "getCompanyNewsFail";
+    }
 
     console.log("companyNews: ");
     console.log(companyNews[0]);

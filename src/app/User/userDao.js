@@ -198,21 +198,33 @@ async function updateUserInfo(connection, id, nickname) {
 }
 
 async function getJobGroupCategories(connection){
+  let jobcategoriesRow;
   const getJobGroupCategoriesQuery=`
    select jobGroupCategoryId,name from WANTED.JobGroupCategories;
   `
 
-  const jobcategoriesRow=await connection.query(getJobGroupCategoriesQuery);
+  try{
+    jobcategoriesRow=await connection.query(getJobGroupCategoriesQuery);
+  }catch(err){
+    throw "getJobCategoriesFail";
+  }
+  
   return jobcategoriesRow[0];
 }
 
 async function postInterestedTags(connection,userId,postTagId){
+  let postInterestedTagsResult;
+
   const postInterestedTagsQuery=`
     INSERT INTO UserPostTagMapping(userId, postTagId)
     VALUES  (${userId},${postTagId});
   `
   console.log(postInterestedTagsQuery);
-  const postInterestedTagsResult=await connection.query(postInterestedTagsQuery);
+  try{
+    postInterestedTagsResult=await connection.query(postInterestedTagsQuery);
+  }catch(err){
+    throw "postInterestedTagFail";
+  }
   return postInterestedTagsResult;
 }
 
@@ -229,31 +241,39 @@ async function postBookMark(connection,userId,employmentId){
 }
 
 async function postHeart(connection,userId,employmentId){
-  
+  let postHeartResult;
   const postHeartQuery=`
     INSERT INTO Heart(userId, employmentId)
     VALUES  (${userId},${employmentId});
   `
 
   console.log(postHeartQuery);
-  const postHeartResult=await connection.query(postHeartQuery);
+  try{
+    postHeartResult=await connection.query(postHeartQuery);
+  }catch(err){
+    throw "postHeartFail";
+  }
   return postHeartResult;
 }
 
 async function postFollow(connection,userId,companyId){
-  
+  let postFollowResult;
   const postFollowQuery=`
     INSERT INTO Follow(userId, companyId)
     VALUES  (${userId},${companyId});
   `
 
   console.log(postFollowQuery);
-  const postFollowResult=await connection.query(postFollowQuery);
+  try{
+    postFollowResult=await connection.query(postFollowQuery);
+  }catch(err){
+    throw "postFollowFail";
+  }
   return postFollowResult;
 }
 
-async function deleteBookMark(connection,userId,employmentId){
-  
+async function deleteBookMark(connection,userId,employmentId){deleteBookMarkFail
+  let deleteBookMarkResult;
   const deleteBookMarkQuery=`
     UPDATE BookMark
     SET status='DELETED'
@@ -261,7 +281,11 @@ async function deleteBookMark(connection,userId,employmentId){
   `
 
   console.log(deleteBookMarkQuery);
-  const deleteBookMarkResult=await connection.query(deleteBookMarkQuery);
+  try{
+    deleteBookMarkResult=await connection.query(deleteBookMarkQuery);
+  }catch(err){
+    throw "deleteBookMarkFail";
+  }
   return deleteBookMarkResult;
 }
 
@@ -280,7 +304,7 @@ async function deleteHeart(connection,userId,employmentId){
 }
 
 async function deleteFollow(connection,userId,companyId){
-  
+  let deleteFollowResult;
   const deleteFollowQuery=`
     UPDATE Follow
     SET status='DELETED'
@@ -288,7 +312,11 @@ async function deleteFollow(connection,userId,companyId){
   `
 
   console.log(deleteFollowQuery);
-  const deleteFollowResult=await connection.query(deleteFollowQuery);
+  try{
+    deleteFollowResult=await connection.query(deleteFollowQuery);
+  }catch(err){
+    throw "deleteFollowFail";
+  }
   return deleteFollowResult;
 }
 

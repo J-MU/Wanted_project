@@ -139,56 +139,74 @@ async function getExampleEmployment(connection,userId,limit) {
 }
 
 async function getBookMarkCount(connection,employmentId) {
-    
+    let BookmarkCountResult;
     const getBookMarkCountQuery = `
             SELECT bookMarkCount
             FROM Employments
             WHERE employmentId=${employmentId}
          `;
-    const BookmarkCountResult = await connection.query(getBookMarkCountQuery);
+    try{
+        BookmarkCountResult = await connection.query(getBookMarkCountQuery);
+    }catch(err){
+        throw "getBookMarkCountFail";
+    }
+    
     const BookMarkCount=BookmarkCountResult[0][0].bookMarkCount; 
     return BookMarkCount;
 }
 async function getHeartCount(connection,employmentId) {
-    
+    let heartCountResult;
     const getHeartCountQuery = `
             SELECT heartCount
             FROM Employments
             WHERE employmentId=${employmentId}
          `;
-    const heartCountResult = await connection.query(getHeartCountQuery);
+    try{
+        console.log(getHeartCountQuery);
+        heartCountResult = await connection.query(getHeartCountQuery);
+    }catch(err){
+        throw "getHeartCountFail";
+    }
     const heartCount=heartCountResult[0][0].heartCount; 
     return heartCount;
 }
 
 async function updateBookMarkCount(connection,employmentId,BookMarkCount) {
-    
+    let plusBookMarkCountResult;
+
     const plusBookMarkCountQuery = `
             UPDATE WANTED.Employments
             SET Employments.bookMarkCount=${BookMarkCount}
             WHERE Employments.employmentId=${employmentId};
          `;
-    const plusBookmarkCountResult = await connection.query(plusBookMarkCountQuery);
-    
+    try{
+        plusBookmarkCountResult = await connection.query(plusBookMarkCountQuery);
+    }catch(err){
+        throw "updateBookMarkFail";
+    }
     return plusBookmarkCountResult[0];
 }
 
 
 async function updateHeartCount(connection,employmentId,heartCount) {
-    
+    let plusHeartCountResult;
     const plusHeartCountQuery = `
             UPDATE WANTED.Employments
             SET Employments.heartCount=${heartCount}
             WHERE Employments.employmentId=${employmentId};
          `;
-    const plusHeartCountResult = await connection.query(plusHeartCountQuery);
+    try{
+        plusHeartCountResult = await connection.query(plusHeartCountQuery);
+    }catch(err){
+        throw "updateHeartCountFail";
+    }
     
     return plusHeartCountResult[0];
 }
 
 
 async function getEmploymentDetails(connection,employmentId,userId) {
-    
+    let EmploymentDetailsData;
     const getEmploymentDetailQuery = `
     SELECT
                 Employments.employmentId,
@@ -216,11 +234,46 @@ async function getEmploymentDetails(connection,employmentId,userId) {
                 WHERE Employments.employmentId=${employmentId};
          `;
     
-         const EmploymentDetailsData = await connection.query(getEmploymentDetailQuery);
-    
+    try{
+        EmploymentDetailsData = await connection.query(getEmploymentDetailQuery);
+    }catch(err){
+        
+        throw "getEmploymentDetailFail";
+    }
+    console.log("여기다!!!!");
+    console.log(getEmploymentDetailQuery);
     return EmploymentDetailsData[0][0];
 }
+async function getRandomEmployments(connection,userId){
+    let randomEmployments;
+    const getRandomEmploymentsQuery=`
+            SELECT Employments.employmentId,
+            employmentImgUrl,
+            country,
+            jobName,
+            city,
+            (recommendedSigningBonus+Employments.recommenderSigningBonus) as SigningBonus,
+            IF(IsBookMark.userId,true,false) as isBookMark,
+            companyName
+        FROM Employments
+        LEFT JOIN Companies C on Employments.companyId = C.CompanyId
+        LEFT JOIN (
+                select * from WANTED.BookMark
+                where  status='ACTIVE'  AND userId=${userId}
+            )IsBookMark
+        on IsBookMark.employmentId=Employments.employmentId
+        ORDER BY RAND() LIMIT 8;
+    `
+    try{
+        randomEmployments=await connection.query(getRandomEmploymentsQuery);
+    }catch(err){
+        throw "getRandomEmploymentsFail";
+    }
+    
 
+    return randomEmployments[0];
+
+}
 async function getEmployments(connection,params) {
     console.log("Query 시작");
     console.log(params.userId);
@@ -370,7 +423,7 @@ async function getEmployments(connection,params) {
 }
 
 async function getCompanyDetails(connection,companyId,userId) {
-    
+    let companyDetailsData;
     const getCompanyDetailsQuery = `
             SELECT 
             companyName,
@@ -386,14 +439,18 @@ async function getCompanyDetails(connection,companyId,userId) {
             )IsFollow on IsFollow.companyId=Companies.CompanyId
             WHERE Companies.companyId=${companyId};
          `;
-    const companyDetailsData = await connection.query(getCompanyDetailsQuery);
+    try{
+        companyDetailsData = await connection.query(getCompanyDetailsQuery);
+    }catch(err){
+        throw "getCompanyDetailsFail";
+    }
     
     return companyDetailsData[0][0];
 }
 
 async function getCompanyTag(connection,companyId) {
     console.log("Query3 시작")
-    
+    let companyTagData;
     const getCompanyTagQuery = `
             SELECT CT.tagId,CT.name FROM Companies
             LEFT JOIN CompanyTagsMapping ON Companies.CompanyId=CompanyTagsMapping.companyId
@@ -401,14 +458,18 @@ async function getCompanyTag(connection,companyId) {
             where Companies.CompanyId=${companyId};
          `;
     
-    const companyTagData = await connection.query(getCompanyTagQuery);
+    try{
+        companyTagData = await connection.query(getCompanyTagQuery);
+    }catch(err){
+        throw "getCompanyTagFail";
+    }
     
     return companyTagData[0];
 }
 
 async function getSkills(connection,employmentId) {
     console.log("Query3 시작")
-    
+    let skills;
     const getSkillsQuery = `
             SELECT S.skillId,S.name from Employments
             LEFT JOIN EmploymentSkillMapping ESM on Employments.employmentId = ESM.employmentId
@@ -416,20 +477,27 @@ async function getSkills(connection,employmentId) {
             WHERE Employments.employmentId=${employmentId};
          `;
     
-    const skills = await connection.query(getSkillsQuery);
+    try{
+        skills = await connection.query(getSkillsQuery);
+    }catch(err){
+        throw "getSkillsFail";
+    }
     
     return skills[0];
 }
 
 async function getEmploymentImgs(connection,employmentId) {
-    console.log("Query3 시작")
-    
+    let ImgUrls;
     const getEmploymentImgsQuery = `
             SELECT EmploymentImgs.ImgUrl FROM EmploymentImgs
             WHERE employmentId=${employmentId};
          `;
     
-    const ImgUrls = await connection.query(getEmploymentImgsQuery);
+    try{
+        ImgUrls = await connection.query(getEmploymentImgsQuery);
+    }catch(err){
+        throw "getEmploymentImgsFail";
+    }
     
     return ImgUrls[0];
 }
@@ -539,6 +607,7 @@ async function getEmploymentsUsingCompanyId(connection,userId,companyId){
     getEmploymentsHavingHeart,
     getEmploymentsHavingBookMark,
     getEmploymentsUsingCompanyId,
+    getRandomEmployments,
 };
   
 

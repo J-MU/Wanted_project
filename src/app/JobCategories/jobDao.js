@@ -1,11 +1,18 @@
 // 모든 유저 조회
 async function getJobCategories(connection,jobGroupId) {
+    let jobCategoryRows;
+
     const getJobCategoriesQuery = `
              select categoryId,name 
              from JobCategories 
              where jobGroupCategoryId=${jobGroupId};
                   `;
-    const jobCategoryRows = await connection.query(getJobCategoriesQuery);
+    try{
+      jobCategoryRows = await connection.query(getJobCategoriesQuery);
+    }catch(err){
+      throw "getJobCategoriesFail";
+    }
+    
     return jobCategoryRows;
 }
 
@@ -18,13 +25,34 @@ async function getJobGroupCategories(connection) {
   return jobCategoryRows;
 }
 
+async function checkJobGroupIdValidable(connection,jobGroupId) {
+  let jobCategoryRows;
+  const getJobCategoriesQuery = `
+           select jobGroupCategoryId,name
+           from JobGroupCategories 
+           WHERE jobGroupCategoryId=${jobGroupId};
+                `;
+  try{
+      jobCategoryRows = await connection.query(getJobCategoriesQuery);
+  }catch(err){
+    throw "getJobCategoriesFail";
+  }
+  return jobCategoryRows;
+}
+
 async function getJobNameByJobId(connection,jobId) {
+  let jobCategoryRows;
   const getJobCategoriesQuery = `
           select name 
           FROM JobCategories
            where categoryId=${jobId};
                 `;
-  const jobCategoryRows = await connection.query(getJobCategoriesQuery);
+  try{
+    jobCategoryRows = await connection.query(getJobCategoriesQuery);
+  }catch(err){
+    throw "getJobNameFail";
+  }
+    
   return jobCategoryRows[0];
 }
 
@@ -46,6 +74,8 @@ async function getJobNameUsingProfileId(connection,profileId){
       WHERE Profiles.profileId=${profileId};
   `;
 
+  console.log(getJobNameUsingProfileIdQuery);
+
   const jobName=await connection.query(getJobNameUsingProfileIdQuery);
   return jobName[0];
 }
@@ -56,5 +86,6 @@ async function getJobNameUsingProfileId(connection,profileId){
     getJobNameByJobId,
     getJobGroupCategoryId,
     getJobNameUsingProfileId,
+    checkJobGroupIdValidable,
   };
   

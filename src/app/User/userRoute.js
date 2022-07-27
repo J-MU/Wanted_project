@@ -14,8 +14,9 @@ module.exports = function(app){
     app.post('/app/job',user.postJobCatgory);
 
     // 3. 회원가입(3페이지) Default Resume 생성.
-    app.post('/app/users/post-default-resume', user.postDefaultResume);
+    app.post('/app/users/post-default-resume',jwtMiddleware,user.postDefaultResume);  //바뀜
 
+    // 관심태그 설정 API
     app.post('/app/users/interestedTags',user.postInterestedTags);
    
     // 3. 특정 유저 조회 API
@@ -40,7 +41,7 @@ module.exports = function(app){
     app.patch('/app/users/:userId/companies/:companyId/follow/status',jwtMiddleware,user.deleteFollow);
 
     //10. 회원여부 체크 API
-    app.get('/app/is-member/:email',user.isMember);
+    app.get('/app/users/is-member/:email',user.isMember);
     // TODO: After 로그인 인증 방법 (JWT)
     // 로그인 하기 API (JWT 생성)
     app.post('/app/login', user.login);

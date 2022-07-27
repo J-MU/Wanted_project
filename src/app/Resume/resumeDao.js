@@ -1,44 +1,66 @@
 // 모든 유저 조회
 async function postResumeInfo(connection,resumeName,userId,userName,email,telephone,self_introduction) {
+    let postResumeInfoResult;
     const postResumeInfoQuery = `
         INSERT INTO Resumes(userId, resumeName, userName, userEmail, userTel, selfIntroduction)
         VALUES (${userId},"${resumeName}","${userName}","${email}","${telephone}","${self_introduction}");
                   `;
         console.log(postResumeInfoQuery);
-
-    const postResumeInfoResult = await connection.query(postResumeInfoQuery);
+    try{
+        postResumeInfoResult = await connection.query(postResumeInfoQuery);
+    }catch(err){
+        throw "postResumeFail";
+    }
+    
     return postResumeInfoResult;
 }
 
 async function postResumeCareerInfo(connection,resumeId,companyId,companyName) {
+    let postResumeCareerInfoResult;
     const postResumeCareerInfoQuery = `
             INSERT INTO Careers(resumeId,companyName)
             VALUES (${resumeId},"${companyName}");
                   `;
         console.log(postResumeCareerInfoQuery);
-    const postResumeCareerInfoResult = await connection.query(postResumeCareerInfoQuery);
+    try{
+        postResumeCareerInfoResult = await connection.query(postResumeCareerInfoQuery);
+    }catch(err){
+        throw "postResumeCareerFail";
+    }
     return postResumeCareerInfoResult;
 }
 
 async function postResumeEducationInfo(connection,resumeId,schoolName) {
+    let postResumeEducationInfoResult;
+
     const postResumeEducationInfoQuery= `
             INSERT INTO Education(resumeId, name)
             VALUES (${resumeId},"${schoolName}");
                   `;
     console.log(postResumeEducationInfoQuery);
-    const postResumeEducationInfoResult = await connection.query(postResumeEducationInfoQuery);
+    try{
+    postResumeEducationInfoResult = await connection.query(postResumeEducationInfoQuery);
+
+    }catch(err){
+        throw "postResumeEducationInfoFail";
+    }
     return postResumeEducationInfoResult;
 }
 
 async function postResumeSkillInfo(connection,resumeId,skillId) {
-    const getJobCategoriesQuery = `
+    let resumeSkillRows;
+    const postResumeSkillInfoQuery = `
         INSERT INTO ResumeSkillsMapping(resumeId,skillId)
         VALUES (${resumeId},${skillId});
                   `;
 
-    console.log(getJobCategoriesQuery);
-    const jobCategoryRows = await connection.query(getJobCategoriesQuery);
-    return jobCategoryRows;
+    console.log(postResumeSkillInfoQuery);
+    try{
+    resumeSkillRows = await connection.query(postResumeSkillInfoQuery);
+    }catch(err){
+        throw "postResumeSkillInfoFail";
+    }
+    return resumeSkillRows;
 }
 //이력서 전체 조회
 async function getResumes(connection, userId) {

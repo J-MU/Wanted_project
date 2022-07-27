@@ -39,29 +39,47 @@ exports.retrieveUser = async function (userId) {
   return userResult[0];
 };
 
-exports.emailCheck = async function ( email) {
-
+exports.emailCheck = async function (email) {
+  let emailCheckResult;
   const connection = await pool.getConnection(async (conn) => conn);
-  const emailCheckResult = await userDao.selectUserEmail(connection, email);
+  try{
+    emailCheckResult = await userDao.selectUserEmail(connection, email);
+  }catch(err){
+    throw "emailCheckFail";
+  }
+  
+  console.log(emailCheckResult);
   connection.release();
 
   return emailCheckResult;
 };
 
 exports.passwordCheck = async function (selectUserPasswordParams) {
+  let passwordCheckResult;
 
   const connection = await pool.getConnection(async (conn) => conn);
-  const passwordCheckResult = await userDao.selectUserPassword(
-      connection,
-      selectUserPasswordParams
-  );
+  try{
+      passwordCheckResult = await userDao.selectUserPassword(
+        connection,
+        selectUserPasswordParams
+    );
+  }catch(err){
+    throw "passwordCheckFail";
+  }
+  
   connection.release();
   return passwordCheckResult[0];
 };
 
 exports.accountCheck = async function (email) {
+  let userAccountResult;
   const connection = await pool.getConnection(async (conn) => conn);
-  const userAccountResult = await userDao.selectUserAccount(connection, email);
+  try{
+    userAccountResult = await userDao.selectUserAccount(connection, email);
+  }catch(err){
+    throw "accountCheckFail";
+  }
+  
   connection.release();
 
   return userAccountResult;
@@ -105,11 +123,13 @@ exports.getProfileDataSTEP2 = async function (userId,userStatus) {
     // 4. 2번과 3번에서 불러온 jobName과 career를 통해 default self_introduction을 생성한다.
     const userName=await userDao.getUserNameUsingUserId(connection,userId);
     console.log(userName);
-    const profileObject=await getProfileInfoUsingUserId(userId);
-    const profileId=profileObject.profileId;
-    const career=profileObject.career;
+    const profileObject=await userDao.getProfileInfoUsingUserId(connection,userId);
+    const profileId=profileObject[0].profileId;
+    const career=profileObject[0].career;
     
     console.log("ProfileObject:",profileObject);
+    console.log("profileId: ",profileId);
+    console.log("career: ",career);
     const jobName=await jobProvider.getJobNameUsingProfileId(profileId);
     const totalData={};
 
