@@ -16,10 +16,10 @@ exports.getPosts = async function (req, res) {
 
     // const userId=req.verifiedToken.userId
     let token = req.verifiedToken;
-    console.log("token 값은???",token)
-    if(token!='undefined' || token!=null){
+    if(token!=undefined){
         token = req.verifiedToken.userId
     }
+
 
     // if(req.verifiedToken) {
     //     console.log('True')

@@ -79,7 +79,7 @@ exports.getPosts = async function (token) {
         var tagId = 'tagId'
         var params = [num, tagId]
 
-        if (token == null) {
+        if (token == undefined) {
 
 
             const getInsitePostTagsResult = await postDao.getInsitePostTags(connection);
