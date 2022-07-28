@@ -36,6 +36,13 @@ exports.getResume = async function(getResumeParams) {
         if(resumeIdCheck.length==0){
             return errResponse(baseResponse.RESUMEID_NOT_EXIST);
         }
+
+        const params= [getResumeParams[1], getResumeParams[0]]
+        const userResumeCheck = await resumeDao.resumeUserCheck(connection,params );
+        if(userResumeCheck.length==0){
+            return errResponse(baseResponse.NOT_USER_RESUME);
+        }
+
         let getResumeResult = await resumeDao.getResumeInfo(connection,getResumeParams);
 
         if(getResumeResult.length==0){
