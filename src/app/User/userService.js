@@ -16,6 +16,7 @@ const {errResponse} = require("../../../config/response");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const {connect} = require("http2");
+const { query } = require("express");
 
 // Service: Create, Update, Delete 비즈니스 로직 처리
 
@@ -172,10 +173,13 @@ exports.postJobCatgory=async function(userId,jobGroupId,jobId,career,skills){
         const profileId=getParam[0].insertId;
         
         connection.beginTransaction();
-
+        console.log("query1");
         const insertJobCatgoryResult=await userDao.insertJobGroupCategoryInfo(connection,profileId,jobGroupId); 
+        console.log("query2");
         const insertJobIdResult=await userDao.insertJobCategoryInfo(connection,profileId,jobId)
+        console.log("qurey3");
         const updateUserStep=await userDao.updateUserState(connection,userId,"STEP2");
+        console.log("query4");
         console.log("확인");
         console.log(skills);
         
@@ -393,7 +397,7 @@ exports.deleteBookMark=async function(userId,employmentId){
         let BookMarkCount=await employmentDao.getBookMarkCount(connection,employmentId);
         BookMarkCount=BookMarkCount-1;
         
-        if(BookMarkCount<=0){
+        if(BookMarkCount<0){
             return errResponse(baseResponse.BOOKMARK_MINUS_ERROR);
         }
         console.log("2번 함수 호출성공");
@@ -429,6 +433,8 @@ exports.deleteHeart=async function(userId,employmentId){
         console.log("1번 함수 호출성공")
         let HeartCount=await employmentDao.getHeartCount(connection,employmentId);
         HeartCount=HeartCount-1;
+        if(HeartCount<0)
+            return errResponse(baseResponse.HEART_MINUS_ERROR);
         console.log("2번 함수 호출성공");
         console.log(HeartCount);
         const deleteHeartCountResult=await employmentDao.updateHeartCount(connection,employmentId,HeartCount);

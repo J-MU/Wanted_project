@@ -110,6 +110,7 @@ module.exports = {
     CANT_SEND_ONE_OF_COMPANYID_OR_COMPANYNAME:{"isSuccess": false, "code": 2506, "message": "companyId, companyName둘중 하나만보낼수는 없습니다."},
     BOOKMARK_MINUS_ERROR:{"isSuccess": false, "code": 2507, "message": "BookMark는 minus가 될 수 없습니다."},
     FOLLOW_MINUS_ERROR:{"isSuccess": false, "code": 2508, "message": "Follow는 minus가 될 수 없습니다."},
+    HEART_MINUS_ERROR:{"isSuccess": false, "code": 2508, "message": "Heart는 minus가 될 수 없습니다."},
     APPLICATION_ID_EMPTY:{"isSuccess": false, "code": 2508, "message": "Application Id를 입력하시오"},
     // Response error
     SIGNUP_REDUNDANT_EMAIL : { "isSuccess": false, "code": 3001, "message":"중복된 이메일입니다." },

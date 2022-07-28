@@ -325,7 +325,8 @@ exports.deleteBookMark = async function (req, res) {
 
     const userId = req.params.userId;
     const employmentId=req.params.employmentId;
-   
+    console.log("id:");
+    console.log(userId,employmentId);
     if(!userId) return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
 
     if (userIdFromJWT != userId) {
