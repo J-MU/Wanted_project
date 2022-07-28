@@ -288,7 +288,7 @@ async function postFollow(connection,userId,companyId){
   return postFollowResult;
 }
 
-async function deleteBookMark(connection,userId,employmentId){deleteBookMarkFail
+async function deleteBookMark(connection,userId,employmentId){
   let deleteBookMarkResult;
   const deleteBookMarkQuery=`
     UPDATE BookMark

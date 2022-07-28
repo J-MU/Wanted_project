@@ -331,7 +331,7 @@ exports.deleteBookMark = async function (req, res) {
     if (userIdFromJWT != userId) {
         return res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
     } else {
-
+        console.log("여기 들어오는거 맞아..?");
         const deleteBookMarkResult = await userService.deleteBookMark(userId,employmentId);
         return res.send(deleteBookMarkResult);
     }
@@ -400,7 +400,7 @@ exports.getProfileData = async function (req, res) {
 
     if(!userId)
         return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
-        
+
     let profileData;
     if (userIdFromJWT != userId) {
         res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));

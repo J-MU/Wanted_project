@@ -387,7 +387,7 @@ exports.deleteBookMark=async function(userId,employmentId){
             1. BookMarkTable 에서 status를 DELETED로 고칠것.
             2. Employments Table에서 BookMark Count를 하나 줄일 것. */
 
-
+        console.log("1번~~");
         const deleteBookMarkResult=await userDao.deleteBookMark(connection,userId,employmentId);
         console.log("1번 함수 호출성공")
         let BookMarkCount=await employmentDao.getBookMarkCount(connection,employmentId);
