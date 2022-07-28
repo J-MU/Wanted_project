@@ -17,7 +17,7 @@ exports.getPosts = async function (req, res) {
     // const userId=req.verifiedToken.userId
     let token = req.verifiedToken;
     console.log("token 값은???",token)
-    if(token!=null){
+    if(token!='undefined' || token!=null){
         token = req.verifiedToken.userId
     }
 
