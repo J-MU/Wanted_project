@@ -1,7 +1,9 @@
 module.exports = function(app) {
-    const multer = require("multer");
+    const baseResponse = require("../../../config/baseResponseStatus");
+    const {response, errResponse} = require("../../../config/response");
 
-    console.log('오류')
+    const {emit} = require("nodemon");
+    const multer = require("multer");
 
 // multer-optional
     var storage = multer.diskStorage({
@@ -16,9 +18,9 @@ module.exports = function(app) {
     var upload = multer({storage: storage});
 
 // Router
-    app.post("/fileUpload/files", upload.single("fileName") ,
+    app.post('/fileUpload/files', upload.single("fileName"),
         (req, res) => {
-        console.log('제발제발 돼라')
+            console.log('제발제발 돼라')
             // if (err) {
             //     return res.json({success: false});
             // }
@@ -28,5 +30,6 @@ module.exports = function(app) {
                 fileName: req.file.filename,
             });
         });
+
 
 }
