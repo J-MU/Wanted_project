@@ -49,7 +49,7 @@ module.exports = {
     // USER_USEREMAIL_NOT_EXIST : { "isSuccess": false, "code": 2015, "message": "해당 이메일을 가진 회원이 존재하지 않습니다." },
     USER_ID_NOT_MATCH : { "isSuccess": false, "code": 2014, "message": "유저 아이디 값을 확인해주세요" },
     // USER_NICKNAME_EMPTY : { "isSuccess": false, "code": 2017, "message": "변경할 닉네임 값을 입력해주세요" },
-
+    USER_ID_NOT_EXIST_IN_DB:{"isSuccess": false, "code": 2015, "message": "존재하지 않는 유저입니다."},
     // USER_STATUS_EMPTY : { "isSuccess": false, "code": 2018, "message": "회원 상태값을 입력해주세요" },
     //Post :2200
     POST_TAG_EMPTY:{"isSuccess": false, "code": 2200, "message": "태그를 입력해 주세요."},
@@ -99,6 +99,7 @@ module.exports = {
     COMPANY_TAG_TOO_MANY: {"isSuccess": false, "code": 2151, "message": "company tag는 3개까지 선택 가능합니다."},
     COMPANY_TAG_EMPTY:{"isSuccess": false, "code": 2152, "message": "company tagId를 입력하세요"},
     COMPANY_TAG_VALIDABLE:{"isSuccess": false, "code": 2153, "message": "company tagId가 유효한 값이 아닙니다."},
+    BOTH_OR_NONE_COMAPNY:{"isSuccess": false, "code": 2153, "message": "CompanyName CompanyId 둘중 하나만 파라미터로 넘겨주실수 없어요"},
     // 기타 error
     OUT_OF_ORDER_BY_OPTION:{"isSuccess": false, "code": 2500, "message": "유효한 정렬 option이 아닙니다."},
     BODY_EMPTY:{"isSuccess": false, "code": 2501, "message": "BODY가 비었습니다."},

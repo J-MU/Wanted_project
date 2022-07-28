@@ -88,7 +88,7 @@ exports.postUsers = async function (req, res) {
  */
 exports.postJobCatgory=async function(req,res){
     /* body: JobGroup, Job, career(년차), skills[]  */
-    const {userId,JobGroupId,JobId,career,skills}=req.body;
+    const {userId,JobGroupId,JobId,career,companyId,companyName,skills}=req.body;
     console.log("일단 이 함수 호출 된긴 했음.");
     console.log(req.body);
 
@@ -97,7 +97,8 @@ exports.postJobCatgory=async function(req,res){
     console.log(typeof userId);
     console.log(typeof JobGroupId);
     console.log(Array.isArray(skills));
-
+    
+    
     // NULL 체크
     if(!req.body)   return res.send(errResponse(baseResponse.BODY_EMPTY));
     if(!userId)     return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
@@ -107,7 +108,7 @@ exports.postJobCatgory=async function(req,res){
     if(!skills)     return res.send(errResponse(baseResponse.SKILLS_NOT_EXIST));
     if(!Array.isArray(skills))   return res.send(errResponse(baseResponse.SKILLS_MUST_SEND_ARRAY));
     if(skills.length<=0)    return res.send(errResponse(baseResponse.SKILLS_EMPTY));
-
+    if((!companyName || !companyId) && (!!companyName || !!companyId)) return res.send(errResponse(baseResponse.BOTH_OR_NONE_COMAPNY));
     console.log(req.body);
 
     const postJobCatgoryResponse=await userService.postJobCatgory(
@@ -480,6 +481,9 @@ exports.patchProfileSpec=async function(req,res){
     let profileObject;
     try{
         profileObject=await userProvider.getProfileInfoUsingUserId(userId);
+        if(!profileObject)
+            return res.send(errResponse(baseResponse.USER_ID_NOT_EXIST_IN_DB));
+
         console.log("profileObject: ",profileObject);
     }catch(err){
         if(err=="getProfileInfoFail") return res.send(errResponse({"isSuccess":false,"code":4001,"message":"fail getProfileInfo Query"}));
