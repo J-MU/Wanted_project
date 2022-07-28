@@ -250,7 +250,7 @@ async function getEmploymentDetails(connection,employmentId,userId) {
                 city,
                 address,
                 description,
-                dueDate
+                dueDate,
                 heartCount,
                 recommenderSigningBonus,
                 recommendedSigningBonus,
