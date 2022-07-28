@@ -16,7 +16,7 @@ module.exports = function(app) {
     var upload = multer({storage: storage});
 
 // Router
-    app.post("/fileUpload", upload.single("fileName") ,
+    app.post("/fileUpload/files", upload.single("fileName") ,
         (req, res) => {
         console.log('제발제발 돼라')
             // if (err) {
