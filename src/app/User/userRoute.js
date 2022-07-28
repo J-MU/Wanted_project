@@ -23,7 +23,7 @@ module.exports = function(app){
     //app.get('/app/users/:userId', user.getUserById);
 
     // 4. 북마크 등록 API
-    app.post('/app/test/users/bookmark',jwtMiddleware,user.postBookMark);
+    app.post('/app/users/bookmark',jwtMiddleware,user.postBookMark);
 
     // 5. 좋아요 등록 API
     app.post('/app/users/heart',jwtMiddleware,user.postHeart);
