@@ -13,11 +13,6 @@ const {emit} = require("nodemon");
  */
 exports.getJobCategories = async function (req, res) {
     const jobGroupId=req.params.jobgroupid; 
-    console.log("req.params:",req.params);
-    console.log("req.params.jobGroupId:",req.params.jobgroupid);
-    console.log("jobGroupId:",jobGroupId);
-    if(!jobGroupId)
-        return res.send(errResponse(baseResponse.JOB_GROUP_EMPTY));
 
     const checkJobGroupIdValidable=await jobProvider.checkJobGroupIdValidable(jobGroupId);
     if(checkJobGroupIdValidable.length<=0)
