@@ -10,17 +10,23 @@ const baseResponse = require("../../../config/baseResponseStatus");
 exports.getJobCategories = async function (jobGroupId) {
     console.log(jobGroupId);
     let skills=null;
+    let totalData={}
     try{
         const connection = await pool.getConnection(async (conn) => conn);
         
         const jobCategoryRows=await jobDao.getJobCategories(connection,jobGroupId);
-    
+        totalData.jobCategoryRows=jobCategoryRows[0];
+        if(jobGroupId==1){
+            skills=await skillDao.getSkillsAll(connection);
+            totalData.skills=skills[0];
+        }
         connection.release();
-
+        
+        
         
        
 
-        return jobCategoryRows[0];
+        return totalData;
     }catch(err){
         if(err=="getJobCategoriesFail") return  errResponse({"isSuccess":false,"code":4001,"message":"fail getJobCategoriesFail Query"})
         logger.error(`App - Get Job Categories Service error\n: ${err.message}`);
