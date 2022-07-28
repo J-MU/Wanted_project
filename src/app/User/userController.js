@@ -267,7 +267,7 @@ exports.postBookMark = async function (req, res) {
 
     const userId = req.body.userId;
     const employmentId=req.body.employmentId;
-
+    console.log("id:",userIdFromJWT,userId);
     if (userIdFromJWT != userId) {
         res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
     } else {
