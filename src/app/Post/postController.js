@@ -81,6 +81,11 @@ exports.getArticlePostsByTagId = async function (req, res) {
     const tagId = req.query.tagId;
 
     const filter = req.body.filter;
+
+    if(!tagId) return res.send(response(baseResponse.POST_TAG_EMPTY))
+
+    if(!filter)  return res.send(response(baseResponse.FILTER_EMPTY))
+
     const getArticlePostsByTagIdResponse = await postProvider.getArticlePostsByTagId(tagId,filter);
 
     return res.send(getArticlePostsByTagIdResponse)
@@ -93,7 +98,9 @@ exports.getArticlePostsByTagId = async function (req, res) {
  */
 
 exports.getArticlePostDetails = async function (req, res) {
-    const postId = req.query.postId
+    const postId = parseInt(req.query.postId);
+
+    if(!postId) return res.send(response(baseResponse.POSTID_EMPTY))
 
     const getArticlePostDetailsResponse = await postProvider.getArticlePostDetails(postId);
 
@@ -109,6 +116,8 @@ exports.getArticlePostDetails = async function (req, res) {
 
 exports.getVodPosts = async function (req, res) {
     const tagId = req.query.tagId
+
+
     const getVodPostsResponse = await postProvider.getVodPosts(tagId);
 
 

@@ -193,7 +193,8 @@ exports.patchResumeCareer = async function (params) {
         if (careerIdCheck.length == 0) {
 
             return response(baseResponse.CAREERID_NOTEXIST);
-        } else {
+        }
+        else {
             const patchResumeCareerResult = await resumeDao.patchResumeCareer(connection, params);
 
 
@@ -212,8 +213,16 @@ exports.patchResumeCareer = async function (params) {
 //이력서 학교 수정
 exports.patchResumeEducation = async function(params) {
     try {
-        console.log(params)
         const connection = await pool.getConnection(async (conn) => conn);
+
+        //educationId check
+        const educationIdCheck = await resumeDao.educationIdCheck(connection, params[0])
+        connection.release();
+        if (educationIdCheck.length == 0) {
+
+            return response(baseResponse.EDUCATIONID_NOTEXIST);
+        }
+
         const patchResumeEducationResult = await resumeDao.patchResumeEducation(connection,params);
         connection.release();
 
@@ -484,6 +493,36 @@ exports.postResumeSkills = async function(resumeId,skillId) {
 exports.deleteResumeSkills = async function(deleteResumeSkillsParams){
     try {
         const connection = await pool.getConnection(async (conn) => conn);
+
+        //resumeId 존재하는지
+        const resumeIdCheck = await resumeDao.resumeIdCheck(connection,deleteResumeSkillsParams[0]);
+
+        if(resumeIdCheck.length==0){
+            return errResponse(baseResponse.RESUMEID_NOT_EXIST);
+        }
+
+        //skillId 존재하는지
+        const skillIdCheck = await resumeDao.skillIdCheck(connection,deleteResumeSkillsParams[1]);
+
+        if(skillIdCheck.length==0){
+            return errResponse(baseResponse.SKILLID_NOTEXIST);
+        }
+
+        //유저의 skillId가 맞는지
+
+        const userSkillCheck = await resumeDao.userSkillCheck(connection, deleteResumeSkillsParams);
+        if(userSkillCheck.length==0){
+            return errResponse(baseResponse.NOT_USERSKILL);
+        }
+
+        //skillId 이미 삭제되어 잇는지
+        const skillIdDeletedCheck = await resumeDao.skillIdDeletedCheck(connection,deleteResumeSkillsParams);
+
+        if(skillIdDeletedCheck[0].status=='DELETED'){
+            return errResponse(baseResponse.SKILLID_ALREADY_DELETED);
+        }
+
+
         const deleteResumeSkillsResult = await resumeDao.deleteResumeSkills(connection,deleteResumeSkillsParams);
         connection.release();
 

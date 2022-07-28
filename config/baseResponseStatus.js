@@ -54,6 +54,7 @@ module.exports = {
     //Post :2200
     POST_TAG_EMPTY:{"isSuccess": false, "code": 2200, "message": "태그를 입력해 주세요."},
     FILTER_EMPTY : {"isSuccess": false, "code": 2201, "message": "filter를 입력해 주세요."},
+    POSTID_EMPTY : {"isSuccess": false, "code": 2202, "message": "postId를 입력해 주세요."},
 
     //Job,JobGroup :2300
     JOB_GROUP_EMPTY:{"isSuccess": false, "code": 2300, "message": "직군을 입력해주세요"},
@@ -112,6 +113,7 @@ module.exports = {
 
     POSTID_NOTEXIST :{ "isSuccess": false, "code": 3200, "message": "postId가 존재하지 않습니다." },
     TAGID_NOTEXIST :{ "isSuccess": false, "code": 3201, "message": "tagId가 존재하지 않습니다." },
+    FILTER_NOTEXIST :{ "isSuccess": false, "code": 3202, "message": "filter 값이 정확하지 않습니다." },
 
 
     //3400: resume 오류
@@ -121,6 +123,8 @@ module.exports = {
     AWARDSID_NOTEXIST : { "isSuccess": false, "code": 3403, "message": "awardsId가 존재하지 않습니다." },
     SKILLID_NOTEXIST : { "isSuccess": false, "code": 3404, "message": "skillId가 존재하지 않습니다." },
     FOREIGNLANGUAGEID_ALREADY_DELETED :  {"isSuccess": false, "code": 3405, "message": "이미 외국어가 삭제되었습니다."},
+    SKILLID_ALREADY_DELETED :  {"isSuccess": false, "code": 3406, "message": "이미 유저의 스킬이 삭제되었습니다."},
+    NOT_USERSKILL :  {"isSuccess": false, "code": 3407, "message": "유저의 스킬이 아닙니다."},
 
 
     SIGNIN_EMAIL_WRONG : { "isSuccess": false, "code": 3003, "message": "아이디가 잘못 되었습니다." },
