@@ -33,5 +33,6 @@ module.exports = function () {
     // require('../src/app/Board/boardRoute')(app);
     require('../src/app/SENS - jeje/sens')(app);
     require("../src/app/File/fileRoute")(app);
+    require("../src/app/multer-jeje/multer")(app);
     return app;
 };

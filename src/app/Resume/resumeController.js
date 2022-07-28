@@ -510,6 +510,19 @@ exports.patchResumeUserInfo = async function(req, res) {
 
     const params = [resumeId , resumeName, userName, userEmail,userTel,selfIntroduction]
 
+    const userId = parseInt(req.verifiedToken.userId)
+    const userId_body= req.body.userId
+
+    if(!userId_body){
+        return res.send(response(baseResponse.RESUME_USERID_EMPTY));
+    }
+
+    if(userId!=userId_body) {
+        return res.send(response(baseResponse.TOKEN_AND_USERID_VERIFICATION_FAILURE));
+    }
+
+    if(!resumeId) return res.send(response(baseResponse.RESUMEID_EMPTY));
+
 
     const patchResumeUserInfoResponse = await resumeService.patchResumeUserInfo(params);
 
@@ -539,9 +552,23 @@ exports.postResumeForeignLanguage = async function(req,res) {
     const foreignLanguage = req.body.foreignLanguage
     const level = req.body.level
 
-    const params = [resumeId, foreignLanguage,level]
+    const userId = parseInt(req.verifiedToken.userId)
+    const userId_body= req.body.userId
 
-    console.log(params)
+    if(!userId_body){
+        return res.send(response(baseResponse.RESUME_USERID_EMPTY));
+    }
+
+    if(userId!=userId_body) {
+        return res.send(response(baseResponse.TOKEN_AND_USERID_VERIFICATION_FAILURE));
+    }
+
+    if(!resumeId) return res.send(response(baseResponse.RESUMEID_EMPTY));
+
+    if(!foreignLanguage) return res.send(response(baseResponse.FOREIGNLANGUAGE_EMPTY));
+    if(!level) return res.send(response(baseResponse.LEVEL_EMPTY));
+
+    const params = [resumeId, foreignLanguage,level]
 
     const postResumeForeignLanguageResponse = await resumeService.postResumeForeignLanguage(params);
 
@@ -557,6 +584,21 @@ exports.postResumeForeignLanguage = async function(req,res) {
 exports.deleteResumeForeignLanguage = async function(req, res) {
     const resumeId= parseInt(req.params.resumeId);
     const foreignLanguageId = parseInt(req.body.foreignLanguageId);
+
+    const userId = parseInt(req.verifiedToken.userId)
+    const userId_body= req.body.userId
+
+    if(!userId_body){
+        return res.send(response(baseResponse.RESUME_USERID_EMPTY));
+    }
+
+    if(userId!=userId_body) {
+        return res.send(response(baseResponse.TOKEN_AND_USERID_VERIFICATION_FAILURE));
+    }
+
+    if(!resumeId) return res.send(response(baseResponse.RESUMEID_EMPTY));
+
+    if(!foreignLanguageId) return res.send(response(baseResponse.FOREIGNLANGUAGEID_EMPTY));
 
     const params = [resumeId, foreignLanguageId]
 

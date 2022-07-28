@@ -419,6 +419,12 @@ exports.patchResumeStatus = async function(resumeId,status) {
 exports.postResumeUserSkills = async function(resumeId,userId) {
     try {
         const connection = await pool.getConnection(async (conn) => conn);
+
+        const resumeIdCheck = await resumeDao.resumeIdCheck(connection, resumeId);
+
+        if(resumeIdCheck.length==0) {
+            return errResponse(baseResponse.RESUMEID_NOT_EXIST);
+        }
         const getResumeUserSkillsResult = await resumeDao.getResumeUserSkills(connection,userId);
 
         for (x in getResumeUserSkillsResult) {
@@ -494,8 +500,16 @@ exports.deleteResumeSkills = async function(deleteResumeSkillsParams){
 
 exports.patchResumeUserInfo = async function(params) {
     try {
-        console.log(params)
         const connection = await pool.getConnection(async (conn) => conn);
+
+        //resumeId validation
+
+        const resumeIdCheck = await resumeDao.resumeIdCheck(connection,params[0]);
+
+        if(resumeIdCheck.length==0){
+            return errResponse(baseResponse.RESUMEID_NOT_EXIST);
+        }
+
         const patchResumeUserInfoResult = await resumeDao.patchResumeUserInfo(connection,params);
         connection.release();
 
@@ -513,11 +527,18 @@ exports.patchResumeUserInfo = async function(params) {
 exports.postResumeForeignLanguage = async function(params) {
     try {
         const connection = await pool.getConnection(async (conn) => conn);
+
+        const resumeIdCheck = await resumeDao.resumeIdCheck(connection,params[0]);
+
+        if(resumeIdCheck.length==0){
+            return errResponse(baseResponse.RESUMEID_NOT_EXIST);
+        }
+
         const postResumeForeignLanguageResult = await resumeDao.postResumeForeignLanguage(connection,params);
 
         const num = postResumeForeignLanguageResult.length
         connection.release();
-        const foreignLanguageId = {foreignLanguageId : postResumeForeignLanguageResult[num-1]}
+        const foreignLanguageId = {Id : postResumeForeignLanguageResult[num-1]}
         return response(baseResponse.SUCCESS,foreignLanguageId);
     }
     catch(err) {
@@ -531,6 +552,19 @@ exports.postResumeForeignLanguage = async function(params) {
 exports.deleteResumeForeignLanguage= async function (params) {
     try {
         const connection = await pool.getConnection(async (conn) => conn);
+
+        const resumeIdCheck = await resumeDao.resumeIdCheck(connection,params[0]);
+
+        if(resumeIdCheck.length==0) {
+            return errResponse(baseResponse.RESUMEID_NOT_EXIST);
+        }
+
+        const foreignLanguageDeletedCheck = await resumeDao.foreignLanguageDeletedCheck(connection,params);
+
+        if(foreignLanguageDeletedCheck[0].status=='DELETED') {
+            return errResponse(baseResponse.FOREIGNLANGUAGEID_ALREADY_DELETED);
+        }
+
         const deleteResumeForeignLanguageResult = await resumeDao.deleteResumeForeignLanguage(connection,params);
 
         connection.release();

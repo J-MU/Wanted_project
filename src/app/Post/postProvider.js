@@ -150,6 +150,12 @@ exports.getPosts = async function (token) {
 exports.getPostsByTagId = async function (tagId){
     try {
             const connection = await pool.getConnection(async (conn) => conn);
+
+            const tagIdCheck = await postDao.tagIdCheck(connection, tagId)
+
+            if(tagIdCheck.length==0) {
+                return errResponse(baseResponse.TAGID_NOTEXIST)
+            }
             const getPostsByTagIdResult = await postDao.getPostsByTagId(connection,tagId);
             connection.release();
             return response(baseResponse.SUCCESS,getPostsByTagIdResult);
@@ -169,6 +175,7 @@ exports.getArticlePosts = async function (filter) {
         const connection = await pool.getConnection(async (conn) => conn);
 
 
+        console.log('controller')
         if(filter=='마감임박순'){
             const getArticlePostsByDate = await postDao.getArticlePostsByDate(connection)
 

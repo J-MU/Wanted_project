@@ -463,7 +463,7 @@ async function postIdCheck (connection, postId) {
     return postIdCheckRow[0]
 }
 
-//vodTag 체그
+//tagIdCheck
 
 async function vodTagCheck (connection, tagId) {
     const vodTagCheckQuery= `
@@ -474,6 +474,17 @@ async function vodTagCheck (connection, tagId) {
     const vodTagCheckRow = await connection.query(vodTagCheckQuery,tagId);
     console.log(vodTagCheckRow[0])
     return vodTagCheckRow[0]
+}
+
+async function tagIdCheck(connection, tagId) {
+    const tagIdCheckQuery= `
+        select tagId
+        from postTags
+        where tagId=? 
+    `
+    const tagIdCheckRow = await connection.query(tagIdCheckQuery,tagId);
+
+    return tagIdCheckRow[0]
 }
 
 module.exports = {
@@ -494,7 +505,8 @@ module.exports = {
     getTopTenContents,
     getVodPostsByTags,
     postIdCheck,
-    vodTagCheck
+    vodTagCheck,
+    tagIdCheck
 
 };
 
