@@ -1,6 +1,8 @@
 module.exports = function(app) {
     const multer = require("multer");
 
+    console.log('오류')
+
 // multer-optional
     var storage = multer.diskStorage({
         destination: (req, file, cb) => {
