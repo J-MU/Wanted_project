@@ -88,7 +88,7 @@ exports.postUsers = async function (req, res) {
  */
 exports.postJobCatgory=async function(req,res){
     /* body: JobGroup, Job, career(년차), skills[]  */
-    const {userId,JobGroupId,JobId,career,comapnyId,companyName,skills}=req.body;
+    const {userId,JobGroupId,JobId,career,companyId,companyName,skills}=req.body;
     console.log("일단 이 함수 호출 된긴 했음.");
     console.log(req.body);
 
