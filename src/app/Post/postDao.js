@@ -103,6 +103,7 @@ catch(err) {
 
 // article 불러오기
 async function getArticlePosts(connection, params) {
+
     let articlePostsRow
     let resultRow = [];
     let articleTagsRow
@@ -115,13 +116,15 @@ async function getArticlePosts(connection, params) {
               and startDate is null
             order by rand() limit ${params[0]};
         `;
-        [articlePostsRow] = await connection.query(getArticlePostsQuery, params);
+        articlePostsRow = await connection.query(getArticlePostsQuery, params);
+
     }
 catch(err) {
         throw "articlePosts Query err"
 } try {
-        for (let i = 0; i < [articlePostsRow].length ; i++) {
-            let articlePostId = articlePostsRow[i].postId;
+
+        for (let i = 0; i < articlePostsRow[0].length ; i++) {
+            let articlePostId = articlePostsRow[0][i].postId;
             const getArticlePostTagsQuery = `
                 select concat("#", name) as name, postTags.tagId
                 from postTags
@@ -129,10 +132,9 @@ catch(err) {
                 where (aTM.articlePostId = ${articlePostId});
             `;
 
-            console.log(i,getArticlePostTagsQuery)
             articleTagsRow = await connection.query(getArticlePostTagsQuery, articlePostId)
-            articlePostsRow[i].postTags = articleTagsRow[0];
-            resultRow.push(articlePostsRow[i]);
+            articlePostsRow[0][i].postTags = articleTagsRow[0];
+            resultRow.push(articlePostsRow[0][i]);
         }
     }
     catch(err) {
