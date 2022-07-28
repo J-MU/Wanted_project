@@ -82,7 +82,7 @@ async function insertJobGroupCategoryInfo(connection,profileId,categoryId) {
   let insertJobCategoryInfoRow;
   console.log('insertJobCategoryInfo 함수 호출 완료.');
   const insertJobCategoryInfoQuery = `
-        INSERT INTO profileJobGroupMapping(profileId,categoryId)
+        INSERT INTO profileJobGroupMappin(profileId,categoryId)
         VALUES (${profileId},${categoryId});
     `;
   try{
