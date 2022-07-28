@@ -171,7 +171,8 @@ exports.postJobCatgory=async function(userId,jobGroupId,jobId,career,skills){
         console.log("hihi");
         console.log(getParam[0].insertId);
         const profileId=getParam[0].insertId;
-        
+        console.log("profileId:",profileId);
+        console.log("jobGroupId:",jobGroupId);
         connection.beginTransaction();
         console.log("query1");
         const insertJobCatgoryResult=await userDao.insertJobGroupCategoryInfo(connection,profileId,jobGroupId); 

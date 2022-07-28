@@ -85,6 +85,7 @@ async function insertJobGroupCategoryInfo(connection,profileId,categoryId) {
         INSERT INTO profileJobGroupMappin(profileId,categoryId)
         VALUES (${profileId},${categoryId});
     `;
+  console.log(profileId,categoryId);
   try{
     insertJobCategoryInfoRow = await connection.query(
       insertJobCategoryInfoQuery,
