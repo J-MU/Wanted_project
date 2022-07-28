@@ -22,7 +22,8 @@ const {emit} = require("nodemon");
     if(!period) return res.send(errResponse(baseResponse.ANALYSIS_PERIOD_EMPTY));
     if(!type) return res.send(errResponse(baseResponse.ANALYSIS_TYPE_EMPTY));
     if(!companyId) return res.send(errResponse(baseResponse.COMPANY_EMPTY));
-
+    if(period<1 || period>3) return res.send(errResponse(baseResponse.ANALYSIS_PERIOD_INVALIABLE));
+    if(type<1 || type>3) return res.send(errResponse(baseResponse.ANALYSIS_TYPE_INVALIABLE));
     try{
         employeeAnalysis=await employeeProvider.getAnalysisEmployee(period,type,companyId);
     }catch(err){

@@ -17,7 +17,6 @@ const RETIREE=3; // 퇴사자 수
 
 exports.getAnalysisEmployee=async function(period,analysisType,companyId){
     
-    console.log(period,analysisType);
     let periodArray=[];
     let periodFormatArray=[];
     let tempData={};
@@ -30,12 +29,9 @@ exports.getAnalysisEmployee=async function(period,analysisType,companyId){
         // 입력한 period(년)에 맞게 x축 뽑아내는 코드
         for(let interval=1; interval<=period*12; interval++){
             tempDate=await employeeDao.getPeriod(connection,interval);
-            console.log(tempDate);
             periodArray.push(tempDate.DATE);
             periodFormatArray.push(tempDate.DATE_FORMAT);
         }
-        console.log("periodArray: ");
-        console.log(periodArray);
 
         for(let index=periodArray.length-1; index>=0; index--){
              tempData.date=periodFormatArray[index];
@@ -49,16 +45,10 @@ exports.getAnalysisEmployee=async function(period,analysisType,companyId){
                 console.log("퇴사자 수 조회");
                 tempData.employeeNum=(await employeeDao.getAnalysisRetireeEmployees(connection,periodArray[index],companyId)).count;
              }
-             console.log(tempData);
              analysisEmployees.push(tempData);
              tempData={};
        }
         
-       console.log("analysis Employees:: !");
-       console.log("analysis Employees:: !");
-       console.log("analysis Employees:: !");
-       console.log(analysisEmployees);
-
         connection.release();
         return analysisEmployees;
 

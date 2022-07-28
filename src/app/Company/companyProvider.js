@@ -82,12 +82,33 @@ exports.getCompanyDetails = async function (userId,companyId) {
         const companyTags=await companyDao.getCompaniesTag(connection,companyId);
         totalData.companyTags=companyTags;
 
-        totalData.Employments=await companyDao.getEmploymentsOfCompany(connection,userId,companyId);
-       
+        const employments=await companyDao.getEmploymentsOfCompany(connection,userId,companyId);
+        for (let index = 0; index < employments.length; index++) {
+            const dateObj=employments[index].dueDate;
+            const year = dateObj.getFullYear();
+            const month = dateObj.getMonth() + 1;
+            const date = dateObj.getDate();
+            const dateStr=year+"-"+month+"-"+date;
+            employments[index].dueDate=dateStr;
+            console.log(employments[index].dueDate);
+        }
+        console.log(employments);
+        totalData.employments=employments;
         /* 직원 분석 Data recieve Code*/
         const period=1;       // 1년
         const analysisType=1; // 전체  1:전체 2: 입사자 수 3: 퇴사자 수
-        totalData.news=await companyDao.getCompanyNews(connection,companyId);
+        const news=await companyDao.getCompanyNews(connection,companyId);
+        console.log(news);
+        for (let index = 0; index < employments.length; index++) {
+            const dateObj=news[index].uploadDate;
+            const year = dateObj.getFullYear();
+            const month = dateObj.getMonth() + 1;
+            const date = dateObj.getDate();
+            const dateStr=year+"-"+month+"-"+date;
+            news[index].uploadDate=dateStr;
+            console.log(news[index].uploadDate);
+        }
+        totalData.news=news;
         totalData.AnalysisEmployees=await employeeProvider.getAnalysisEmployee(period,analysisType,companyId);
 
 

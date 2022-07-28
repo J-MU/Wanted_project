@@ -112,6 +112,8 @@ module.exports = {
     FOLLOW_MINUS_ERROR:{"isSuccess": false, "code": 2508, "message": "Follow는 minus가 될 수 없습니다."},
     HEART_MINUS_ERROR:{"isSuccess": false, "code": 2508, "message": "Heart는 minus가 될 수 없습니다."},
     APPLICATION_ID_EMPTY:{"isSuccess": false, "code": 2508, "message": "Application Id를 입력하시오"},
+    ANALYSIS_PERIOD_INVALIABLE:{"isSuccess": false, "code": 2509, "message": "Period가 적절한 범위가 아닙니다."},
+    ANALYSIS_TYPE_INVALIABLE:{"isSuccess": false, "code": 2510, "message": "Type이 적절한 범위가 아닙니다."},
     // Response error
     SIGNUP_REDUNDANT_EMAIL : { "isSuccess": false, "code": 3001, "message":"중복된 이메일입니다." },
     SIGNUP_REDUNDANT_NICKNAME : { "isSuccess": false, "code": 3002, "message":"중복된 닉네임입니다." },
