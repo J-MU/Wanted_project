@@ -153,7 +153,7 @@ exports.getEmployments = async function (params) {
         return response(baseResponse.COMPANY_TAG_TOO_MANY);
     
     //6. career가 0~10 사이인지.
-    if(params.career && !(params.career>=0 && params.career<=MAX_CAREER_SIZE))
+    if(!!prams.career && params.career && !(params.career>=0 && params.career<=MAX_CAREER_SIZE))
         return response(baseResponse.OUT_OF_CAREER_RANGE);
 
     //7. orderBy가 0~3사이인지.
