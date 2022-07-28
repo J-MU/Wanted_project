@@ -46,7 +46,7 @@ exports.getPostsByTagId = async function (req, res) {
 
     const tagId= req.query.tagId;
 
-    //validation
+    if(!tagId) return res.send(response(baseResponse.POST_TAG_EMPTY))
 
     const getPostsByTagId = await postProvider.getPostsByTagId(tagId);
 
@@ -63,6 +63,8 @@ exports.getArticlePosts = async function (req, res) {
 
     // const userId=req.verifiedToken.userId
     const filter = req.body.filter;
+
+    if(!filter)  return res.send(response(baseResponse.FILTER_EMPTY))
 
     const getArticlePostsResponse = await postProvider.getArticlePosts(filter);
 

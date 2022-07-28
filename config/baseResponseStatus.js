@@ -53,6 +53,8 @@ module.exports = {
     // USER_STATUS_EMPTY : { "isSuccess": false, "code": 2018, "message": "회원 상태값을 입력해주세요" },
     //Post :2200
     POST_TAG_EMPTY:{"isSuccess": false, "code": 2200, "message": "태그를 입력해 주세요."},
+    FILTER_EMPTY : {"isSuccess": false, "code": 2201, "message": "filter를 입력해 주세요."},
+
     //Job,JobGroup :2300
     JOB_GROUP_EMPTY:{"isSuccess": false, "code": 2300, "message": "직군을 입력해주세요"},
     JOB_EMPTY:{"isSuccess": false, "code": 2301, "message": "직무를 입력해주세요"},
@@ -86,7 +88,10 @@ module.exports = {
     AWARDSID_EMPTY : {"isSuccess": false, "code": 2418, "message": "awardsId를 입력해주세요."},
     RESUMESTATUS_EMPTY : {"isSuccess": false, "code": 2418, "message": "작성완료 혹은 임시 저장을 입력해주세요."},
     SKILLID_EMPTY : {"isSuccess": false, "code": 2419, "message": "skillId를 입력해주세요."},
-    
+    LEVEL_EMPTY : {"isSuccess": false, "code": 2420, "message": "언어수준을 입력해주세요."},
+    FOREIGNLANGUAGE_EMPTY : {"isSuccess": false, "code": 2421, "message": "추가할 언어를 입력해주세요."},
+    FOREIGNLANGUAGEID_EMPTY : {"isSuccess": false, "code": 2422, "message": "foreignLanguageId를 입력해주세요."},
+
 
     //company : 2150
     COMPANYNAME_EMPTY : {"isSuccess": false, "code": 2150, "message": "회사이름을 입력해주세요"},
@@ -111,6 +116,7 @@ module.exports = {
     // 3200 :post 오류
 
     POSTID_NOTEXIST :{ "isSuccess": false, "code": 3200, "message": "postId가 존재하지 않습니다." },
+    TAGID_NOTEXIST :{ "isSuccess": false, "code": 3201, "message": "tagId가 존재하지 않습니다." },
 
 
     //3400: resume 오류
@@ -119,6 +125,7 @@ module.exports = {
     EDUCATIONID_NOTEXIST : { "isSuccess": false, "code": 3402, "message": "educationId가 존재하지 않습니다." },
     AWARDSID_NOTEXIST : { "isSuccess": false, "code": 3403, "message": "awardsId가 존재하지 않습니다." },
     SKILLID_NOTEXIST : { "isSuccess": false, "code": 3404, "message": "skillId가 존재하지 않습니다." },
+    FOREIGNLANGUAGEID_ALREADY_DELETED :  {"isSuccess": false, "code": 3405, "message": "이미 외국어가 삭제되었습니다."},
 
 
     SIGNIN_EMAIL_WRONG : { "isSuccess": false, "code": 3003, "message": "아이디가 잘못 되었습니다." },

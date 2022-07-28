@@ -16,6 +16,7 @@ module.exports = function(app) {
 // Router
     app.post("/fileUpload", upload.single("fileName") ,
         (req, res) => {
+        console.log('제발제발 돼라')
             // if (err) {
             //     return res.json({success: false});
             // }

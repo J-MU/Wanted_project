@@ -12,7 +12,7 @@ module.exports = function(app) {
     //이력서 외국어 생성
     app.post('/app/resumes/:resumeId/foreignLanguage',jwtMiddleware, resume.postResumeForeignLanguage);
 
-    //이력서 외국어 수정
+    //이력서 외국어 삭제
     app.patch('/app/resumes/:resumeId/foreignLanguage/deleted',jwtMiddleware, resume.deleteResumeForeignLanguage);
 
     //이력서 유저 스킬 추가
@@ -35,11 +35,8 @@ module.exports = function(app) {
     //이력서 삭제
     app.patch('/app/resumes/:resumeId/deleted',jwtMiddleware, resume.deleteResumes);
 
-
     //이력서 생성
     app.post('/app/resumes/:userId',  jwtMiddleware, resume.postResumes);
-
-
 
     //이력서 조회
     app.get('/app/resumes/:resumeId', jwtMiddleware, resume.getResume);

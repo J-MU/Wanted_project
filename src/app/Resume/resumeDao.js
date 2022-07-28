@@ -710,6 +710,18 @@ async function skillIdCheck(connection, skillId) {
 
     return skillIdCheckRow[0]
 }
+
+async function foreignLanguageDeletedCheck(connection, params) {
+    console.log(params)
+    const foreignLanguageDeletedCheckQuery = `
+            select status
+            from foreignLanguages
+            where foreignLanguageId = ${params[1]} and resumeId= ${params[0]};
+        `;
+    const foreignLanguageDeletedCheckRow = await connection.query(foreignLanguageDeletedCheckQuery, params);
+        console.log(foreignLanguageDeletedCheckRow[0])
+    return foreignLanguageDeletedCheckRow[0]
+}
 module.exports = {
     postResumeInfo,
     postResumeCareerInfo,
@@ -760,5 +772,6 @@ module.exports = {
     careerDeletedCheck,
     educationIdCheck,
     educationDeletedCheck,
-    skillIdCheck
+    skillIdCheck,
+    foreignLanguageDeletedCheck
 };

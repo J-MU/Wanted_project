@@ -3,7 +3,6 @@ module.exports = function(app) {
     const request = require('request');
 
     app.get('/sms/:phone', (req, res) => {
-        console.log('hello');
         const paramObj = req.params;
         send_message(paramObj.phone);
         res.send("complete!");
