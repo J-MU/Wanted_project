@@ -219,6 +219,8 @@ exports.postDefaultResume=async function(userId,userName,email,telephone,jobId,c
         const jobName=jobNametemp[0].name;
 
         let self_introduction;
+        console.log(jobNametemp);
+        console.log(jobName);
         if(career==0)
         {
             self_introduction="안녕하세요. 신입 "+ jobName+"입니다.";
