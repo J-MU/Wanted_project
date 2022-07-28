@@ -262,7 +262,7 @@ exports.patchUsers = async function (req, res) {
 exports.postBookMark = async function (req, res) {
 
     // jwt - userId, path variable :userId
-
+    console.log("이게 들어는 오나요~~~~?");
     const userIdFromJWT = req.verifiedToken.userId;
 
     const userId = req.body.userId;
