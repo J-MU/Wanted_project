@@ -522,7 +522,7 @@ exports.getUserInfo=async function(req,res){
     const userId=req.params.userId;
     const userIdFromJWT=req.verifiedToken.userId;
     console.log("여기까진 왔을까? 궁금해");
-   
+    console.log(req.url);
     if (userIdFromJWT != userId)  res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
     
     const userInfoResult=await userProvider.getUserInfo(userId);
