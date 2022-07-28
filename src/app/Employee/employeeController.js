@@ -12,15 +12,24 @@ const {emit} = require("nodemon");
  * API Name : 직원 분석 API
  * [GET] /app/company/:companyId/anaylisis?period=&type=
  */
- exports.getEmployeeAnalysis = async function (req, res) {    //TODO 로그인이 되어있는 경우 고려해야함.
+ exports.getEmployeeAnalysis = async function (req, res) {    
     console.log("Run Controller");
-    // TODO period와 type validation
+    let employeeAnalysis;
 
     const period=req.query.period;
     const type=req.query.type;
     const companyId=req.params.companyId;
+    if(!period) return res.send(errResponse(baseResponse.ANALYSIS_PERIOD_EMPTY));
+    if(!type) return res.send(errResponse(baseResponse.ANALYSIS_TYPE_EMPTY));
+    if(!companyId) return res.send(errResponse(baseResponse.COMPANY_EMPTY));
 
-    const employeeAnalysis=await employeeProvider.getAnalysisEmployee(period,type,companyId);
+    try{
+        employeeAnalysis=await employeeProvider.getAnalysisEmployee(period,type,companyId);
+    }catch(err){
+        if(err=="getAnalysisTotalEmployeesFail") return res.send(response(errResponse({"isSuccess":false,"code":4001,"message":"fail getAnalysisTotalEmployees Query"})));
+        if(err=="getAnalysisEntrantEmployeesFail") return res.send(response(errResponse({"isSuccess":false,"code":4002,"message":"fail getAnalysisEntrantEmployees Query"})));
+        if(err=="getAnalysisRetireeEmployeesFail") return res.send(response(errResponse({"isSuccess":false,"code":4003,"message":"fail getAnalysisRetireeEmployees Query"})));
+    }
     
     return res.send(response(baseResponse.SUCCESS,employeeAnalysis))
 }

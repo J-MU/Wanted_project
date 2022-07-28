@@ -543,6 +543,12 @@ exports.updateProfileSpecInfo=async function(params){
         return response(baseResponse.SUCCESS);
     } catch(err){
         connection.rollback();
+        if(err=="updateProfileDataFail") throw "updateProfileDataFail";
+        if(err=="updateJobGroupFail") throw "updateJobGroupFail";
+        if(err=="updateJobFail") throw "updateJobFail";
+        if(err=="deleteSkillsFail") throw "deleteSkillsFail";
+        if(err=="newPostSkillsFail") throw "newPostSkillsFail";
+
         logger.error(`App - UPDATE Profile Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
     }finally{

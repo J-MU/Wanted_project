@@ -87,6 +87,14 @@ exports.getDataForMainPage = async function (userId) {
 
         return totalData;
     }catch(err){
+        if(err=="getEmploymentCarouselDataFail") return errResponse({"isSuccess":false,"code":4001,"message":"fail getEmploymentCarouselData Query"});
+        if(err=="getExampleEmploymentFail") return errResponse({"isSuccess":false,"code":4002,"message":"fail getExampleEmployment Query"});
+        if(err=="getThemeDataFail") return errResponse({"isSuccess":false,"code":4003,"message":"fail getThemeData Query"});
+        if(err=="getCompanyLogoFail") return errResponse({"isSuccess":false,"code":4004,"message":"fail getCompanyLogo Query"});
+        if(err=="getTagInfoFail") return errResponse({"isSuccess":false,"code":4005,"message":"fail getTagInfo Query"});
+        if(err=="getCompaniesMatchingTagFail") return errResponse({"isSuccess":false,"code":4006,"message":"fail getCompaniesMatchingTag Query"});
+       
+
         logger.error(`App - Get Employment Categories Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
     }

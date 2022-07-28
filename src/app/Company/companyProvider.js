@@ -10,8 +10,14 @@ const baseResponse = require("../../../config/baseResponseStatus");
 //이력서 회사 검색
 exports.getCompanies = async function () {
     try {
+        let getCompaniesResult;
         const connection = await pool.getConnection(async (conn) => conn);
-        const getCompaniesResult = await companyDao.getCompanies(connection);
+        
+        try{
+            getCompaniesResult = await companyDao.getCompanies(connection);
+        }catch(err){
+            if(err="getCompaniesFail") throw "getCompaniesFail";
+        }
         connection.release();
 
         return getCompaniesResult;

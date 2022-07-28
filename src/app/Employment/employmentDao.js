@@ -1,5 +1,6 @@
 // 모든 유저 조회
 async function getEmploymentCarouselData(connection) {
+    let EmploymentCarouselData;
     const getEmploymentCarouselDataQuery = `
         select carouselId,imgUrl,title,content,link
         from Carousel
@@ -7,26 +8,45 @@ async function getEmploymentCarouselData(connection) {
         ORDER BY RAND();
         
                   `;
-    const EmploymentCarouselData = await connection.query(getEmploymentCarouselDataQuery);
+    try{
+        EmploymentCarouselData = await connection.query(getEmploymentCarouselDataQuery);
+    }
+    catch(err){
+        throw "getEmploymentCarouselDataFail"
+    }
     return EmploymentCarouselData[0];
 }
 async function getThemeData(connection) {
+    let ThemeData;
+    
     const getThemeDataQuery = `
         SELECT companyThemeId,themeName,introduction,themeImgUrl FROM CompanyThemes;
         
          `;
-    const ThemeData = await connection.query(getThemeDataQuery);
+    try{
+        ThemeData = await connection.query(getThemeDataQuery);
+    }
+    catch(err){
+        throw "getThemeDataFail";
+    }
     return ThemeData[0];
 }
 
 async function getCompanyLogo(connection,companyThemeId) {
+    let companyLogoRows;
+
     const getCompanyLogoQuery = `
         SELECT Logo FROM Companies
         RIGHT JOIN CompanyThemeMapping CTM on Companies.CompanyId = CTM.companyId
         WHERE companyThemeId=${companyThemeId};
         
          `;
-    const companyLogoRows = await connection.query(getCompanyLogoQuery);
+    try{
+        companyLogoRows = await connection.query(getCompanyLogoQuery);
+    }     
+    catch(err){
+        throw "getCompanyLogoFail"
+    }
     const companyLogoList=[];
     for (let index = 0; index < companyLogoRows[0].length; index++) {
         companyLogoList[index] = companyLogoRows[0][index].Logo;
@@ -36,6 +56,7 @@ async function getCompanyLogo(connection,companyThemeId) {
 
 async function getCompaniesMatchingTag(connection,tagId,userId) {
     console.log(tagId,userId);
+    let companiesMatchingTagRows;
     const getCompaniesMatchingTagQuery = `
     SELECT Companies.CompanyId,
     companyName,
@@ -60,19 +81,28 @@ FROM Companies
      LEFT JOIN CompanyCategory CC on CCM.categoryId = CC.categoryId
      WHERE CompanyTags.tagId=${tagId};
          `;
-    const companiesMatchingTagRows = await connection.query(getCompaniesMatchingTagQuery);
-    
+    try{
+        companiesMatchingTagRows = await connection.query(getCompaniesMatchingTagQuery);
+    }
+    catch(err){
+        throw "getCompaniesMatchingTagFail"
+    }
     return companiesMatchingTagRows[0];
 }
 
 async function getTagInfo(connection,tagId) {
+    let tagInfo;
     console.log("여기까지2"); 
     const getCompaniesMatchingTagQuery = `
             select tagId,name,tagImgUrl from CompanyTags
             WHERE tagId=${tagId};
          `;
-    const tagInfo = await connection.query(getCompaniesMatchingTagQuery);
-    
+    try{
+        tagInfo = await connection.query(getCompaniesMatchingTagQuery);
+    }
+    catch(err){
+        throw "getTagInfoFail";
+    }
     return tagInfo[0];
 }
 
@@ -107,7 +137,7 @@ async function getRandomCompanies(connection,userId) {
 }
 async function getExampleEmployment(connection,userId,limit) {
     let limitStr;
-
+    let tagInfo;
     
     limitStr=" LIMIT "+limit;
     
@@ -133,8 +163,12 @@ async function getExampleEmployment(connection,userId,limit) {
                     ORDER BY RAND()
          `+limitStr;
 
-    const tagInfo = await connection.query(getCompaniesMatchingTagQuery);
-    
+    try{
+        tagInfo = await connection.query(getCompaniesMatchingTagQuery);
+    }
+    catch(err){
+        throw "getExampleEmploymentFail";
+    }
     return tagInfo[0];
 }
 

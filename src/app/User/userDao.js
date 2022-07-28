@@ -42,27 +42,37 @@ async function selectUserId(connection, userId) {
 }
 
 async function getUserNameUsingUserId(connection,userId){
-
+  let userName;
   const selectUserNameQuery=`
     SELECT name
     FROM Users
     WHERE userId=${userId}
   `;
 
-  const userName=await connection.query(selectUserNameQuery);
+  try{
+    userName=await connection.query(selectUserNameQuery);
+  }catch(err){
+    throw "selectUserName";
+  }
   return userName[0][0].name;
 }
 // 유저 생성
 async function insertUserInfo(connection, insertUserInfoParams) {
+  let insertUserInfoRow;
   console.log('insertUserInfo');
   const insertUserInfoQuery = `
         INSERT INTO Users(name, phoneNumber, email, password, IsAcceptedPrivacyTerm, IsAcceptedMarketingTerm)
         VALUES (?, ?, ?, ?, ?, ?);
     `;
-  const insertUserInfoRow = await connection.query(
-    insertUserInfoQuery,
-    insertUserInfoParams
-  );
+
+  try{
+      insertUserInfoRow = await connection.query(
+        insertUserInfoQuery,
+        insertUserInfoParams
+      );
+  }catch(err){
+    throw "insertUserInfoRowQuery";
+  }
 
   return insertUserInfoRow;
 }
@@ -148,15 +158,21 @@ async function insertProfileInfo(connection,userId,career) {
 }
 
 async function getProfileInfoUsingUserId(connection,userId){
+  let profileId;
+  console.log("getProfileInfoUsingUserIdQuery: ",userId);
   const getProfileIdUsingUserIdQuery=`
       SELECT profileId,career,profileImg FROM Users
       LEFT JOIN Profiles ON Users.userId=Profiles.userId
       WHERE Users.userId=${userId};
   `;
+  console.log(getProfileIdUsingUserIdQuery);
+  try{
+    profileId=await connection.query(getProfileIdUsingUserIdQuery);
+  }catch(err){
+    throw "getProfileInfoFail";
+  }
 
-  const profileId=await connection.query(getProfileIdUsingUserIdQuery);
-
-  return profileId[0]
+  return profileId[0];
 }
 
 
@@ -359,12 +375,14 @@ async function getUserStatus(connection,userId,stepLevel){
 async function getDefaultResumeInfo(connection,userId){
 
   const getDefaultResumeInfoQuery=`
-    SELECT Users.name,email,phoneNumber,selfIntroduction,profileImg,E.name,E.MajorOrDegree,C.companyName,C.DepartmentAndTitle FROM Users
+    SELECT Users.name,email,phoneNumber,J.name AS jobName,P.career,profileImg,E.name as educationName,E.MajorOrDegree,C.companyName,C.DepartmentAndTitle FROM Users
     LEFT JOIN Profiles P on Users.userId = P.userId
     LEFT JOIN Resumes R on P.resumeId = R.resumeId
     LEFT JOIN Education E on P.resumeId = E.resumeId
     LEFT JOIN Careers C on E.resumeId = C.resumeId
-    WHERE Users.userId=${userId}
+    LEFT JOIN profileJobMapping PM on PM.profileId=P.profileId
+    LEFT JOIN JobCategories J on J.categoryId=PM.categoryId
+    WHERE Users.userId=${userId};
   ;
   `
 
@@ -373,7 +391,7 @@ async function getDefaultResumeInfo(connection,userId){
 
 
 
-  return temp[0];
+  return temp[0][0];
 }
 
 async function postResumeId(connection,userId,resumeId){
@@ -421,6 +439,7 @@ async function updateProfileInfo(connection,userId,userName,userEmail,userPhoneN
 }
 
 async function updateProfileData(connection,params){
+  let updateProfileInfoResult;
   console.log(params);
   const updateProfileInfoQuery=`
       UPDATE Profiles
@@ -432,13 +451,18 @@ async function updateProfileData(connection,params){
   `;
 
   console.log(updateProfileInfoQuery);
-  const updateProfileInfoResult=await connection.query(updateProfileInfoQuery);
-
+  try{
+    updateProfileInfoResult=await connection.query(updateProfileInfoQuery);
+  }
+  catch(err){
+    throw "updateProfileDataFail";
+  }
   return updateProfileInfoResult;
 }
 
 
 async function updateJobGroup(connection,params){
+  let updateProfileInfoResult;
   console.log(params);
   const updateJobGroupQuery=`
       UPDATE profileJobGroupMapping
@@ -447,12 +471,17 @@ async function updateJobGroup(connection,params){
   `;
 
   console.log(updateJobGroupQuery);
-  const updateProfileInfoResult=await connection.query(updateJobGroupQuery);
-
+  try{
+    updateProfileInfoResult=await connection.query(updateJobGroupQuery);
+  }
+  catch(err){
+    throw "updateJobGroupFail";
+  }
   return updateProfileInfoResult;
 }
 
 async function updateJob(connection,params){
+  let updateProfileInfoResult;
   console.log(params);
   const updateJobQuery=`
       UPDATE profileJobMapping
@@ -461,13 +490,18 @@ async function updateJob(connection,params){
   `;
 
   console.log(updateJobQuery);
-  const updateProfileInfoResult=await connection.query(updateJobQuery);
-
+  try{
+    updateProfileInfoResult=await connection.query(updateJobQuery);
+  }
+  catch(err){
+    throw "updateJobFail";
+  }
   return updateProfileInfoResult;
 }
 
 
 async function deleteSkills(connection,userId){
+  let updateProfileInfoResult;
   const deleteSkillsQuery=`
       UPDATE userSkills
       SET status="DELETED"
@@ -475,12 +509,17 @@ async function deleteSkills(connection,userId){
   `;
 
   console.log(deleteSkillsQuery);
-  const updateProfileInfoResult=await connection.query(deleteSkillsQuery);
-
+  try{
+    updateProfileInfoResult=await connection.query(deleteSkillsQuery);
+  }
+  catch(err){
+    throw "deleteSkillsFail";
+  }
   return updateProfileInfoResult;
 }
 
 async function newPostSkills(connection,userId,skillId){
+  let updateProfileInfoResult;
   console.log(skillId);
   const postSkillsQuery=`
       INSERT INTO userSkills(userId,skillId)
@@ -488,8 +527,12 @@ async function newPostSkills(connection,userId,skillId){
   `;
 
   console.log(postSkillsQuery);
-  const updateProfileInfoResult=await connection.query(postSkillsQuery);
-
+  try{
+    updateProfileInfoResult=await connection.query(postSkillsQuery);
+  }
+  catch(err){
+    throw "newPostSkillsFail";
+  }
   return updateProfileInfoResult;
 }
 

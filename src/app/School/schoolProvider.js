@@ -9,12 +9,17 @@ const resumeDao = require("../Resume/resumeDao");
 //학교 검색
 exports.getSchools = async function () {
     try {
+        let getSchoolsResult;
+        
         const connection = await pool.getConnection(async (conn) => conn);
-        const getSchoolsResult = await schoolDao.getSchools(connection);
+        try{
+            getSchoolsResult = await schoolDao.getSchools(connection);
+        }catch(err){
+            if(err="getSchoolsFail") throw "getSchoolsFail"
+        }
         connection.release();
 
         return getSchoolsResult;
-
     }
     catch(err) {
         logger.error(`App - createUser Service error\n: ${err.message}`);

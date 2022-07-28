@@ -35,14 +35,18 @@ async function updateFollowCount(connection,companyId,followCount) {
 }
 //회사 검색
 async function getCompanies (connection) {
+    let getCareerCompaniesRows;
     const  getCompaniesQuery = `
         select companyName, companyId
         from Companies;
     `;
+    try{
+        getCareerCompaniesRows = await connection.query(getCompaniesQuery);
+    }catch(err){
+        throw "getCompaniesFail";
+    }
 
-    const  getCareerCompaniesRows = await connection.query(getCompaniesQuery);
-
-    return  getCareerCompaniesRows[0]
+    return  getCareerCompaniesRows[0];
 }
 
 async function getCompaniesUsingTag (connection,tagId,userId) {

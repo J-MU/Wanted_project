@@ -159,7 +159,12 @@ exports.getProfileDataSTEP2 = async function (userId,userStatus) {
     totalData.schoolList=schoolList;
     
     return totalData;
-  }catch(err){
+  }catch(err){getJobName
+        if(err=="selectUserNameFail") return errResponse({"isSuccess":false,"code":4001,"message":"fail selectUserName Query"});
+        if(err=="getProfileInfoFail") return errResponse({"isSuccess":false,"code":4002,"message":"fail getProfileInfo Query"});
+        if(err=="getJobNameFail") return errResponse({"isSuccess":false,"code":4003,"message":"fail getJobName Query"});
+        if(err=="getCompaniesFail") return errResponse({"isSuccess":false,"code":4004,"message":"fail getCompanies Query"});
+        if(err=="getSchoolsFail") return errResponse({"isSuccess":false,"code":4005,"message":"fail getSchools Query"});
         logger.error(`App - GET ProfileData STEP2 Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
   }finally{
@@ -173,9 +178,10 @@ exports.getProfileInfoUsingUserId=async function(userId){
   console.log("getProfileId Service Run");
   try{
     const profileId=await userDao.getProfileInfoUsingUserId(connection,userId);
+    console.log(profileId);
     return profileId[0];
   }catch(err){
-
+    if(err=="getProfileInfoFail") throw "getProfileInfoFail";
     logger.error(`App - GET ProfileData ACTIVE Service error\n: ${err.message}`);
     return errResponse(baseResponse.DB_ERROR);
   }finally{
@@ -189,8 +195,25 @@ exports.getProfileDataACTIVE = async function (userId) {
   
   try{
     const resumeInfo = await userDao.getDefaultResumeInfo(connection, userId);
-    
-    return resumeInfo[0];
+    console.log("resumeInfo");
+    console.log(resumeInfo);
+
+    const jobName=resumeInfo.jobName;
+    const career=resumeInfo.career;
+    let self_introduction;
+        if(career==0)
+        {
+            self_introduction="안녕하세요. 신입 "+ jobName+"입니다.";
+        }else{
+            self_introduction="안녕하세요. "+career+"년차 "+jobName+"입니다.";
+        }
+    resumeInfo.self_introduction=self_introduction
+
+    delete resumeInfo.jobName;
+    delete resumeInfo.career;
+    console.log("resumeInfo: ");
+    console.log(resumeInfo);
+    return resumeInfo;
   }catch(err){
         logger.error(`App - GET ProfileData ACTIVE Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
