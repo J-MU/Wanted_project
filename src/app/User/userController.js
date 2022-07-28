@@ -7,6 +7,7 @@ const {response, errResponse} = require("../../../config/response");
 const regexEmail = require("regex-email");
 const {emit} = require("nodemon");
 const { insertUserSkills } = require("./userDao");
+const { profile } = require("winston");
 
 /**
  * API No. 0
@@ -409,6 +410,8 @@ exports.getProfileData = async function (req, res) {
     if(userStatus=="STEP2"){
         console.log("STEP2");
         profileData=await userProvider.getProfileDataSTEP2(userId); // 여기 구현 완료!!
+        console.log("profileData");
+        console.log(profileData);
     }
     else if(userStatus=="ACTIVE"){
         console.log("ACTIVE");
@@ -429,6 +432,7 @@ exports.patchProfileImg=async function (req,res){
     const userId=req.verifiedToken.userId;
     const profileImgUrl=req.body.profileImg;
 
+    if(!profileImgUrl) return res.send(errResponse(baseResponse.PROFILE_IMG_EMPTY));
     const insertProfileImgResult=await userService.patchProfileImg(userId,profileImgUrl);
 
     return res.send(insertProfileImgResult);
@@ -465,15 +469,22 @@ exports.patchProfileSpec=async function(req,res){
       salary,salaryPeriod,monetary);
    */
     console.log(req.body);
-    if (userIdFromJWT != userId)  res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    console.log("id: ",userId,userIdFromJWT);
+    if (userIdFromJWT != userId)  return res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
     if(!req.body) return res.send(response(baseResponse.BODY_EMPTY));
-    if(!req.body.userId)  return res.send(response(baseResponse.USER_USERID_EMPTY));
+    if(!req.params.userId)  return res.send(response(baseResponse.USER_USERID_EMPTY));
     if(!req.body.jobGroupId) return res.send(response(baseResponse.JOB_GROUP_EMPTY));
     if(!req.body.jobId) return res.send(response(baseResponse.JOB_EMPTY));
     if(!req.body.career) return res.send(response(baseResponse.CAREER_EMPTY));
     if(!req.body.skills) return res.send(response(baseResponse.SKILLS_EMPTY));
     
-    const profileObject=await userProvider.getProfileInfoUsingUserId(userId);
+    let profileObject;
+    try{
+        profileObject=await userProvider.getProfileInfoUsingUserId(userId);
+        console.log("profileObject: ",profileObject);
+    }catch(err){
+        if(err=="getProfileInfoFail") return res.send(errResponse({"isSuccess":false,"code":4001,"message":"fail getProfileInfo Query"}));
+    }
 
     const params={};
 
@@ -486,13 +497,24 @@ exports.patchProfileSpec=async function(req,res){
     params.jobGroupId=req.body.jobGroupId;
     params.jobId=req.body.jobId;
     params.career=req.body.career;
-    params.salary=req.body.salary;
-    params.salaryPeriod=req.body.salaryPeriod;
-    params.monetary=req.body.monetary;
-    params.profileId=profileObject.profileId;
+
+    params.salary=req.body.salary ? req.body.salary : null;
+    params.salaryPeriod=req.body.salaryPeriod ? req.body.salaryPeriod : null;
+    params.monetary=req.body.monetary ? req.body.monetary : null;
+    params.profileId=profileObject.profileId ? profileObject.profileId : null;
 
     console.log("Params: \n",params);
-    const patchProfileResult=await userService.updateProfileSpecInfo(params);
+    let patchProfileResult;
+
+    try{
+        patchProfileResult=await userService.updateProfileSpecInfo(params);
+    }catch(err){
+        if(err=="updateProfileDataFail") return errResponse({"isSuccess":false,"code":4001,"message":"fail updateProfileData Query"});
+        if(err=="updateJobGroupFail") return errResponse({"isSuccess":false,"code":4002,"message":"fail updateJobGroup Query"});
+        if(err=="updateJobFail") return errResponse({"isSuccess":false,"code":4003,"message":"fail updateJob Query"});
+        if(err=="deleteSkillsFail") return errResponse({"isSuccess":false,"code":4004,"message":"fail deleteSkills Query"});
+        if(err=="newPostSkillsFail") return errResponse({"isSuccess":false,"code":4005,"message":"fail newPostSkills Query"});
+    }
     
     return res.send(patchProfileResult);
 }
@@ -531,7 +553,8 @@ exports.cancleApplication=async function(req,res){
     const userId=req.body.userId;
     const applicationId=req.body.applicationId;
 
-    if(!req.body)   res.send(errResponse(baseResponse.BODY_EMPTY));
+    if(!userId)  res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+    if(!applicationId) res.send(errResponse(baseResponse.APPLICATION_ID_EMPTY));
     // ApplicationId NULL check
     if (userIdFromJWT != userId)  res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
 

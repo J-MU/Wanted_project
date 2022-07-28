@@ -36,8 +36,9 @@ exports.getCompaniesUsingTag = async function (req, res) {
     console.log(req.params);
     console.log(req.params.companyTagId);
     if(!req.params || !req.params.companyTagId)
-        return res.send(response(baseResponse.COMPANY_TAG_EMPTY));
-    
+        return res.send(errresponse(baseResponse.COMPANY_TAG_EMPTY));
+    if(1<=companyTagId && companyTagId <=14)
+        return res.send(errResponse(baseResponse.COMPANY_TAG_VALIDABLE));
     const companyTagId=req.params.companyTagId;
 
     const companyRows = await companyProvider.getCompaniesUsingTag(companyTagId,userId);

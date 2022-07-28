@@ -39,7 +39,7 @@ module.exports = {
     NOT_DEVELOPMENT_CANT_HAVE_SKILL:{"isSuccess": false, "code": 2055, "message": "직군이 개발이 아니면 skill을 등록할 수 없습니다."},
     USER_STATUS_TYPE_ERROR:{"isSuccess": false, "code": 2056, "message": "STATUS가 비정상적인 값입니다."},
     // USER_USERID_NOT_EXIST : { "isSuccess": false, "code": 2013, "message": "해당 회원이 존재하지 않습니다." },
-
+    PROFILE_IMG_EMPTY:{"isSuccess": false, "code": 2060, "message": "프로필 이미지를 입력해주세요"},
     // Employments: 2100
     OUT_OF_CAREER_RANGE: {"isSuccess": false, "code": 2101, "message": "경력 범위를 벗어났습니다."},
     SEARCH_LOCATION_ERROR_TYPE:{"isSuccess": false, "code": 2102, "message": "Location 형식이 맞지않습니다."},
@@ -60,6 +60,10 @@ module.exports = {
     OUT_OF_JOB_RANGE:{"isSuccess": false, "code": 2301, "message": "직무를 입력해주세요"},
     NOT_INHERITANCE_CATEGORIES:{"isSuccess": false, "code": 2301, "message": "jobGroup과 job이 상속관계가 아닙니다. 다시 확인해주세요"},
     UNVALIDABLE_JOB_GROUP_ID:{"isSuccess": false, "code": 2302, "message": "유효하지 않은 JobGroupId입니다. "},
+    
+    // Employee :2350
+    ANALYSIS_PERIOD_EMPTY:{"isSuccess": false, "code": 2350, "message": "분석할 기간을 입력해주세요."},
+    ANALYSIS_TYPE_EMPTY:{"isSuccess": false, "code": 2351, "message": "분석할 타입을 입력해주세요."},
     //resume : 2400
     RESUMEID_EMPTY : {"isSuccess": false, "code": 2400, "message": "이력서Id를 입력해주세요"},
     SCHOOLNAME_EMPTY  : {"isSuccess": false, "code": 2401, "message": "학교이름을 입력해주세요"},
@@ -88,7 +92,7 @@ module.exports = {
     COMPANYNAME_EMPTY : {"isSuccess": false, "code": 2150, "message": "회사이름을 입력해주세요"},
     COMPANY_TAG_TOO_MANY: {"isSuccess": false, "code": 2151, "message": "company tag는 3개까지 선택 가능합니다."},
     COMPANY_TAG_EMPTY:{"isSuccess": false, "code": 2152, "message": "company tagId를 입력하세요"},
-
+    COMPANY_TAG_VALIDABLE:{"isSuccess": false, "code": 2153, "message": "company tagId가 유효한 값이 아닙니다."},
     // 기타 error
     OUT_OF_ORDER_BY_OPTION:{"isSuccess": false, "code": 2500, "message": "유효한 정렬 option이 아닙니다."},
     BODY_EMPTY:{"isSuccess": false, "code": 2501, "message": "BODY가 비었습니다."},
@@ -99,6 +103,7 @@ module.exports = {
     CANT_SEND_ONE_OF_COMPANYID_OR_COMPANYNAME:{"isSuccess": false, "code": 2506, "message": "companyId, companyName둘중 하나만보낼수는 없습니다."},
     BOOKMARK_MINUS_ERROR:{"isSuccess": false, "code": 2507, "message": "BookMark는 minus가 될 수 없습니다."},
     FOLLOW_MINUS_ERROR:{"isSuccess": false, "code": 2508, "message": "Follow는 minus가 될 수 없습니다."},
+    APPLICATION_ID_EMPTY:{"isSuccess": false, "code": 2508, "message": "Application Id를 입력하시오"},
     // Response error
     SIGNUP_REDUNDANT_EMAIL : { "isSuccess": false, "code": 3001, "message":"중복된 이메일입니다." },
     SIGNUP_REDUNDANT_NICKNAME : { "isSuccess": false, "code": 3002, "message":"중복된 닉네임입니다." },
