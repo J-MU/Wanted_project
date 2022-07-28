@@ -78,7 +78,8 @@ exports.getEmployments = async function (req, res) {    //TODO 로그인이 되�
     console.log(!!req.query.jobGroupId);
     console.log(!!req.query.jobId);
     console.log((!!req.query.jobGroupId && !!req.query.jobId));
-    console.log();
+    console.log(!!career);
+    console.log((!!req.query.jobGroupId && !!req.query.jobId)&&!!career);
     if(!((!!req.query.jobGroupId && !!req.query.jobId) && !!career))
         return res.send(errResponse(baseResponse.JOB_GROUP_OR_JOB_EMPTY));
 
