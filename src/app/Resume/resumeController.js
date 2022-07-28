@@ -120,8 +120,6 @@ exports.patchResumeTitle = async function(req, res) {
 
     const resumeName = req.body.resumeName
 
-    const getResumeParams = [userId, resumeId,resumeName]
-
     if(!userId_body){
         return res.send(response(baseResponse.RESUME_USERID_EMPTY));
     }
@@ -130,8 +128,9 @@ exports.patchResumeTitle = async function(req, res) {
         return res.send(response(baseResponse.TOKEN_AND_USERID_VERIFICATION_FAILURE));
     }
 
-
     if (!resumeId)  return res.send(response(baseResponse.RESUMEID_EMPTY));
+
+    const getResumeParams = [userId, resumeId,resumeName]
 
     const patchResumeTitleResponse = await resumeService.patchResumeTitle(getResumeParams);
 

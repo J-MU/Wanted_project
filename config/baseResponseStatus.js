@@ -133,6 +133,7 @@ module.exports = {
     NOT_USERSKILL :  {"isSuccess": false, "code": 3407, "message": "유저의 스킬이 아닙니다."},
 
 
+
     SIGNIN_EMAIL_WRONG : { "isSuccess": false, "code": 3003, "message": "아이디가 잘못 되었습니다." },
     SIGNIN_PASSWORD_WRONG : { "isSuccess": false, "code": 3004, "message": "비밀번호가 잘못 되었습니다." },
     SIGNIN_INACTIVE_ACCOUNT : { "isSuccess": false, "code": 3005, "message": "비활성화 된 계정입니다. 고객센터에 문의해주세요." },
