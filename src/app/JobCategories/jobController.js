@@ -6,14 +6,9 @@ const {response, errResponse} = require("../../../config/response");
 
 const {emit} = require("nodemon");
 
-/**
- * API No. 0
- * API Name : 테스트 API
- * [GET] /app/test
- */
+
 exports.getJobCategories = async function (req, res) {
     const jobGroupId=req.params.jobgroupid; 
-    
     const checkJobGroupIdValidable=await jobProvider.checkJobGroupIdValidable(jobGroupId);
     if(checkJobGroupIdValidable.length<=0)
         return res.send(errResponse(baseResponse.UNVALIDABLE_JOB_GROUP_ID));
