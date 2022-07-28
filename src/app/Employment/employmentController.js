@@ -69,11 +69,12 @@ exports.getEmployments = async function (req, res) {    //TODO 로그인이 되�
         
     if(req.query.companyTagId)  //TODO companyTagList가 length가 3이하인지 validation해야함.
         params.companyTagId=req.query.companyTagId;
+    console.log("career:",req.query.career);
     if(req.query.career)
         params.career=req.query.career;
-    if((!req.query.jobGroupId || !req.query.jobId) && !!career)
+    if((!!req.query.jobGroupId && !!req.query.jobId) && !!career)
         return res.send(errResponse(baseResponse.JOB_GROUP_OR_JOB_EMPTY));
-        
+
     if(req.query.skillTagId)    //ok~
         params.skills=req.query.skillTagId;
     if(req.query.orderBy)
