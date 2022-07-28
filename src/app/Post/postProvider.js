@@ -211,17 +211,35 @@ exports.getArticlePosts = async function (filter) {
 //아티클 포스트 가져오기 by 태그로 ( 디폴트 = 마감임박순)
 exports.getArticlePostsByTagId = async function (tagId,filter) {
     try {
-        console.log(filter)
+        console.log("filter값은?",filter)
         const connection = await pool.getConnection(async (conn) => conn);
+
+        //tagId validation
+        const tagIdCheck = await postDao.tagIdCheck(connection, tagId)
+
+        if(tagIdCheck.length==0) {
+            return errResponse(baseResponse.TAGID_NOTEXIST)
+        }
+
+        if(filter!='마감임박순' & filter!='최신순') {
+            return errResponse(baseResponse.FILTER_NOTEXIST)
+        }
         if(filter=='마감임박순'){
             console.log('마감!')
-            const getArticlePostsByTagIdAndDate = await postDao.getArticlePostsByTagIdAndDate(connection,tagId)
+            let getArticlePostsByTagIdAndDate = await postDao.getArticlePostsByTagIdAndDate(connection,tagId)
 
-            const getArticlePostsByTagId = await postDao.getArticlePostsByTagId(connection, tagId)
+
+            let getArticlePostsByTagId = await postDao.getArticlePostsByTagId(connection, tagId)
 
 
             var getArticelPostsByTagIdResult = {}
+            if(getArticlePostsByTagIdAndDate.length==0){
+                getArticlePostsByTagIdAndDate = null
+            }
             getArticelPostsByTagIdResult.getArticlePostsByTagIdAndDate=getArticlePostsByTagIdAndDate
+            if(getArticlePostsByTagId.length==0){
+                getArticlePostsByTagId = null
+            }
             getArticelPostsByTagIdResult.getArticlePostsByTagId=getArticlePostsByTagId
 
             connection.release();
@@ -249,7 +267,7 @@ exports.getArticlePostDetails = async function (postId) {
         //validaiton postId 있는지 확인
 
         const postIdCheck = await postDao.postIdCheck(connection,postId);
-        connection.release();
+
         if(postIdCheck.length==0) {
             return response(baseResponse.POSTID_NOTEXIST);
         }
@@ -277,6 +295,11 @@ exports.getArticlePostDetails = async function (postId) {
 
     }
     catch(err){
+        if(err=="getArticlePostDetails Query err") return errResponse({"isSuccess":false, "code":4120, "message":"getArticlePostDetails Query err"});
+        if(err=="getArticleImg Query err") return errResponse({"isSuccess":false, "code":4121, "message":"getArticleImg Query err"});
+        if(err== "getArticleTag Query err") return errResponse({"isSuccess":false, "code":4122, "message":"getArticleTag Query err"});
+        if(err=="articlePosts Query err") return errResponse({"isSuccess":false, "code":4105, "message":"articlePosts Query err"});
+        if(err=="articlePostTags Query err") return errResponse({"isSuccess":false, "code":4105, "message":"articlePostTags Query err"});
         logger.error(`App - Get PostTags Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
     }
@@ -308,7 +331,14 @@ exports.getVodPosts = async function (tagId) {
         }
         else {
             const connection = await pool.getConnection(async (conn) => conn);
+
             //tagId validation
+            const tagIdCheck = await postDao.tagIdCheck(connection, tagId)
+
+            if(tagIdCheck.length==0) {
+                return errResponse(baseResponse.TAGID_NOTEXIST)
+            }
+
 
             const vodTagCheck = await postDao.vodTagCheck(connection, tagId)
 

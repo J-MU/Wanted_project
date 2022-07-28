@@ -120,7 +120,7 @@ async function getArticlePosts(connection, params) {
 catch(err) {
         throw "articlePosts Query err"
 } try {
-        for (let i = 0; i < params[0]; i++) {
+        for (let i = 0; i < [articlePostsRow].length ; i++) {
             let articlePostId = articlePostsRow[i].postId;
             const getArticlePostTagsQuery = `
                 select concat("#", name) as name, postTags.tagId
@@ -129,6 +129,7 @@ catch(err) {
                 where (aTM.articlePostId = ${articlePostId});
             `;
 
+            console.log(i,getArticlePostTagsQuery)
             articleTagsRow = await connection.query(getArticlePostTagsQuery, articlePostId)
             articlePostsRow[i].postTags = articleTagsRow[0];
             resultRow.push(articlePostsRow[i]);
@@ -389,35 +390,53 @@ async function getArticlePostsByCurrent(connection) {
 //아티클 눌렀을 때 전체 조회
 
 async function getArticlePostDetails (connection, postId) {
-    const getArticlePostDetailsQuery = `
-        select D.content, D.videoContent, D.writer, date_format(D.createdAt, '%Y.%m.%d') as createdAt
-        from articlePostDetails as D
-        where postId=?;
-    `;
-    const  getArticlePostDetailsRow = await connection.query(getArticlePostDetailsQuery,postId);
-
+    let getArticlePostDetailsRow
+    try {
+        console.log("여기" ,postId)
+        const getArticlePostDetailsQuery = `
+            select D.content, D.videoContent, D.writer, date_format(D.createdAt, '%Y.%m.%d') as createdAt
+            from articlePostDetails as D
+            where postId = ${postId};
+        `;
+        console.log(getArticlePostDetailsQuery)
+       getArticlePostDetailsRow = await connection.query(getArticlePostDetailsQuery, postId);
+    }
+    catch(err) {
+        throw "getArticlePostDetails Query err"
+    }
     return getArticlePostDetailsRow[0];
 }
 
 async function getArticlePostImg (connection, postId) {
-    const getArticlePostImgQuery= `
+    let getArticlePostImgRow
+    try {
+        const getArticlePostImgQuery = `
             select imgUrl
             from articlePostImg
-            where postId=?
-    `
-    const  getArticlePostImgRow = await connection.query(getArticlePostImgQuery,postId);
-
+            where postId = ?
+        `
+        getArticlePostImgRow = await connection.query(getArticlePostImgQuery, postId);
+    }
+    catch(err){
+        throw "getArticleImg Query err"
+    }
     return getArticlePostImgRow[0]
 }
 
 async function getArticleTag (connection, postId) {
-    const getArticleTagQuery= `
+    let getArticleTagRow
+    try {
+        const getArticleTagQuery = `
             select tagId
             from articleTagsMapping
-            where articlePostId=?
-            order by rand() limit 1 
-    `
-    const  getArticleTagRow = await connection.query(getArticleTagQuery,postId);
+            where articlePostId = ?
+            order by rand() limit 1
+        `
+        getArticleTagRow = await connection.query(getArticleTagQuery, postId);
+    }
+    catch(err) {
+        throw "getArticleTag Query err"
+    }
     return getArticleTagRow[0][0].tagId
 }
 

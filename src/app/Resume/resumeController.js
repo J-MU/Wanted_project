@@ -203,6 +203,18 @@ exports.patchResumeCareer = async function (req, res) {
     const DepartmentAndTitle = req.body.DepartmentAndTitle
     const startDate = req.body.startDate
     const endDate = req.body.endDate
+    const userId = parseInt(req.verifiedToken.userId)
+    const userId_body= req.body.userId
+
+    if (!careerId)  return res.send(response(baseResponse.CAREERID_EMPTY));
+
+    if(!userId_body){
+        return res.send(response(baseResponse.RESUME_USERID_EMPTY));
+    }
+
+    if(userId!=userId_body) {
+        return res.send(response(baseResponse.TOKEN_AND_USERID_VERIFICATION_FAILURE));
+    }
 
     const params = [careerId , companyName, type, DepartmentAndTitle, startDate, endDate]
 
@@ -269,6 +281,21 @@ exports.patchResumeEducation = async function(req, res) {
     const subject = req.body.subject
     const startDate = req.body.startDate
     const endDate = req.body.endDate
+
+    const userId = parseInt(req.verifiedToken.userId)
+    const userId_body= req.body.userId
+
+    if(!userId_body){
+        return res.send(response(baseResponse.RESUME_USERID_EMPTY));
+    }
+
+    if(userId!=userId_body) {
+        return res.send(response(baseResponse.TOKEN_AND_USERID_VERIFICATION_FAILURE));
+    }
+
+    if(!educationId) {
+        return res.send(response(baseResponse.EDUCATIONID_EMPTY));
+    }
 
     const params = [educationId , name, MajorOrDegree, subject, startDate, endDate]
 
@@ -379,10 +406,20 @@ exports.patchResumeAwards = async function(req, res) {
     const period = req.body.period
     const name = req.body.name
     const details = req.body.details
+    const userId = parseInt(req.verifiedToken.userId)
+    const userId_body= req.body.userId
 
-    const params = [awardsId , period, name, details]
+    if(!userId_body){
+        return res.send(response(baseResponse.RESUME_USERID_EMPTY));
+    }
+
+    if(userId!=userId_body) {
+        return res.send(response(baseResponse.TOKEN_AND_USERID_VERIFICATION_FAILURE));
+    }
 
     if(!awardsId) return res.send(response(baseResponse.AWARDSID_EMPTY));
+
+    const params = [awardsId , period, name, details]
 
     const patchResumeAwardsResponse = await resumeService.patchResumeAwards(params);
 
@@ -486,10 +523,22 @@ exports.postResumeSkills =  async function(req, res) {
 exports.deleteResumeSkills = async function(req, res) {
     const resumeId= parseInt(req.params.resumeId);
     const skillId = parseInt(req.params.skillId);
+    const userId = parseInt(req.verifiedToken.userId)
+    const userId_body= req.body.userId
+
+    if(!userId_body){
+        return res.send(response(baseResponse.RESUME_USERID_EMPTY));
+    }
+
+    if(userId!=userId_body) {
+        return res.send(response(baseResponse.TOKEN_AND_USERID_VERIFICATION_FAILURE));
+    }
+
+    if(!resumeId) return res.send(response(baseResponse.RESUMEID_EMPTY));
+    if(!skillId) return res.send(response(baseResponse.SKILLID_EMPTY));
 
     const deleteResumeSkillsParams = [resumeId, skillId]
 
-    console.log(deleteResumeSkillsParams)
 
     const deleteResumeSkillsResponse = await resumeService.deleteResumeSkills(deleteResumeSkillsParams);
 

@@ -509,16 +509,15 @@ async function postResumeSkills(connection, postResumeSkillsParams){
 
 //스킬 삭제
 async function deleteResumeSkills(connection,deleteResumeSkillsParams ) {
-    console.log(deleteResumeSkillsParams[0])
 
     const  deleteResumeSkillsQuery = `
     UPDATE ResumeSkillsMapping 
     SET status = 'DELETED'
-    WHERE resumeId=${deleteResumeSkillsParams[0]} and skillId=${deleteResumeSkillsParams[0]};
+    WHERE resumeId=${deleteResumeSkillsParams[0]} and skillId=${deleteResumeSkillsParams[1]};
     `;
 
     const deleteResumeSkillsRows = await connection.query(deleteResumeSkillsQuery,deleteResumeSkillsParams);
-
+    console.log(deleteResumeSkillsQuery)
     return  deleteResumeSkillsRows
 }
 
@@ -722,6 +721,28 @@ async function foreignLanguageDeletedCheck(connection, params) {
         console.log(foreignLanguageDeletedCheckRow[0])
     return foreignLanguageDeletedCheckRow[0]
 }
+
+async function skillIdDeletedCheck(connection, deleteResumeSkillsParams) {
+    const skillIdDeletedCheckQuery = `
+            select status
+            from ResumeSkillsMapping
+            where resumeId = ${deleteResumeSkillsParams[0]} and skillId=${deleteResumeSkillsParams[1]};
+        `;
+    const skillIdDeletedCheckRow = await connection.query(skillIdDeletedCheckQuery, deleteResumeSkillsParams);
+    return skillIdDeletedCheckRow[0]
+
+}
+
+async function userSkillCheck(connection, deleteResumeSkillsParams) {
+
+        const userSkillCheckQuery = `
+            select skillId
+            from ResumeSkillsMapping
+            where resumeId = ${deleteResumeSkillsParams[0]} and skillId=${deleteResumeSkillsParams[1]};
+        `;
+       const userSkillCheckRow = await connection.query(userSkillCheckQuery, deleteResumeSkillsParams);
+    return userSkillCheckRow[0]
+}
 module.exports = {
     postResumeInfo,
     postResumeCareerInfo,
@@ -773,5 +794,7 @@ module.exports = {
     educationIdCheck,
     educationDeletedCheck,
     skillIdCheck,
-    foreignLanguageDeletedCheck
+    foreignLanguageDeletedCheck,
+    skillIdDeletedCheck,
+    userSkillCheck
 };
