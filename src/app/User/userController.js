@@ -262,13 +262,12 @@ exports.patchUsers = async function (req, res) {
 exports.postBookMark = async function (req, res) {
 
     // jwt - userId, path variable :userId
-
+    console.log("이게 들어는 오나요~~~~?");
     const userIdFromJWT = req.verifiedToken.userId;
 
     const userId = req.body.userId;
     const employmentId=req.body.employmentId;
-   
-
+    console.log("id:",userIdFromJWT,userId);
     if (userIdFromJWT != userId) {
         res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
     } else {
@@ -509,11 +508,11 @@ exports.patchProfileSpec=async function(req,res){
     try{
         patchProfileResult=await userService.updateProfileSpecInfo(params);
     }catch(err){
-        if(err=="updateProfileDataFail") return errResponse({"isSuccess":false,"code":4001,"message":"fail updateProfileData Query"});
-        if(err=="updateJobGroupFail") return errResponse({"isSuccess":false,"code":4002,"message":"fail updateJobGroup Query"});
-        if(err=="updateJobFail") return errResponse({"isSuccess":false,"code":4003,"message":"fail updateJob Query"});
-        if(err=="deleteSkillsFail") return errResponse({"isSuccess":false,"code":4004,"message":"fail deleteSkills Query"});
-        if(err=="newPostSkillsFail") return errResponse({"isSuccess":false,"code":4005,"message":"fail newPostSkills Query"});
+        if(err=="updateProfileDataFail") return errResponse({"isSuccess":false,"code":4002,"message":"fail updateProfileData Query"});
+        if(err=="updateJobGroupFail") return errResponse({"isSuccess":false,"code":4003,"message":"fail updateJobGroup Query"});
+        if(err=="updateJobFail") return errResponse({"isSuccess":false,"code":4004,"message":"fail updateJob Query"});
+        if(err=="deleteSkillsFail") return errResponse({"isSuccess":false,"code":4005,"message":"fail deleteSkills Query"});
+        if(err=="newPostSkillsFail") return errResponse({"isSuccess":false,"code":4006,"message":"fail newPostSkills Query"});
     }
     
     return res.send(patchProfileResult);

@@ -59,10 +59,10 @@ module.exports = {
     //Job,JobGroup :2300
     JOB_GROUP_EMPTY:{"isSuccess": false, "code": 2300, "message": "직군을 입력해주세요"},
     JOB_EMPTY:{"isSuccess": false, "code": 2301, "message": "직무를 입력해주세요"},
-    OUT_OF_JOBGROUP_RANGE:{"isSuccess": false, "code": 2301, "message": "직군을 입력해주세요"},
-    OUT_OF_JOB_RANGE:{"isSuccess": false, "code": 2301, "message": "직무를 입력해주세요"},
-    NOT_INHERITANCE_CATEGORIES:{"isSuccess": false, "code": 2301, "message": "jobGroup과 job이 상속관계가 아닙니다. 다시 확인해주세요"},
-    UNVALIDABLE_JOB_GROUP_ID:{"isSuccess": false, "code": 2302, "message": "유효하지 않은 JobGroupId입니다. "},
+    OUT_OF_JOBGROUP_RANGE:{"isSuccess": false, "code": 2302, "message": "직군이 유효한 범위에 들어가지 않았습니다."},
+    OUT_OF_JOB_RANGE:{"isSuccess": false, "code": 2303, "message": "직무가 유효한 범위에 들어가지 않았습니다."},
+    NOT_INHERITANCE_CATEGORIES:{"isSuccess": false, "code": 2304, "message": "jobGroup과 job이 상속관계가 아닙니다. 다시 확인해주세요"},
+    UNVALIDABLE_JOB_GROUP_ID:{"isSuccess": false, "code": 2305, "message": "유효하지 않은 JobGroupId입니다. "},
     
     // Employee :2350
     ANALYSIS_PERIOD_EMPTY:{"isSuccess": false, "code": 2350, "message": "분석할 기간을 입력해주세요."},

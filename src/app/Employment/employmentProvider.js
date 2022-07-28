@@ -172,6 +172,8 @@ exports.getEmployments = async function (params) {
         connection.release();
         return totalData;
     }catch(err){
+        if(err=="getRandomCompaniesFail") return errResponse({"isSuccess":false,"code":4001,"message":"fail getRandomCompanies Query"});
+        if(err=="getEmploymentsFail") return errResponse({"isSuccess":false,"code":4002,"message":"fail getEmployments Query"});
         logger.error(`App - Get Filtering Employments Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
     }
