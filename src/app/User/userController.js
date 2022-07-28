@@ -98,7 +98,7 @@ exports.postJobCatgory=async function(req,res){
     console.log(typeof JobGroupId);
     console.log(Array.isArray(skills));
     
-    
+
     // NULL 체크
     if(!req.body)   return res.send(errResponse(baseResponse.BODY_EMPTY));
     if(!userId)     return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
@@ -325,13 +325,14 @@ exports.deleteBookMark = async function (req, res) {
 
     const userId = req.params.userId;
     const employmentId=req.params.employmentId;
-   
+    console.log("id:");
+    console.log(userId,employmentId);
     if(!userId) return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
 
     if (userIdFromJWT != userId) {
         return res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
     } else {
-
+        console.log("여기 들어오는거 맞아..?");
         const deleteBookMarkResult = await userService.deleteBookMark(userId,employmentId);
         return res.send(deleteBookMarkResult);
     }
@@ -397,8 +398,11 @@ exports.getProfileData = async function (req, res) {
     console.log("여기들어오는건 맞지...?");
     const userIdFromJWT = req.verifiedToken.userId;
     const userId = req.params.userId;
-    let profileData;
 
+    if(!userId)
+        return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+
+    let profileData;
     if (userIdFromJWT != userId) {
         res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
     } 

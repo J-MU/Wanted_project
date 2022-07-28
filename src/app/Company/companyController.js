@@ -27,7 +27,7 @@ exports.getCompanies = async function (req, res) {
  */
 exports.getCompaniesUsingTag = async function (req, res) {
     let userId=0;
-
+    const companyTagId=req.params.companyTagId;
     if(req.verifiedToken){
         userId = req.verifiedToken.userId;
     }
@@ -35,11 +35,13 @@ exports.getCompaniesUsingTag = async function (req, res) {
     console.log("parmas::?");
     console.log(req.params);
     console.log(req.params.companyTagId);
+    console.log(1<=companyTagId);
+    console.log(companyTagId<=14);
     if(!req.params || !req.params.companyTagId)
         return res.send(errresponse(baseResponse.COMPANY_TAG_EMPTY));
-    if(1<=companyTagId && companyTagId <=14)
+    if(1>companyTagId || companyTagId >14)
         return res.send(errResponse(baseResponse.COMPANY_TAG_VALIDABLE));
-    const companyTagId=req.params.companyTagId;
+    
 
     const companyRows = await companyProvider.getCompaniesUsingTag(companyTagId,userId);
 

@@ -250,7 +250,7 @@ async function getEmploymentDetails(connection,employmentId,userId) {
                 city,
                 address,
                 description,
-                dueDate
+                dueDate,
                 heartCount,
                 recommenderSigningBonus,
                 recommendedSigningBonus,
@@ -606,7 +606,7 @@ async function getEmploymentsUsingCompanyId(connection,userId,companyId){
             )IsBookMark on IsBookMark.employmentId=Employments.employmentId
             WHERE C.CompanyId=${companyId}
             ORDER BY Employments.createdAt
-            LIMIT 4,9999; 
+            LIMIT 0,9999; 
     `;
     // TODO employments 더미 더 넣어야함. MySQL 공식 문서에서 LIMIT옆에 엄청 큰 숫자 넣으래..진짜루..
     console.log("Query:");
