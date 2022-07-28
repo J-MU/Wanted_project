@@ -96,7 +96,7 @@ async function postResumes(connection, userId){
         INSERT INTO WANTED.Resumes (userId, resumeName, userName, userEmail, userTel)
         select Users.userId,
                concat(name,
-                      (select count(userId+1) FROM Resumes
+                      (select count(userId)+1 FROM Resumes
                        where (status = '작성 중' or status = '작성 완료') and userId = ${userId})
                    ) as resumeName,name, email, phoneNumber
         from Users
