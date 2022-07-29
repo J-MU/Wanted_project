@@ -18,5 +18,10 @@ module.exports = function(app) {
     });
 
     //회사 검색 API
-    app.post('/app/files', upload.single("Myfile") ,file.uploadFile);
+    try{
+      app.post('/app/files', upload.single("Myfile") ,file.uploadFile);
+    }catch(err){
+      console.log("gogo");
+      console.log(err);
+    }
 }
