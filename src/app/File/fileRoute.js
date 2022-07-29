@@ -18,11 +18,6 @@ module.exports = function(app) {
     });
 
     //회사 검색 API
-    try{
-      app.post('/app/files', upload.single("Myfile") ,file.uploadFile);
-    }catch(err){
-      console.log("gogogoo");
-      console.log("gogo");
-      console.log(err);
-    }
+    app.post('/app/files', upload.single("Myfile") ,file.uploadFile);
+
 }
