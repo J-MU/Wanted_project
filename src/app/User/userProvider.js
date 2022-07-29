@@ -159,7 +159,7 @@ exports.getProfileDataSTEP2 = async function (userId,userStatus) {
     totalData.schoolList=schoolList;
     
     return totalData;
-  }catch(err){getJobName
+  }catch(err){
         if(err=="selectUserNameFail") return errResponse({"isSuccess":false,"code":4001,"message":"fail selectUserName Query"});
         if(err=="getProfileInfoFail") return errResponse({"isSuccess":false,"code":4002,"message":"fail getProfileInfo Query"});
         if(err=="getJobNameFail") return errResponse({"isSuccess":false,"code":4003,"message":"fail getJobName Query"});

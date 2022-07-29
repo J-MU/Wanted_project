@@ -58,7 +58,7 @@ exports.getEmployments = async function (req, res) {    //TODO 로그인이 되�
     const locationRegex=new RegExp('.\..'); // sdf.dsfsd 형태 (city.region)
    
     if(req.query.location && !locationRegex.test(req.query.location)){
-        return response(baseResponse.SEARCH_LOCATION_ERROR_TYPE);
+        return res.send(response(baseResponse.SEARCH_LOCATION_ERROR_TYPE));
     }
     if(req.query.location){
         const location=req.query.location.split('.');
