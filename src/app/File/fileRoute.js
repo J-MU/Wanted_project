@@ -21,6 +21,7 @@ module.exports = function(app) {
     try{
       app.post('/app/files', upload.single("Myfile") ,file.uploadFile);
     }catch(err){
+      console.log("gogogoo");
       console.log("gogo");
       console.log(err);
     }
