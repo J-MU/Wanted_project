@@ -78,7 +78,7 @@ exports.checkInheritanceJobandJobGroupCategory = async function (jobGroupId,jobI
         console.log("JobGroupId:");
         console.log(jobGroupId);
         console.log(JobGroupCategoryId[0].jobGroupCategoryId == jobGroupId);
-        let boolean=false;
+        let boolean=false; //처음 설정 왜 false?
         if(JobGroupCategoryId.length>0 && JobGroupCategoryId[0].jobGroupCategoryId==jobGroupId )
             boolean=true;
 

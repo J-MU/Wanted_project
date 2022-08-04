@@ -157,22 +157,22 @@ exports.editUser = async function (id, nickname) {
 
 exports.postJobCatgory=async function(userId,jobGroupId,jobId,career,skills){   
     console.log(userId,jobGroupId,jobId,career,skills);
-    if(jobGroupId!=1&&skills!=null)    return errResponse(baseResponse.NOT_DEVELOPMENT_CANT_HAVE_SKILL);
+    if(jobGroupId!=1&&skills!=null)    return errResponse(baseResponse.NOT_DEVELOPMENT_CANT_HAVE_SKILL); //이해 잘 안 됨
     
     // TODO : JobGroup 과 Job이 부모-자식 관계여야함. check 함수가 추가로 구현되어야함.
     const connection = await pool.getConnection(async (conn) => conn);
     const isHeritance=await jobProvider.checkInheritanceJobandJobGroupCategory(jobGroupId,jobId);
     console.log("isHeritance: ",isHeritance);
-    if(!isHeritance)
+    if(!isHeritance) // 오오오오
         return errResponse(baseResponse.NOT_INHERITANCE_CATEGORIES);
     try{
         //,JobGroup,Job
-        const getParam = await userDao.insertProfileInfo(connection,userId,career);
+        const getParam = await userDao.insertProfileInfo(connection,userId,career); //return하면 params의 값에 뭐가 있죠..?
         console.log("hihi");
         console.log(getParam[0].insertId);
         const profileId=getParam[0].insertId;
         
-        connection.beginTransaction();
+        connection.beginTransaction(); //transaction 설명
         console.log("query1");
         const insertJobCatgoryResult=await userDao.insertJobGroupCategoryInfo(connection,profileId,jobGroupId); 
         console.log("query2");
@@ -269,12 +269,12 @@ exports.postInterestedTags=async function(userId,postTagList){
     //companyId가 넘어올 수도 있음.
     
     const connection = await pool.getConnection(async (conn) => conn);
-    try{
+    try{ //Q.트렌젝션
         await connection.beginTransaction();
         for (let index = 0; index < postTagList.length; index++) {
             const postInterestedTagsResult=await userDao.postInterestedTags(connection,userId,postTagList[index]);
         }
-        await connection.commit() // 커밋
+        await connection.commit() // 커밋  Q 커밋
         return response(baseResponse.SUCCESS);
     } catch(err){
         if(err="postInterestedTagFail") return errResponse({"isSuccess":false, "code":4006, "message":"fail postInterestedTag Query"});

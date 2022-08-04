@@ -36,9 +36,9 @@ exports.getDataForMainPage = async function (userId) {
         console.log("여긴어디냐.");
         totalData.carousel=await employmentDao.getEmploymentCarouselData(connection);
         if(userId!=0){
-            totalData.recommendEmployment=await employmentDao.getExampleEmployment(connection,userId,12);
+            totalData.recommendEmployment=await employmentDao.getExampleEmployment(connection,userId,12); //오홍 limit을 이렇게
         }
-        totalData.recommendHighPassRateEmployment=await employmentDao.getExampleEmployment(connection,userId,12);
+        totalData.recommendHighPassRateEmployment=await employmentDao.getExampleEmployment(connection,userId,12);  //highpass?
         console.log("여긴 여기지");
         const themeData=await employmentDao.getThemeData(connection);
         

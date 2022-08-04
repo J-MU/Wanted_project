@@ -353,7 +353,7 @@ exports.patchResumeStatus = async function(resumeId,status) {
             if (selfIntroductionRows < 400)
                 return errResponse(baseResponse.SELFINTRODUCTIONNUM_ERROR);
 
-            var result = []
+            var result = [] //에러 메시지를 담는 통
             // 경력 있는지 확인
             const careerCheck = await resumeProvider.careerCheck(resumeId);
             if (careerCheck.length > 0) {

@@ -77,6 +77,7 @@ exports.getArticlePosts = async function (req, res) {
  */
 
 exports.getArticlePostsByTagId = async function (req, res) {
+
     const tagId = req.query.tagId;
 
     const filter = req.body.filter;
