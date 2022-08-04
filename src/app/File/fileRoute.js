@@ -18,5 +18,7 @@ module.exports = function(app) {
     });
 
     //회사 검색 API
+    console.log("haha..");
     app.post('/app/files', upload.single("Myfile") ,file.uploadFile);
+
 }

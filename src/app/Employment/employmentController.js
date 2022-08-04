@@ -58,7 +58,7 @@ exports.getEmployments = async function (req, res) {    //TODO 로그인이 되�
     const locationRegex=new RegExp('.\..'); // sdf.dsfsd 형태 (city.region)
    
     if(req.query.location && !locationRegex.test(req.query.location)){
-        return response(baseResponse.SEARCH_LOCATION_ERROR_TYPE);
+        return res.send(response(baseResponse.SEARCH_LOCATION_ERROR_TYPE));
     }
     if(req.query.location){
         const location=req.query.location.split('.');
@@ -69,8 +69,20 @@ exports.getEmployments = async function (req, res) {    //TODO 로그인이 되�
         
     if(req.query.companyTagId)  //TODO companyTagList가 length가 3이하인지 validation해야함.
         params.companyTagId=req.query.companyTagId;
+    console.log("career:",req.query.career);
     if(req.query.career)
         params.career=req.query.career;
+    console.log("jobGroupId , jobId");
+    console.log(req.query.jobGroupId);
+    console.log(req.query.jobId);
+    console.log(!!req.query.jobGroupId);
+    console.log(!!req.query.jobId);
+    console.log((!!req.query.jobGroupId && !!req.query.jobId));
+    console.log(!!req.query.career);
+    console.log((!!req.query.jobGroupId && !!req.query.jobId)&&!req.query.career);
+    if(!((!!req.query.jobGroupId && !!req.query.jobId)) && !!req.query.career)
+        return res.send(errResponse(baseResponse.JOB_GROUP_OR_JOB_EMPTY));
+
     if(req.query.skillTagId)    //ok~
         params.skills=req.query.skillTagId;
     if(req.query.orderBy)

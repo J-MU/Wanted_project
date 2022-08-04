@@ -17,7 +17,6 @@ async function getAnalysisTotalEmployees (connection,date,companyId) {    //ìž…ì
         where (ISNULL(firedAt) OR TIMEDIFF(firedAt,"${date}")>0) AND TIMEDIFF(hiredAt,"${date}")<=0 AND companyId=${companyId};
     `;
 
-    console.log("Query: ",getAnalysisEmployeeQuery);
 
     try{
         Analysis = await connection.query(getAnalysisEmployeeQuery);   
@@ -33,7 +32,6 @@ async function getAnalysisEntrantEmployees (connection,date,companyId) {    //ìž
             where hiredAt="${date}" AND companyId=${companyId};   
     `;
 
-    console.log("Query: ",getAnalysisEmployeeQuery);
 
     const  Analysis = await connection.query(getAnalysisEmployeeQuery);   
     return  Analysis[0][0];
@@ -45,7 +43,6 @@ async function getAnalysisRetireeEmployees (connection,date,companyId) {    //ìž
             where firedAt="${date}" AND companyId=${companyId};
     `;
 
-    console.log("Query: ",getAnalysisEmployeeQuery);
 
     const  Analysis = await connection.query(getAnalysisEmployeeQuery);   
     return  Analysis[0][0];

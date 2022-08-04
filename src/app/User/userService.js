@@ -171,8 +171,14 @@ exports.postJobCatgory=async function(userId,jobGroupId,jobId,career,skills){
         console.log("hihi");
         console.log(getParam[0].insertId);
         const profileId=getParam[0].insertId;
+<<<<<<< HEAD
         
         connection.beginTransaction(); //transaction 설명
+=======
+        console.log("profileId:",profileId);
+        console.log("jobGroupId:",jobGroupId);
+        connection.beginTransaction();
+>>>>>>> d52c010f72e4cfd9dcc7f117bd898a8b697b3ec7
         console.log("query1");
         const insertJobCatgoryResult=await userDao.insertJobGroupCategoryInfo(connection,profileId,jobGroupId); 
         console.log("query2");
@@ -218,6 +224,8 @@ exports.postDefaultResume=async function(userId,userName,email,telephone,jobId,c
         const jobName=jobNametemp[0].name;
 
         let self_introduction;
+        console.log(jobNametemp);
+        console.log(jobName);
         if(career==0)
         {
             self_introduction="안녕하세요. 신입 "+ jobName+"입니다.";

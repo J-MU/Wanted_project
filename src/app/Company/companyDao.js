@@ -158,7 +158,6 @@ async function getCompanyDetails(connection,userId,companyId){
     }
 
     console.log("companyDetails: ");
-    console.log(companyDetails[0]);
 
     return  companyDetails[0];
 }
@@ -180,7 +179,6 @@ async function getCompanyImgs(connection,companyId){
     }
 
     console.log("companyImgs: ");
-    console.log(companyImgs[0]);
 
     return  companyImgs[0];
 }
@@ -235,8 +233,6 @@ async function getCompanyNews(connection,companyId){
         throw "getCompanyNewsFail";
     }
 
-    console.log("companyNews: ");
-    console.log(companyNews[0]);
 
     return  companyNews[0];
 }
